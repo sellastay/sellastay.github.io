@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt-BR" id="html-root">
+<head>
+
+    <title data-i18n="page_title">SellaStay - CRM para Hotelaria | Transforme Leads em Reservas</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Json manifest for mobile icon App -->
+    <link rel="manifest" href="js/manifest.json">
+    <meta name="theme-color" content="#000">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" data-i18n="meta_description" content="SellaStay é o CRM especializado que revoluciona a gestão de leads no setor hoteleiro. Aumente suas conversões em até 40% com analytics inteligentes.">
+    <meta name="keywords" data-i18n="meta_keywords" content="CRM hotelaria, gestão leads hotéis, software hoteleiro, revenue management, conversão reservas">
+    <meta name="author" content="SellaStay">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sellastay.com/">
+    <meta property="og:title" data-i18n="og_title" content="SellaStay - CRM para Hotelaria">
+    <meta property="og:description" data-i18n="og_description" content="Transforme leads em reservas com o CRM especializado em hotelaria">
+    <meta property="og:image" content="https://sellastay.com/og-image.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="img/favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#4A1A5C">
+
+    <!--Bootstrap icons-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/sellastay-landing.css">
+
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html#hero"><img src="img/logoheader_.png" alt="SellaStay" class="logo" id="nav-logo"></a>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#features" class="nav-link" data-i18n="nav_features">Recursos</a></li>
+                <li><a href="#testimonials" class="nav-link" data-i18n="nav_testimonials">Cases</a></li>
+                <li><a href="#pricing" class="nav-link" data-i18n="nav_pricing">Preços</a></li>
+                <li><a href="#faq" class="nav-link" data-i18n="nav_faq">FAQ</a></li>
+                <li><a href="#demo" class="nav-link nav-cta" data-i18n="nav_demo">Demo Grátis</a></li>
+                <li class="language-selector">
+                    <div class="language-dropdown" id="language-dropdown">
+                        <button class="language-btn" id="language-btn">
+                            🇧🇷 PT
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <div class="language-menu" id="language-menu">
+                            <button class="language-option active" data-lang="pt" data-i18n="lang_portuguese">🇧🇷 Português</button>
+                            <button class="language-option" data-lang="en" data-i18n="lang_english">🇺🇸 English</button>
+                            <button class="language-option" data-lang="es" data-i18n="lang_spanish">🇪🇸 Español</button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="sec hero" id="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <!-- <span class="badge-text" data-i18n="hero_badge">🚀 Mais de 500 hotéis confiam na SellaStay</span> -->
+                </div>
+                <h1 class="hero-title">
+                    <span data-i18n="hero_title_1">Transforme</span> <span class="gradient-text" data-i18n="hero_title_2">Leads em Reservas</span> <span data-i18n="hero_title_3">com o CRM do Futuro</span>
+                </h1>
+                <p class="hero-description" data-i18n="hero_description">
+                    O SellaStay revoluciona a gestão de leads na hotelaria com analytics inteligentes 
+                    e automação que <strong>aumenta suas conversões em até 40%</strong>.
+                </p>
+                <div class="hero-cta">
+                    <button class="btn btn-primary btn-lg" onclick="openDemo()">
+                        <span data-i18n="hero_cta_primary">Começar Demo Gratuita</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <button class="btn btn-secondary btn-lg" onclick="scrollToFeatures()">
+                        <i style="font-size: 18px; margin-right: 10px;" class="bi bi-play-btn"></i><span data-i18n="hero_cta_secondary">Ver Como Funciona</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div id="features"></div>
+        <div class="container">
+            <div class="section-header">
+                <!-- <span class="section-badge" data-i18n="features_badge">Recursos Poderosos</span> -->
+                <h2 class="section-title" data-i18n="features_title">Tudo que seu hotel precisa em uma única plataforma</h2>
+                <p class="section-description" data-i18n="features_description">
+                    Gerencie leads, automatize follow-ups e tome decisões baseadas em dados reais
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 3v18h18V3H3zm16 16H5V5h14v14z" fill="currentColor"/>
+                            <path d="M7 7h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title" data-i18n="feature_1_title">CRM Inteligente</h3>
+                    <p class="feature-description" data-i18n="feature_1_description">
+                        Sistema Kanban visual com scoring automático de leads e pipeline drag & drop.
+                    </p>
+                </div>
+
+                <div class="feature-card featured">
+                    <div class="feature-badge" data-i18n="feature_badge_popular">Mais Popular</div>
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z" fill="currentColor"/>
+                            <path d="m2 17 10 5 10-5M2 12l10 5 10-5" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title" data-i18n="feature_2_title">Analytics Avançados</h3>
+                    <p class="feature-description" data-i18n="feature_2_description">
+                        Dashboards em tempo real com métricas que importam e previsões de receita.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title" data-i18n="feature_3_title">Automação Inteligente</h3>
+                    <p class="feature-description" data-i18n="feature_3_description">
+                        Follow-ups automáticos e workflows que nunca deixam um lead escapar.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title" data-i18n="feature_4_title">Gestão de Clientes</h3>
+                    <p class="feature-description" data-i18n="feature_4_description">
+                        Base completa com histórico, preferências e segmentação avançada.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title" data-i18n="feature_5_title">Calendário Integrado</h3>
+                    <p class="feature-description" data-i18n="feature_5_description">
+                        Eventos automatizados com sincronização Google e lembretes push.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1v12z" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title" data-i18n="feature_6_title">Metas & Objetivos</h3>
+                    <p class="feature-description" data-i18n="feature_6_description">
+                        Tracking em tempo real com sistema de conquistas e gamificação.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="social-proof">
+        <div id="testimonials"></div>
+        <div class="container">
+            <div class="section-header">
+                <!-- <span class="section-badge" data-i18n="testimonials_badge">Cases de Sucesso</span> -->
+                <h2 class="section-title" data-i18n="testimonials_title">Hotéis que já transformaram seus resultados</h2>
+            </div>
+            
+            <div class="testimonials-carousel">
+                <div class="testimonials-container" id="testimonials-container">
+                    <div class="testimonial-slide active">
+                        <div class="testimonial-card">
+                            <div class="testimonial-content">
+                                <div class="stars">⭐⭐⭐⭐⭐</div>
+                                <p class="testimonial-text" data-i18n="testimonial_1_text">
+                                    "O SellaStay aumentou nossa conversão de leads em 45% no primeiro mês. 
+                                    O dashboard é incrível e finalmente conseguimos ter visibilidade total do funil."
+                                </p>
+                            </div>
+                            <div class="testimonial-author">
+                                <div class="author-avatar">
+                                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face" alt="Carlos Mendes">
+                                </div>
+                                <div class="author-info">
+                                    <span class="author-name">Carlos Mendes</span>
+                                    <span class="author-title" data-i18n="testimonial_1_title">Diretor Comercial, Atlântica Hotels</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <div class="testimonial-content">
+                                <div class="stars">⭐⭐⭐⭐⭐</div>
+                                <p class="testimonial-text" data-i18n="testimonial_2_text">
+                                    "Antes perdíamos leads no meio do caminho. Agora com o SellaStay 
+                                    temos controle total e nossa receita cresceu 60% em 6 meses."
+                                </p>
+                            </div>
+                            <div class="testimonial-author">
+                                <div class="author-avatar">
+                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face" alt="Ana Santos">
+                                </div>
+                                <div class="author-info">
+                                    <span class="author-name">Ana Santos</span>
+                                    <span class="author-title" data-i18n="testimonial_2_title">Revenue Manager, Bristol Hotéis</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <div class="testimonial-content">
+                                <div class="stars">⭐⭐⭐⭐⭐</div>
+                                <p class="testimonial-text" data-i18n="testimonial_3_text">
+                                    "Interface intuitiva, relatórios poderosos e suporte excepcional. 
+                                    O SellaStay é essencial para qualquer hotel sério sobre vendas."
+                                </p>
+                            </div>
+                            <div class="testimonial-author">
+                                <div class="author-avatar">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face" alt="Roberto Lima">
+                                </div>
+                                <div class="author-info">
+                                    <span class="author-name">Roberto Lima</span>
+                                    <span class="author-title" data-i18n="testimonial_3_title">Gerente de Vendas, Pestana Hotel Group</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="carousel-indicators" id="carousel-indicators">
+                    <button class="indicator active" data-slide="0"></button>
+                    <button class="indicator" data-slide="1"></button>
+                    <button class="indicator" data-slide="2"></button>
+                </div>
+            </div>
+
+            <div class="metrics-showcase">
+                <div class="metric-showcase">
+                    <span class="metric-number">500+</span>
+                    <span class="metric-label" data-i18n="metric_1_label">Hotéis Ativos</span>
+                </div>
+                <div class="metric-showcase">
+                    <span class="metric-number">1.2M+</span>
+                    <span class="metric-label" data-i18n="metric_2_label">Leads Processados</span>
+                </div>
+                <div class="metric-showcase">
+                    <span class="metric-number">R$ 50M+</span>
+                    <span class="metric-label" data-i18n="metric_3_label">Receita Gerada</span>
+                </div>
+                <div class="metric-showcase">
+                    <span class="metric-number">98%</span>
+                    <span class="metric-label" data-i18n="metric_4_label">Satisfação</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing">
+        <div id="pricing"></div><br>
+        <div class="container">
+            <div class="section-header">
+                <!-- <span class="section-badge" data-i18n="pricing_badge">Planos Flexíveis</span><br> -->
+                <h2 class="section-title" data-i18n="pricing_title">Escolha o <span>plano ideal</span> para seu hotel</h2>
+                <p class="section-description" data-i18n="pricing_description" style="margin-bottom: -35px; margin-top: -10px;">
+                    Todos os planos incluem suporte 24/7 e garantia de 30 dias
+                </p>
+            </div>
+            
+            <div class="pricing-toggle">
+                <span class="toggle-label" data-i18n="pricing_monthly">Mensal</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="pricing-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
+                <span class="toggle-label" data-i18n="pricing_yearly">Anual</span>
+                 <span class="discount-badge">-20%</span>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3 class="plan-name" data-i18n="plan_1_name">Starter</h3>
+                        <p class="plan-description" data-i18n="plan_1_description">Perfeito para hotéis iniciantes</p>
+                        <div class="price-container">
+                            <span class="price monthly-price">R$ 197</span>
+                            <span class="price yearly-price hidden">R$ 158</span>
+                            <span class="price-period" data-i18n="price_period">/mês</span>
+                        </div>
+                    </div>
+                    <ul class="features-list">
+                        <li data-i18n="plan_1_feature_1">✓ Até 100 leads/mês</li>
+                        <li data-i18n="plan_1_feature_2">✓ CRM básico</li>
+                        <li data-i18n="plan_1_feature_3">✓ Dashboard essencial</li>
+                        <li data-i18n="plan_1_feature_4">✓ 2 usuários</li>
+                        <li data-i18n="plan_1_feature_5">✓ Suporte por email</li>
+                    </ul>
+                    <button class="btn btn-outline btn-block" data-i18n="plan_1_cta">Começar Grátis</button>
+                </div>
+
+                <div class="pricing-card popular">
+                    <div class="popular-badge" data-i18n="plan_popular_badge">Mais Popular</div>
+                    <div class="pricing-header">
+                        <h3 class="plan-name" data-i18n="plan_2_name">Professional</h3>
+                        <p class="plan-description" data-i18n="plan_2_description">Ideal para hotéis em crescimento</p>
+                        <div class="price-container">
+                            <span class="price monthly-price">R$ 397</span>
+                            <span class="price yearly-price hidden">R$ 318</span>
+                            <span class="price-period" data-i18n="price_period">/mês</span>
+                        </div>
+                    </div>
+                    <ul class="features-list">
+                        <li data-i18n="plan_2_feature_1">✓ Até 500 leads/mês</li>
+                        <li data-i18n="plan_2_feature_2">✓ CRM completo</li>
+                        <li data-i18n="plan_2_feature_3">✓ Analytics avançados</li>
+                        <li data-i18n="plan_2_feature_4">✓ 10 usuários</li>
+                        <li data-i18n="plan_2_feature_5">✓ Automação completa</li>
+                        <li data-i18n="plan_2_feature_6">✓ Suporte prioritário</li>
+                    </ul>
+                    <button class="btn btn-primary btn-block" data-i18n="plan_2_cta">Começar Teste</button>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3 class="plan-name" data-i18n="plan_3_name">Enterprise</h3>
+                        <p class="plan-description" data-i18n="plan_3_description">Para redes e hotéis grandes</p>
+                        <div class="price-container">
+                            <span class="price monthly-price">R$ 797</span>
+                            <span class="price yearly-price hidden">R$ 638</span>
+                            <span class="price-period" data-i18n="price_period">/mês</span>
+                        </div>
+                    </div>
+                    <ul class="features-list">
+                        <li data-i18n="plan_3_feature_1">✓ Leads ilimitados</li>
+                        <li data-i18n="plan_3_feature_2">✓ Multi-propriedades</li>
+                        <li data-i18n="plan_3_feature_3">✓ BI & Analytics</li>
+                        <li data-i18n="plan_3_feature_4">✓ Usuários ilimitados</li>
+                        <li data-i18n="plan_3_feature_5">✓ White-label</li>
+                        <li data-i18n="plan_3_feature_6">✓ Suporte dedicado</li>
+                    </ul>
+                    <button class="btn btn-outline btn-block" data-i18n="plan_3_cta">Falar com Vendas</button>
+                </div>
+            </div>
+
+            <div class="pricing-guarantee">
+                <div class="guarantee-content">
+                    <div class="guarantee-icon">🛡️</div>
+                    <div class="guarantee-text">
+                        <h4 data-i18n="guarantee_title">Garantia de 30 dias</h4>
+                        <p data-i18n="guarantee_text">Não satisfeito? Devolvemos 100% do seu dinheiro, sem perguntas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div id="faq"></div>
+        <div class="container">
+            <div class="section-header">
+                <!-- <span class="section-badge" data-i18n="faq_badge">Dúvidas Frequentes</span> -->
+                <h2 class="section-title" data-i18n="faq_title">Tudo que você precisa saber sobre o SellaStay</h2>
+            </div>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <h3 data-i18n="faq_1_question">Como o SellaStay aumenta a conversão de leads?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faq_1_answer">O SellaStay utiliza automação inteligente, scoring de leads e follow-ups automáticos para garantir que nenhum lead seja perdido. Nosso sistema identifica os leads mais promissores e orienta sua equipe sobre as melhores ações para convertê-los em reservas.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <h3 data-i18n="faq_2_question">É difícil implementar o SellaStay no meu hotel?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faq_2_answer">Não! O SellaStay foi projetado para ser intuitivo e fácil de usar. Oferecemos onboarding completo, treinamento da equipe e suporte 24/7. A maioria dos hotéis está operando em menos de 48 horas.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <h3 data-i18n="faq_3_question">O SellaStay integra com meu sistema atual?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faq_3_answer">Sim! Integramos com os principais PMS (Property Management Systems), sistemas de reserva, Google Sheets, WhatsApp Business e mais de 50 ferramentas populares na hotelaria.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <h3 data-i18n="faq_4_question">Posso cancelar minha assinatura a qualquer momento?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faq_4_answer">Claro! Não há contratos de permanência. Você pode cancelar sua assinatura a qualquer momento através do painel administrativo ou entrando em contato conosco.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <h3 data-i18n="faq_5_question">Meus dados ficam seguros no SellaStay?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faq_5_answer">Absoluta segurança! Utilizamos criptografia SSL 256-bit, backups automáticos diários, servidores na AWS com certificação SOC 2 e estamos em conformidade com a LGPD brasileira.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <h3 data-i18n="faq_6_question">Existe período de teste gratuito?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faq_6_answer">Sim! Oferecemos 14 dias de teste gratuito com acesso completo a todos os recursos. Não é necessário cartão de crédito para começar.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title" data-i18n="cta_title">Pronto para transformar seus leads em receita?</h2>
+                <p class="cta-description" data-i18n="cta_description">
+                    Junte-se a mais de 500 hotéis que já aumentaram suas conversões com o SellaStay
+                </p>
+                <div class="cta-buttons">
+                    <button class="btn btn-primary btn-lg" onclick="openDemo()">
+                        <span data-i18n="cta_primary">Começar Teste Gratuito</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <button class="btn btn-secondary btn-lg" onclick="scheduleDemo()">
+                        <span data-i18n="cta_secondary">Agendar Demonstração</span>
+                    </button>
+                </div>
+                <div class="cta-guarantee">
+                    <span class="guarantee-text" data-i18n="cta_guarantee_1">✓ Teste gratuito de 14 dias</span>
+                    <span class="guarantee-text" data-i18n="cta_guarantee_2">✓ Sem cartão de crédito</span>
+                    <span class="guarantee-text" data-i18n="cta_guarantee_3">✓ Suporte em português</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="img/logoheader_.png" alt="SellaStay" class="logo">
+                    </div>
+                    <p class="footer-description" data-i18n="footer_description">
+                        O CRM que transforma leads em reservas.<br>
+                        Feito especialmente para a hotelaria brasileira.
+                    </p>
+                    <div class="social-links">
+                        <!-- LinkedIn -->
+                        <a href="#" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                        
+                        <!-- Instagram -->
+                        <a href="#" class="social-link" aria-label="Instagram" target="_blank" rel="noopener">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </a>
+                        
+                        <!-- YouTube -->
+                        <a href="#" class="social-link" aria-label="YouTube" target="_blank" rel="noopener">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title" data-i18n="footer_product_title">Produto</h4>
+                    <ul class="footer-links">
+                        <li><a href="#features" data-i18n="footer_features">Recursos</a></li>
+                        <li><a href="#pricing" data-i18n="footer_pricing">Preços</a></li>
+                        <li><a href="#" data-i18n="footer_integrations">Integrações</a></li>
+                        <li><a href="#" data-i18n="footer_security">Segurança</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title" data-i18n="footer_company_title">Empresa</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" data-i18n="footer_about">Sobre nós</a></li>
+                        <li><a href="#" data-i18n="footer_blog">Blog</a></li>
+                        <li><a href="#" data-i18n="footer_careers">Carreiras</a></li>
+                        <li><a href="#" data-i18n="footer_partners">Parceiros</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title" data-i18n="footer_support_title">Suporte</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" data-i18n="footer_help">Central de Ajuda</a></li>
+                        <li><a href="#" data-i18n="footer_contact">Contato</a></li>
+                        <li><a href="#" data-i18n="footer_status">Status</a></li>
+                        <li><a href="#" data-i18n="footer_docs">Documentação</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p data-i18n="footer_copyright">&copy; 2025 SellaStay. Todos os direitos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/sellastay-landing.js"></script>
+
+</body>
+</html>
