@@ -157,7 +157,7 @@ class SellaStayLanding {
         cta_guarantee_3: "✓ Suporte em português",
         
         // Footer
-        footer_description: "O CRM que transforma leads em reservas.<br>Feito especialmente para a hotelaria brasileira.",
+        footer_description: "O CRM que transforma leads em reservas.",
         footer_product_title: "Produto",
         footer_features: "Recursos",
         footer_pricing: "Preços",
@@ -308,7 +308,7 @@ class SellaStayLanding {
         cta_guarantee_3: "✓ English support",
         
         // Footer
-        footer_description: "The CRM that transforms leads into bookings.<br>Made specifically for the hospitality industry.",
+        footer_description: "The CRM that transforms leads into bookings.",
         footer_product_title: "Product",
         footer_features: "Features",
         footer_pricing: "Pricing",
@@ -459,7 +459,7 @@ class SellaStayLanding {
         cta_guarantee_3: "✓ Soporte en español",
         
         // Footer
-        footer_description: "El CRM que transforma leads en reservas.<br>Hecho especialmente para la industria hotelera.",
+        footer_description: "El CRM que transforma leads en reservas.",
         footer_product_title: "Producto",
         footer_features: "Características",
         footer_pricing: "Precios",
