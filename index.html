@@ -503,12 +503,6 @@
                 "Integração com PMS": "Integração com PMS",
                 "Integração com e-mail": "Integração com e-mail",
                 "Integração com WhatsApp": "Integração com WhatsApp",
-                "Até R$300/mês": "Até R$300/mês",
-                "R$300–R$500/mês": "R$300–R$500/mês",
-                "R$500–R$700/mês": "R$500–R$700/mês",
-                "R$700–R$900/mês": "R$700–R$900/mês",
-                "Acima de R$900/mês": "Acima de R$900/mês",
-                "Depende do retorno": "Depende do retorno"
             },
             en: {
                 "Nome do hotel": "Hotel name",
@@ -615,12 +609,6 @@
                 "Integração com PMS": "PMS integration",
                 "Integração com e-mail": "Email integration",
                 "Integração com WhatsApp": "WhatsApp integration",
-                "Até R$300/mês": "Up to $100/month",
-                "R$300–R$500/mês": "$100–$200/month",
-                "R$500–R$700/mês": "$200–$300/month",
-                "R$700–R$900/mês": "$300–$500/month",
-                "Acima de R$900/mês": "Above $500/month",
-                "Depende do retorno": "Depends on return"
             },
             es: {
                 "Nome do hotel": "Nombre del hotel",
@@ -727,12 +715,6 @@
                 "Integração com PMS": "Integración con PMS",
                 "Integração com e-mail": "Integración con email",
                 "Integração com WhatsApp": "Integración con WhatsApp",
-                "Até R$300/mês": "Hasta €100/mes",
-                "R$300–R$500/mês": "€100–€200/mes",
-                "R$500–R$700/mês": "€200–€300/mes",
-                "R$700–R$900/mês": "€300–€500/mes",
-                "Acima de R$900/mês": "Más de €500/mes",
-                "Depende do retorno": "Depende del retorno"
             }
         };
 
@@ -823,7 +805,7 @@
         { key: "mapeamento_eventos", type: "select", label: "Seria interessante também que esse sistema fizesse um mapeamento de eventos ao longo do ano que possam impactar a ocupação do seu hotel?", options:["Sim","Não"], required:true },
         { key: "principal_beneficio", type: "select", label: "Qual seria o principal benefício que você espera de uma ferramenta assim?", options:["Agilidade","Organização","Comunicação centralizada","Relatórios automáticos","Integração com sistemas","Redução de erros"], required:true },
         { key: "func_essenciais", type: "multiselect", label: "Quais funcionalidades você considera essenciais? (selecione até 4)", options:["Kanban de negociações","Cálculo automático de cotação","Histórico de tratativas (FUP)","Painel de indicadores","Cadastro de agências e contatos","Integração com PMS","Integração com e-mail","Integração com WhatsApp","Outro"], maxChoices: 4, required:true },
-        { key: "preco_disposto", type: "select", label: "Caso a ferramenta fosse por assinatura, quanto o hotel estaria disposto a investir?", options:["Até R$300/mês","R$300–R$500/mês","R$500–R$700/mês","R$700–R$900/mês","Acima de R$900/mês","Depende do retorno"], required:true },
+        { key: "preco_disposto", type: "text", label: "Caso a ferramenta fosse por assinatura, quanto o hotel estaria disposto a investir?", placeholder: "Ex.: R$700/mês", required:true },
         { key: "participar_piloto", type: "select", label: "Gostaria de participar como hotel piloto (fase de testes)?", options:["Sim","Não"], required:true },
         { key: "responsavel_nome", type: "text", label: "Nome do responsável pelo setor de grupos/Eventos", placeholder:"Nome completo", required:false },
         { key: "responsavel_email", type: "email", label: "E-mail do responsável", placeholder:"email@hotel.com", required:false },
@@ -1058,5 +1040,6 @@
     </script>
 </body>
 </html>
+
 
 
