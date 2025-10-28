@@ -1,0 +1,21 @@
+{
+  "name": "SellaStay Survey",
+  "short_name": "Survey",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#3e0163",
+  "theme_color": "#3e0163",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "img/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "img/png"
+    }
+  ]
+
+}

@@ -1,0 +1,2428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SellaStay | Pesquisa-Prospecção</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="fav.png">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Json manifest for mobile icon App -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3e0163">
+
+    <!-- Chart.js para Dashboard -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3e0163;
+            --secondary: #7202b7;
+            --accent: #ff914d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --bg: #f6f8fb;
+            --card: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7b8794;
+            --border: #e0e6ed;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+            HEADER PRINCIPAL COM NAVEGAÇÃO
+            ═══════════════════════════════════════════════════════════════════ */
+
+        .main-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-map-leads {
+            background: transparent;
+            color: white;
+            border: 2px solid var(--accent);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-map-leads:hover {
+            background: var(--accent);
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Tabs de Navegação */
+        .nav-tabs {
+            display: flex;
+            gap: 5px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-tab {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-tab.active {
+            color: white;
+            border-bottom-color: var(--accent);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+            PAINEL EXPANSÍVEL DE MAPEAMENTO DE LEADS
+            ═══════════════════════════════════════════════════════════════════ */
+
+        .lead-mapper-panel {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .lead-mapper-panel.expanded {
+            max-height: 800px;
+            padding: 25px 30px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-close-panel {
+            background: transparent;
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+
+        .btn-close-panel:hover {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        .search-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(62, 1, 99, 0.1);
+        }
+
+        .btn-search {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-search:hover {
+            background: var(--secondary);
+            box-shadow: 0 4px 12px rgba(62, 1, 99, 0.3);
+        }
+
+        .btn-search:disabled {
+            background: var(--border);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .search-status {
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .search-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .search-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .search-status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+
+        /* Tabela de Resultados */
+        .results-container {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .results-table thead {
+            background: var(--primary);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .results-table th {
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .results-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .results-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .btn-add-single {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-add-single:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        .btn-add-single:disabled {
+            background: var(--border);
+            cursor: not-allowed;
+        }
+
+        .btn-add-all {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-add-all:hover {
+            background: #ff7a2d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 145, 77, 0.3);
+        }
+
+        .btn-add-all:disabled {
+            background: var(--border);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+            CONTEÚDO PRINCIPAL - VIEWS
+            ═══════════════════════════════════════════════════════════════════ */
+
+        .main-content {
+            padding: 0;
+            height: calc(100vh - 140px);
+            overflow: hidden;
+        }
+
+        .view {
+            display: none;
+            height: 100%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* VIEW: MAPA */
+        #mapView {
+            position: relative;
+            height: 100%;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-sidebar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 320px;
+            height: 100%;
+            background: var(--card);
+            box-shadow: var(--shadow);
+            overflow-y: auto;
+            z-index: 500;
+            transition: transform 0.3s ease;
+        }
+
+        .map-sidebar.collapsed {
+            transform: translateX(-320px);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 2px solid var(--border);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+            margin-left: 30px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-left: 30px;
+        }
+
+        .filters {
+            padding: 20px;
+        }
+
+        .filter-group {
+            margin-bottom: 18px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .filter-input, .filter-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .filter-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(62, 1, 99, 0.1);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .btn-filter {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-filter.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-filter.primary:hover {
+            background: var(--secondary);
+        }
+
+        .btn-filter.secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .btn-filter.secondary:hover {
+            background: #d0d6dd;
+        }
+
+        .toggle-sidebar {
+            position: absolute;
+            left: 320px;
+            top: 89px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            z-index: 501;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .toggle-sidebar:hover {
+            background: var(--secondary);
+        }
+
+        .map-sidebar.collapsed ~ .toggle-sidebar {
+            left: 0;
+        }
+
+        /* Marcadores Customizados */
+        .custom-marker {
+            color: var(--primary);
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s;
+        }
+
+        .marker-economico { background: #28a745; }
+        .marker-midscale { background: #17a2b8; }
+        .marker-luxo { background: #6f42c1; }
+        .marker-resort { background: #fd7e14; }
+        .marker-rede { background: #e83e8c; }
+
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            padding: 0;
+            width: 250px;
+            height: auto;
+        }
+        .leaflet-popup-close-button {
+            color: rgba(255, 255, 255, 0.383)!important;
+            margin-top: 14px;
+            transition: .4s ease;
+        }
+        .leaflet-popup-close-button:hover {
+            color: #ff914d !important;
+            font-weight: 900 !important;
+        }
+       
+        .leaflet-popup-content {
+            width: 100% !important;
+        }
+        /* .leaflet-popup-tip {
+            margin-top: -15px !important;
+            z-index: 99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999 !important;
+        } */
+
+        .popup-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+            width: 100% !important;
+            margin-left: -20px;
+            
+        }
+
+        .popup-hotel-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .popup-location {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .popup-body {
+            padding: 10px;
+        }
+
+        .popup-info-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .popup-category {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            margin-bottom: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* VIEW: TABELAS (Hotels e Survey) */
+        .table-view {
+            padding: 30px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .table-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-export {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: #218838;
+        }
+
+        .btn-refresh {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-refresh:hover {
+            background: #138496;
+        }
+
+        .data-table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead {
+            background: var(--primary);
+            color: white;
+        }
+
+        .data-table th {
+            padding: 15px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+        .badge-info { background: #d1ecf1; color: #0c5460; }
+        .badge-danger { background: #f8d7da; color: #721c24; }
+
+        /* VIEW: DASHBOARD */
+        #dashboardView {
+            padding: 30px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .dashboard-subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card-icon {
+            font-size: 24px;
+            opacity: 0.7;
+        }
+
+        .stat-card-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-card-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .chart-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 15px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-tabs {
+                overflow-x: auto;
+            }
+
+            .map-sidebar {
+                width: 100%;
+            }
+
+            .toggle-sidebar {
+                display: none;
+            }
+
+            .table-view {
+                padding: 15px;
+            }
+
+            .data-table {
+                font-size: 12px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .results-table input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .hotel-row-selected {
+            background-color: #e8f4ff !important;
+        }
+    </style>
+
+</head>
+<body>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Carregando...</div>
+    </div>
+
+    <!-- HEADER PRINCIPAL -->
+    <header class="main-header">
+        <div class="header-top">
+            <div class="logo-section">
+                <div class="logo">
+                    <img style="width: 150px;" src="img/logoheader_.png"></img>
+                </div>
+                <div>
+                    <div class="logo-subtitle">Pesquisa | Prospecção</div>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button style="border: 2px solid white; font-size: 22px; padding: 4px 10px;" class="btn-map-leads" onclick="location.reload()">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+                <button style="border: 2px solid white; font-size: 22px; padding: 4px 10px;" class="btn-map-leads">
+                    <a href="https://docs.google.com/spreadsheets/d/1gIvIC0IyuibAsHP09bs874oUIFIr6z8ZMK9nMSWw_hM/edit?gid=1470453367#gid=1470453367" target="_blank" style="text-decoration: none; color: white;"><i class="bi bi-filetype-xls"></i></a>
+                </button>
+                <button class="btn-map-leads" onclick="toggleLeadMapper()">
+                    <i class="fas fa-map-marked-alt"></i>
+                    Mapear Leads Locais
+                </button>
+                <div class="header-stats">
+                    <div class="stat-box">
+                        <div class="stat-number" id="totalHotels">0</div>
+                        <div class="stat-label">Hotéis</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="totalSurveys">0</div>
+                        <div class="stat-label">Respostas</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs de Navegação -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchView('map')" data-view="map">
+                <i class="fas fa-map"></i> Mapa
+            </button>
+            <button class="nav-tab" onclick="switchView('hotels')" data-view="hotels">
+                <i class="fas fa-list"></i> Lista Hotels
+            </button>
+            <button class="nav-tab" onclick="switchView('survey')" data-view="survey">
+                <i class="fas fa-poll"></i> Respostas Survey
+            </button>
+            <button class="nav-tab" onclick="switchView('dashboard')" data-view="dashboard">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </button>
+        </div>
+    </header>
+
+    <!-- PAINEL EXPANSÍVEL DE MAPEAMENTO DE LEADS -->
+    <div class="lead-mapper-panel" id="leadMapperPanel">
+        <div class="panel-header">
+            <div class="panel-title">
+                <i class="fas fa-search-location"></i>
+                Buscar Hotéis no Google Maps
+            </div>
+            <button class="btn-close-panel" onclick="toggleLeadMapper()">
+                <i class="fas fa-times"></i> Fechar
+            </button>
+        </div>
+
+        <div class="search-section">
+            <input 
+                type="text" 
+                class="search-input" 
+                id="gmapsSearchInput" 
+                placeholder="Ex: Hotel em Copacabana, Rio de Janeiro"
+                onkeypress="if(event.key==='Enter') iniciarScraping()"
+            >
+            <button class="btn-search" id="btnGmapsSearch" onclick="iniciarScraping()">
+                <i class="fas fa-search"></i> Buscar
+            </button>
+        </div>
+
+        <div class="search-status" id="gmapsSearchStatus"></div>
+
+        <div id="gmapsResultsContainer" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <div style="display:flex; gap:15px; align-items:center;">
+                    <div style="font-size:16px; font-weight:600; color:var(--primary);">
+                        <i class="fas fa-list-check"></i> 
+                        Resultados: <span id="gmapsResultsCount">0</span>
+                    </div>
+                    <div style="font-size:14px; color:#666;">
+                        Selecionados: <span id="selectedCount">0</span>
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <!-- <button class="btn-secondary" onclick="toggleSelectAll()" id="btnSelectAll">
+                        <i class="fas fa-check-square"></i> Selecionar Todos
+                    </button> -->
+                    <button class="btn-add-all" id="btnAddSelected" onclick="adicionarSelecionados()" disabled>
+                        <i class="fas fa-plus-circle"></i> Adicionar Selecionados
+                    </button>
+                </div>
+            </div>
+            <div class="results-container">
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th style="width:40px;">
+                                <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
+                            </th>
+                            <th>Nome</th>
+                            <th>Endereço</th>
+                            <th>Telefone</th>
+                            <th>Site</th>
+                            <th>Classificação</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gmapsResults">
+                        <!-- Resultados serão inseridos aqui -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-content">
+
+        <!-- VIEW: MAPA -->
+        <div id="mapView" class="view active">
+            <div class="map-sidebar" id="mapSidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-title">
+                        <i class="fas fa-filter"></i> Filtros
+                    </div>
+                    <div class="sidebar-subtitle">Refine sua busca</div>
+                </div>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-search"></i> Buscar Hotel
+                        </label>
+                        <input type="text" class="filter-input" id="filterSearch" placeholder="Nome do hotel...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-globe-americas"></i> Continente
+                        </label>
+                        <select class="filter-select" id="filterContinent">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-flag"></i> País
+                        </label>
+                        <select class="filter-select" id="filterCountry">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-map-marker-alt"></i> Estado/UF
+                        </label>
+                        <select class="filter-select" id="filterState">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-city"></i> Cidade
+                        </label>
+                        <select class="filter-select" id="filterCity">
+                            <option value="">Todas</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-star"></i> Categoria
+                        </label>
+                        <select class="filter-select" id="filterCategory">
+                            <option value="">Todas</option>
+                            <option value="Econômico">Econômico</option>
+                            <option value="Midscale">Midscale</option>
+                            <option value="Luxo">Luxo</option>
+                            <option value="Resort">Resort</option>
+                            <option value="Rede hoteleira">Rede hoteleira</option>
+                        </select>
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="btn-filter primary" onclick="applyMapFilters()">
+                            <i class="fas fa-check"></i> Aplicar
+                        </button>
+                        <button class="btn-filter secondary" onclick="clearMapFilters()">
+                            <i class="fas fa-times"></i> Limpar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="toggle-sidebar" onclick="toggleMapSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div id="map"></div>
+        </div>
+
+        <!-- VIEW: LISTA DE HOTELS -->
+        <div id="hotelsView" class="view table-view">
+            <div class="table-header">
+                <h2 class="table-title">
+                    <i class="fas fa-building"></i> Lista de Hotéis
+                </h2>
+                <div class="table-actions">
+                    <button class="btn-action btn-refresh" onclick="location.reload()">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+
+                    <button class="btn-action btn-export" onclick="exportHotelsCSV()">
+                        <i class="fas fa-file-csv"></i> Exportar CSV
+                    </button>
+                </div>
+            </div>
+            <div class="data-table-container">
+                <table class="data-table" id="hotelsTable">
+                    <thead>
+                        <tr>
+                            <th>Nome do Hotel</th>
+                            <th>Endereço</th>
+                            <th>Telefone</th>
+                            <th>Site</th>
+                            <th>Classificação</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hotelsTableBody">
+                        <!-- Dados serão inseridos aqui -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: RESPOSTAS DO SURVEY -->
+        <div id="surveyView" class="view table-view">
+            <div class="table-header">
+                <h2 class="table-title">
+                    <i class="fas fa-clipboard-list"></i> Respostas do Survey
+                </h2>
+                <div class="table-actions">
+                    <button class="btn-action btn-refresh" onclick="loadSurveyTable()">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                    <button class="btn-action btn-export" onclick="exportSurveyCSV()">
+                        <i class="fas fa-file-csv"></i> Exportar CSV
+                    </button>
+                </div>
+            </div>
+            <div class="data-table-container">
+                <table class="data-table" id="surveyTable">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Hotel</th>
+                            <th>Cidade/Estado</th>
+                            <th>Categoria</th>
+                            <th>Trabalha c/ Grupos</th>
+                            <th>Interesse em Testar</th>
+                            <th>Piloto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="surveyTableBody">
+                        <!-- Dados serão inseridos aqui -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: DASHBOARD -->
+        <div id="dashboardView" class="view">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">
+                    <i class="fas fa-chart-pie"></i> Dashboard de Análise
+                </h2>
+                <p class="dashboard-subtitle">
+                    Análise completa das respostas do survey
+                </p>
+            </div>
+
+            <!-- Cards de Estatísticas -->
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-title">Total de Respostas</div>
+                        <div class="stat-card-icon" style="color:var(--primary)">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-value" id="dashTotalResponses">0</div>
+                    <div class="stat-card-label">Pesquisas respondidas</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-title">Interesse em Testar</div>
+                        <div class="stat-card-icon" style="color:var(--success)">
+                            <i class="fas fa-thumbs-up"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-value" id="dashInterestRate">0%</div>
+                    <div class="stat-card-label">"Sim, claro!" + "Provavelmente sim"</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-title">Hotéis Piloto</div>
+                        <div class="stat-card-icon" style="color:var(--accent)">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-value" id="dashPilotCount">0</div>
+                    <div class="stat-card-label">Interessados em participar</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-title">Redes Hoteleiras</div>
+                        <div class="stat-card-icon" style="color:var(--info)">
+                            <i class="fas fa-building"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-value" id="dashRedeCount">0</div>
+                    <div class="stat-card-label">Respondentes</div>
+                </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="chart-card">
+                <h3 class="chart-title">Distribuição por Categoria de Hotel</h3>
+                <div class="chart-container">
+                    <canvas id="chartCategoria"></canvas>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:25px; margin-bottom:25px;">
+                <div class="chart-card">
+                    <h3 class="chart-title">Número de Quartos</h3>
+                    <div class="chart-container">
+                        <canvas id="chartQuartos"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Frequência de Solicitações</h3>
+                    <div class="chart-container">
+                        <canvas id="chartFrequencia"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title">Maiores Desafios na Negociação de Grupos</h3>
+                <div class="chart-container">
+                    <canvas id="chartDesafios"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title">Sistemas Utilizados</h3>
+                <div class="chart-container">
+                    <canvas id="chartSistemas"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title">Recursos Desejados</h3>
+                <div class="chart-container">
+                    <canvas id="chartRecursos"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // CONFIGURAÇÕES GLOBAIS
+        // ═══════════════════════════════════════════════════════════════════════════════
+        
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxgHxbekUL2KcoP_HghbRsKETz_k7OjTIF0WmIc9Dj9KY5OuKDeD9DvndNLz4OlvDQ1sQ/exec';
+        const BACKEND_URL = 'http://localhost:3000';
+
+        // Estado Global
+        let map;
+        let markersCluster;
+        let allHotels = [];
+        let filteredHotels = [];
+        let allSurveys = [];
+        let currentLeadsData = [];
+        
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // INICIALIZAÇÃO
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeApp();
+        });
+
+        async function initializeApp() {
+            showLoading('Carregando...');
+            try {
+                await Promise.all([
+                    loadHotelsData(),
+                    loadSurveyData()
+                ]);
+                initMap();
+                updateStats();
+                hideLoading();
+            } catch (error) {
+                console.error('Erro na inicialização:', error);
+                hideLoading();
+                showStatus('Erro ao carregar dados', 'error');
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // NAVEGAÇÃO E UI
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        function switchView(viewName) {
+            // Atualizar tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-view="${viewName}"]`).classList.add('active');
+
+            // Atualizar views
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.remove('active');
+            });
+
+            const viewMap = {
+                'map': 'mapView',
+                'hotels': 'hotelsView',
+                'survey': 'surveyView',
+                'dashboard': 'dashboardView'
+            };
+
+            const targetView = document.getElementById(viewMap[viewName]);
+            targetView.classList.add('active');
+
+            // Carregar dados específicos
+            if (viewName === 'hotels') {
+                loadHotelsTable();
+            } else if (viewName === 'survey') {
+                loadSurveyTable();
+            } else if (viewName === 'dashboard') {
+                loadDashboard();
+            } else if (viewName === 'map') {
+                setTimeout(() => map.invalidateSize(), 100);
+            }
+        }
+
+        function toggleLeadMapper() {
+            const panel = document.getElementById('leadMapperPanel');
+            if (!panel) return;
+            
+            // TOGGLE da classe 'expanded' (como você tem no CSS)
+            panel.classList.toggle('expanded');
+        }
+
+
+        function toggleMapSidebar() {
+            document.getElementById('mapSidebar').classList.toggle('collapsed');
+        }
+
+        function showLoading(text = 'Carregando...') {
+            const overlay = document.getElementById('loadingOverlay');
+            const loadingText = overlay.querySelector('.loading-text');
+            loadingText.textContent = text;
+            overlay.classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('searchStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = 'search-status ' + type;
+        }
+
+        function updateStats() {
+            document.getElementById('totalHotels').textContent = allHotels.length;
+            document.getElementById('totalSurveys').textContent = allSurveys.length;
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // API - GOOGLE SHEETS
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        async function loadHotelsData() {
+            try {
+                const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?action=hotels`);
+                const data = await response.json();
+                allHotels = data.hotels || [];
+                filteredHotels = [...allHotels];
+                populateMapFilters();
+                return data;
+            } catch (error) {
+                console.error('Erro ao carregar hotéis:', error);
+                throw error;
+            }
+        }
+
+        async function loadSurveyData() {
+            try {
+                const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?action=survey`);
+                const data = await response.json();
+                allSurveys = data.surveys || [];
+                return data;
+            } catch (error) {
+                console.error('Erro ao carregar surveys:', error);
+                throw error;
+            }
+        }
+
+        async function addHotelToSheets(hotelData) {
+            try {
+                const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?action=addHotel`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(hotelData)
+                });
+                return await response.json();
+            } catch (error) {
+                console.error('Erro ao adicionar hotel:', error);
+                throw error;
+            }
+        }
+
+        async function addMultipleHotelsToSheets(hotelsArray) {
+            try {
+                const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?action=addMultipleHotels`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(hotelsArray)
+                });
+                return await response.json();
+            } catch (error) {
+                console.error('Erro ao adicionar múltiplos hotéis:', error);
+                throw error;
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // MAPEAMENTO DE LEADS (NGROK BACKEND)
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        async function startSearch() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            
+            if (!searchTerm) {
+                showStatus('Digite um termo de busca', 'error');
+                return;
+            }
+
+            const btnSearch = document.getElementById('btnSearch');
+            btnSearch.disabled = true;
+            btnSearch.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+            
+            showStatus('Buscando estabelecimentos...', 'info');
+
+            try {
+                const response = await fetch(`${NGROK_BACKEND_URL}/api/scrape`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ searchTerm: searchTerm })
+                });
+
+                const data = await response.json();
+                currentLeadsData = data.results || [];
+                
+                displaySearchResults(currentLeadsData);
+                showStatus(`${currentLeadsData.length} estabelecimentos encontrados!`, 'success');
+                
+            } catch (error) {
+                console.error('Erro na busca:', error);
+                showStatus('Erro ao buscar. Verifique se o backend está rodando.', 'error');
+            } finally {
+                btnSearch.disabled = false;
+                btnSearch.innerHTML = '<i class="fas fa-search"></i> Buscar';
+            }
+        }
+
+        function displaySearchResults(results) {
+            const tbody = document.getElementById('searchResults');
+            const container = document.getElementById('searchResultsContainer');
+            const btnAddAll = document.getElementById('btnAddAll');
+            
+            tbody.innerHTML = '';
+            
+            if (results.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            document.getElementById('resultsCount').textContent = results.length;
+            btnAddAll.disabled = false;
+
+            results.forEach((lead, index) => {
+                const row = `
+                    <tr>
+                        <td><strong>${lead.name || 'N/A'}</strong></td>
+                        <td>${lead.address || 'N/A'}</td>
+                        <td>${lead.phone || 'N/A'}</td>
+                        <td>${lead.rating ? '⭐ ' + lead.rating : 'N/A'}</td>
+                        <td>
+                            <button class="btn-add-single" onclick="addSingleLead(${index})">
+                                <i class="fas fa-plus"></i> +Add
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        async function addSingleLead(index) {
+            const lead = currentLeadsData[index];
+            const hotelData = parseLeadToHotel(lead);
+            
+            showLoading('Adicionando hotel...');
+            
+            try {
+                const result = await addHotelToSheets(hotelData);
+                hideLoading();
+                
+                if (result.success) {
+                    showStatus(`Hotel "${lead.name}" adicionado com sucesso!`, 'success');
+                    await loadHotelsData();
+                    addMarkers(filteredHotels);
+                    updateStats();
+                    
+                    // Desabilitar botão
+                    event.target.disabled = true;
+                    event.target.innerHTML = '<i class="fas fa-check"></i> Adicionado';
+                }
+            } catch (error) {
+                hideLoading();
+                showStatus('Erro ao adicionar hotel', 'error');
+            }
+        }
+
+        async function addAllLeads() {
+            if (currentLeadsData.length === 0) return;
+            
+            const confirmation = confirm(`Deseja adicionar TODOS os ${currentLeadsData.length} estabelecimentos à sua lista?`);
+            if (!confirmation) return;
+
+            showLoading(`Adicionando ${currentLeadsData.length} hotéis...`);
+            
+            const hotelsArray = currentLeadsData.map(lead => parseLeadToHotel(lead));
+            
+            try {
+                const result = await addMultipleHotelsToSheets(hotelsArray);
+                hideLoading();
+                
+                if (result.success) {
+                    showStatus(`${result.results.total} hotéis processados! ${result.results.duplicates} possíveis duplicatas.`, 'success');
+                    await loadHotelsData();
+                    addMarkers(filteredHotels);
+                    updateStats();
+                    
+                    // Limpar resultados
+                    currentLeadsData = [];
+                    displaySearchResults([]);
+                    document.getElementById('searchInput').value = '';
+                }
+            } catch (error) {
+                hideLoading();
+                showStatus('Erro ao adicionar hotéis em lote', 'error');
+            }
+        }
+
+        function parseLeadToHotel(lead) {
+            // Extrair cidade, UF, país do endereço
+            const addressParts = (lead.address || '').split(',').map(s => s.trim());
+            let cidade = '';
+            let uf = '';
+            let pais = 'Brasil'; // Padrão
+            
+            if (addressParts.length >= 2) {
+                cidade = addressParts[addressParts.length - 2];
+                const lastPart = addressParts[addressParts.length - 1];
+                
+                // Tentar extrair UF (2 letras) e país
+                const match = lastPart.match(/([A-Z]{2})\s*-?\s*(\w+)?/);
+                if (match) {
+                    uf = match[1];
+                    pais = match[2] || pais;
+                }
+            }
+
+            return {
+                continente: 'América do Sul', // Pode melhorar baseado no país
+                pais: pais,
+                uf: uf,
+                cidade: cidade,
+                nome: lead.name || '',
+                latitude: lead.latitude || '',
+                longitude: lead.longitude || '',
+                descricao: `Rating: ${lead.rating || 'N/A'} | Avaliações: ${lead.reviews || 'N/A'}`,
+                categoria: 'Midscale', // Padrão
+                responsavel_nome: '',
+                responsavel_email: '',
+                responsavel_telefone: lead.phone || '',
+                endereco: lead.address || ''
+            };
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // MAPA INTERATIVO
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        function initMap() {
+            map = L.map('map').setView([-15.7801, -47.9292], 4);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap',
+                maxZoom: 18
+            }).addTo(map);
+
+            markersCluster = L.markerClusterGroup({
+                maxClusterRadius: 50,
+                spiderfyOnMaxZoom: true
+            });
+
+            map.addLayer(markersCluster);
+            addMarkers(filteredHotels);
+        }
+
+        function addMarkers(hotels) {
+            markersCluster.clearLayers();
+            
+            hotels.forEach(hotel => {
+                if (hotel.latitude && hotel.longitude) {
+                    const lat = parseFloat(hotel.latitude);
+                    const lng = parseFloat(hotel.longitude);
+                    
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                        const icon = L.divIcon({
+                            className: 'custom-marker',
+                            html: '<div><i class="fas fa-hotel"></i></div>',
+                            iconSize: [36, 36],
+                            iconAnchor: [18, 18],
+                            popupAnchor: [0, -18]
+                        });
+                        
+                        const marker = L.marker([lat, lng], { icon: icon });
+                        
+                        const popupContent = `
+                            <div class="popup-header">
+                                <div class="popup-hotel-name">${hotel.nome || 'Hotel'}</div>
+                                <div class="popup-location">${hotel.endereco || ''}</div>
+                            </div>
+                            <div class="popup-body">
+                                ${hotel.telefone ? `<div><i class="fas fa-phone"></i> ${hotel.telefone}</div>` : ''}
+                                ${hotel.site ? `<div><a href="${hotel.site}" target="_blank">🔗 Site</a></div>` : ''}
+                                ${hotel.classificacao ? `<div>⭐ ${hotel.classificacao}</div>` : ''}
+                            </div>
+                        `;
+                        
+                        marker.bindPopup(popupContent, { maxWidth: 300 });
+                        markersCluster.addLayer(marker);
+                    }
+                }
+            });
+        }
+
+        function createPopupContent(hotel) {
+            return `
+                <div class="popup-header" id="popupheader">
+                    <div class="popup-hotel-name">${hotel['Nome do Hotel'] || 'Hotel'}</div>
+                    <div class="popup-location">
+                        <i class="fas fa-map-marker-alt"></i> 
+                        ${hotel.Cidade || ''}, ${hotel.UF || ''} - ${hotel.País || ''}
+                    </div>
+                </div>
+                <div class="popup-body">
+                    ${hotel.Categoria ? `<span class="popup-category">${hotel.Categoria}</span>` : ''}
+                    ${hotel['Nome do Responsável'] ? `<div class="popup-info-row"><i class="fas fa-user"></i><span>${hotel['Nome do Responsável']}</span></div>` : ''}
+                    ${hotel['E-mail do Responsável'] ? `<div class="popup-info-row"><i class="fas fa-envelope"></i><span>${hotel['E-mail do Responsável']}</span></div>` : ''}
+                    ${hotel['Telefone do Responsável'] ? `<div class="popup-info-row"><i class="fas fa-phone"></i><span>${hotel['Telefone do Responsável']}</span></div>` : ''}
+                </div>
+            `;
+        }
+
+        function getCategoryClass(category) {
+            const map = {
+                'Econômico': 'marker-economico',
+                'Midscale': 'marker-midscale',
+                'Luxo': 'marker-luxo',
+                'Resort': 'marker-resort',
+                'Rede hoteleira': 'marker-rede'
+            };
+            return map[category] || '';
+        }
+
+        function populateMapFilters() {
+            const continents = [...new Set(allHotels.map(h => h.Continente).filter(Boolean))].sort();
+            populateSelect('filterContinent', continents);
+            const countries = [...new Set(allHotels.map(h => h.País).filter(Boolean))].sort();
+            populateSelect('filterCountry', countries);
+            const states = [...new Set(allHotels.map(h => h.UF).filter(Boolean))].sort();
+            populateSelect('filterState', states);
+            const cities = [...new Set(allHotels.map(h => h.Cidade).filter(Boolean))].sort();
+            populateSelect('filterCity', cities);
+        }
+
+        function populateSelect(selectId, options) {
+            const select = document.getElementById(selectId);
+            const firstOption = select.options[0];
+            select.innerHTML = '';
+            select.appendChild(firstOption);
+            options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                select.appendChild(option);
+            });
+        }
+
+        function applyMapFilters() {
+            const searchText = document.getElementById('filterSearch').value.toLowerCase();
+            const continent = document.getElementById('filterContinent').value;
+            const country = document.getElementById('filterCountry').value;
+            const state = document.getElementById('filterState').value;
+            const city = document.getElementById('filterCity').value;
+            const category = document.getElementById('filterCategory').value;
+
+            filteredHotels = allHotels.filter(hotel => {
+                const matchSearch = !searchText || hotel['Nome do Hotel']?.toLowerCase().includes(searchText);
+                const matchContinent = !continent || hotel.Continente === continent;
+                const matchCountry = !country || hotel.País === country;
+                const matchState = !state || hotel.UF === state;
+                const matchCity = !city || hotel.Cidade === city;
+                const matchCategory = !category || hotel.Categoria === category;
+                return matchSearch && matchContinent && matchCountry && matchState && matchCity && matchCategory;
+            });
+
+            addMarkers(filteredHotels);
+            if (filteredHotels.length > 0) {
+                const bounds = L.latLngBounds(filteredHotels.map(h => [h.Latitude, h.Longitude]));
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+
+        function clearMapFilters() {
+            document.getElementById('filterSearch').value = '';
+            document.getElementById('filterContinent').value = '';
+            document.getElementById('filterCountry').value = '';
+            document.getElementById('filterState').value = '';
+            document.getElementById('filterCity').value = '';
+            document.getElementById('filterCategory').value = '';
+            applyMapFilters();
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // TABELAS
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        function loadHotelsTable() {
+            const tbody = document.getElementById('hotelsTableBody');
+            tbody.innerHTML = '';
+            
+            allHotels.forEach(hotel => {
+                const row = `
+                    <tr>
+                        <td><strong>${hotel.nome || 'N/A'}</strong></td>
+                        <td>${hotel.endereco || '-'}</td>
+                        <td>${hotel.telefone || '-'}</td>
+                        <td>${hotel.site ? `<a href="${hotel.site}" target="_blank">🔗 Site</a>` : '-'}</td>
+                        <td>${hotel.classificacao || '-'}</td>
+                        <td>${hotel.latitude || '-'}</td>
+                        <td>${hotel.longitude || '-'}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function loadSurveyTable() {
+            const tbody = document.getElementById('surveyTableBody');
+            tbody.innerHTML = '';
+
+            allSurveys.forEach(survey => {
+                const row = `
+                    <tr>
+                        <td>${new Date(survey.submitted_at).toLocaleDateString('pt-BR')}</td>
+                        <td><strong>${survey.nome_hotel || 'N/A'}</strong></td>
+                        <td>${survey.cidade_estado || 'N/A'}</td>
+                        <td><span class="badge badge-info">${survey.categoria || 'N/A'}</span></td>
+                        <td><span class="badge ${survey.trabalha_grupos === 'Sim' ? 'badge-success' : 'badge-warning'}">${survey.trabalha_grupos || 'N/A'}</span></td>
+                        <td><span class="badge ${survey.interesse_teste?.includes('Sim') ? 'badge-success' : 'badge-warning'}">${survey.interesse_teste || 'N/A'}</span></td>
+                        <td><span class="badge ${survey.participar_piloto === 'Sim' ? 'badge-success' : 'badge-danger'}">${survey.participar_piloto || 'N/A'}</span></td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function exportHotelsCSV() {
+            const csv = convertToCSV(allHotels);
+            downloadCSV(csv, 'sellastay_hotels.csv');
+        }
+
+        function exportSurveyCSV() {
+            const csv = convertToCSV(allSurveys);
+            downloadCSV(csv, 'sellastay_survey.csv');
+        }
+
+        function convertToCSV(data) {
+            if (data.length === 0) return '';
+            const headers = Object.keys(data[0]);
+            const rows = data.map(obj => headers.map(key => JSON.stringify(obj[key] || '')).join(','));
+            return [headers.join(','), ...rows].join('\n');
+        }
+
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // DASHBOARD
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        function loadDashboard() {
+            updateDashboardStats();
+            createCategoryChart();
+            createQuartosChart();
+            createFrequenciaChart();
+            createDesafiosChart();
+            createSistemasChart();
+            createRecursosChart();
+        }
+
+        function updateDashboardStats() {
+            document.getElementById('dashTotalResponses').textContent = allSurveys.length;
+            
+            const interested = allSurveys.filter(s => s.interesse_teste?.includes('Sim')).length;
+            const rate = allSurveys.length > 0 ? Math.round((interested / allSurveys.length) * 100) : 0;
+            document.getElementById('dashInterestRate').textContent = rate + '%';
+            
+            const pilots = allSurveys.filter(s => s.participar_piloto === 'Sim').length;
+            document.getElementById('dashPilotCount').textContent = pilots;
+            
+            const redes = allSurveys.filter(s => s.categoria === 'Rede hoteleira').length;
+            document.getElementById('dashRedeCount').textContent = redes;
+        }
+
+        function createCategoryChart() {
+            const ctx = document.getElementById('chartCategoria');
+            const counts = {};
+            allSurveys.forEach(s => {
+                counts[s.categoria] = (counts[s.categoria] || 0) + 1;
+            });
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(counts),
+                    datasets: [{
+                        data: Object.values(counts),
+                        backgroundColor: ['#28a745', '#17a2b8', '#6f42c1', '#fd7e14', '#e83e8c']
+                    }]
+                }
+            });
+        }
+
+        function createQuartosChart() {
+            const ctx = document.getElementById('chartQuartos');
+            const counts = {};
+            allSurveys.forEach(s => {
+                counts[s.num_quartos] = (counts[s.num_quartos] || 0) + 1;
+            });
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(counts),
+                    datasets: [{
+                        label: 'Quantidade',
+                        data: Object.values(counts),
+                        backgroundColor: '#3e0163'
+                    }]
+                }
+            });
+        }
+
+        function createFrequenciaChart() {
+            const ctx = document.getElementById('chartFrequencia');
+            const counts = {};
+            allSurveys.forEach(s => {
+                counts[s.frequencia_solicitacoes] = (counts[s.frequencia_solicitacoes] || 0) + 1;
+            });
+
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(counts),
+                    datasets: [{
+                        data: Object.values(counts),
+                        backgroundColor: ['#28a745', '#17a2b8', '#ffc107', '#fd7e14', '#dc3545']
+                    }]
+                }
+            });
+        }
+
+        function createDesafiosChart() {
+            const ctx = document.getElementById('chartDesafios');
+            const counts = {};
+            allSurveys.forEach(s => {
+                const desafios = (s.maiores_desafios || '').split('|').map(d => d.trim());
+                desafios.forEach(d => {
+                    if (d) counts[d] = (counts[d] || 0) + 1;
+                });
+            });
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(counts),
+                    datasets: [{
+                        label: 'Menções',
+                        data: Object.values(counts),
+                        backgroundColor: '#ff914d'
+                    }]
+                },
+                options: { indexAxis: 'y' }
+            });
+        }
+
+        function createSistemasChart() {
+            const ctx = document.getElementById('chartSistemas');
+            const counts = {};
+            allSurveys.forEach(s => {
+                const sistemas = (s.sistema_registro || '').split('|').map(d => d.trim());
+                sistemas.forEach(d => {
+                    if (d) counts[d] = (counts[d] || 0) + 1;
+                });
+            });
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(counts),
+                    datasets: [{
+                        label: 'Uso',
+                        data: Object.values(counts),
+                        backgroundColor: '#7202b7'
+                    }]
+                }
+            });
+        }
+
+        function createRecursosChart() {
+            const ctx = document.getElementById('chartRecursos');
+            const counts = {};
+            allSurveys.forEach(s => {
+                const recursos = (s.que_gostaria || '').split('|').map(d => d.trim());
+                recursos.forEach(d => {
+                    if (d) counts[d] = (counts[d] || 0) + 1;
+                });
+            });
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(counts),
+                    datasets: [{
+                        label: 'Interesse',
+                        data: Object.values(counts),
+                        backgroundColor: '#17a2b8'
+                    }]
+                },
+                options: { indexAxis: 'y' }
+            });
+        }
+    </script>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // GOOGLE MAPS SCRAPING COM CHECKBOXES
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        // Armazenar hotéis extraídos globalmente
+        let scrapedHotels = [];
+        let selectedHotels = new Set();
+
+        async function iniciarScraping() {
+            const searchInput = document.getElementById('gmapsSearchInput');
+            const searchQuery = searchInput.value.trim();
+            
+            if (!searchQuery) {
+                showStatus('Por favor, digite uma pesquisa', 'error');
+                return;
+            }
+            
+            const resultsDiv = document.getElementById('gmapsResultsContainer');
+            const searchBtn = document.getElementById('btnGmapsSearch');
+            
+            // Limpar seleções anteriores
+            selectedHotels.clear();
+            
+            // Mostrar loading
+            showStatus('⏳ Buscando hotéis no Google Maps... Isso pode levar alguns minutos.', 'info');
+            resultsDiv.style.display = 'none';
+            searchBtn.disabled = true;
+            searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/scrape-hotels`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ searchQuery })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    scrapedHotels = data.hotels;
+                    exibirResultadosGmaps(data.hotels);
+                    showStatus(`✅ ${data.total} hotéis encontrados com sucesso!`, 'success');
+                } else {
+                    showStatus('❌ Erro ao buscar hotéis: ' + data.error, 'error');
+                }
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                showStatus('❌ Erro ao conectar com o servidor. Certifique-se de que o backend está rodando em ' + BACKEND_URL, 'error');
+            } finally {
+                searchBtn.disabled = false;
+                searchBtn.innerHTML = '<i class="fas fa-search"></i> Buscar no Google Maps';
+            }
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('gmapsSearchStatus');
+            statusDiv.className = 'search-status ' + type;
+            statusDiv.textContent = message;
+            statusDiv.style.display = 'block';
+        }
+
+        function exibirResultadosGmaps(hotels) {
+            const resultsContainer = document.getElementById('gmapsResultsContainer');
+            const resultsBody = document.getElementById('gmapsResults');
+            const resultsCount = document.getElementById('gmapsResultsCount');
+            
+            if (hotels.length === 0) {
+                showStatus('Nenhum hotel encontrado.', 'error');
+                resultsContainer.style.display = 'none';
+                return;
+            }
+            
+            resultsCount.textContent = hotels.length;
+            updateSelectedCount();
+            
+            let tableHTML = '';
+            hotels.forEach((hotel, index) => {
+                tableHTML += `
+                    <tr id="hotel-row-${index}">
+                        <td style="text-align: center;">
+                            <input 
+                                type="checkbox" 
+                                class="hotel-checkbox" 
+                                data-index="${index}"
+                                onchange="toggleHotelSelection(${index})"
+                            >
+                        </td>
+                        <td style="max-width: 180px; overflow: hidden; text-overflow: ellipsis;">
+                            ${hotel.nome || '-'}
+                        </td>
+                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                            ${hotel.endereco || '-'}
+                        </td>
+                        <td>${hotel.telefone || '-'}</td>
+                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;">
+                            ${hotel.site ? `<a href="${hotel.site}" target="_blank" style="color: #3e0163;">🔗 Site</a>` : '-'}
+                        </td>
+                        <td>
+                            ${hotel.classificacao ? `⭐ ${hotel.classificacao}` : '-'}
+                        </td>
+                        <td style="font-size: 11px;">
+                            ${hotel.latitude || '-'}
+                        </td>
+                        <td style="font-size: 11px;">
+                            ${hotel.longitude || '-'}
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            resultsBody.innerHTML = tableHTML;
+            resultsContainer.style.display = 'block';
+            
+            document.getElementById('selectAllCheckbox').checked = false;
+        }
+        
+        function toggleHotelSelection(index) {
+            const checkbox = document.querySelector(`.hotel-checkbox[data-index="${index}"]`);
+            const row = document.getElementById(`hotel-row-${index}`);
+            
+            if (checkbox.checked) {
+                selectedHotels.add(index);
+                row.classList.add('hotel-row-selected');
+            } else {
+                selectedHotels.delete(index);
+                row.classList.remove('hotel-row-selected');
+            }
+            
+            updateSelectedCount();
+            updateSelectAllCheckbox();
+        }
+
+        function toggleSelectAll() {
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            const allCheckboxes = document.querySelectorAll('.hotel-checkbox');
+            
+            selectedHotels.clear();
+            
+            allCheckboxes.forEach((checkbox, index) => {
+                checkbox.checked = selectAllCheckbox.checked;
+                const row = document.getElementById(`hotel-row-${index}`);
+                
+                if (selectAllCheckbox.checked) {
+                    selectedHotels.add(index);
+                    row.classList.add('hotel-row-selected');
+                } else {
+                    row.classList.remove('hotel-row-selected');
+                }
+            });
+            
+            updateSelectedCount();
+        }
+
+        function updateSelectAllCheckbox() {
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            const allCheckboxes = document.querySelectorAll('.hotel-checkbox');
+            const checkedCount = document.querySelectorAll('.hotel-checkbox:checked').length;
+            
+            selectAllCheckbox.checked = checkedCount === allCheckboxes.length && allCheckboxes.length > 0;
+        }
+
+        function updateSelectedCount() {
+            const selectedCount = document.getElementById('selectedCount');
+            const btnAddSelected = document.getElementById('btnAddSelected');
+            
+            selectedCount.textContent = selectedHotels.size;
+            btnAddSelected.disabled = selectedHotels.size === 0;
+        }
+
+        async function adicionarSelecionados() {
+            if (selectedHotels.size === 0) {
+                alert('Selecione pelo menos um hotel');
+                return;
+            }
+            
+            const hotelsToAdd = Array.from(selectedHotels).map(i => scrapedHotels[i]);
+            
+            const btn = document.getElementById('btnAddSelected');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adicionando...';
+            
+            try {
+                // USANDO NO-CORS para evitar erro
+                const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?action=addMultipleHotels`, {
+                    method: 'POST',
+                    mode: 'no-cors', // <- CRÍTICO: Esta linha resolve o CORS
+                    body: JSON.stringify(hotelsToAdd)
+                });
+                
+                // Com no-cors não temos resposta, então assumimos sucesso
+                alert(`✅ ${hotelsToAdd.length} hotéis enviados!`);
+                
+                // Desabilitar linhas adicionadas
+                selectedHotels.forEach(index => {
+                    const checkbox = document.querySelector(`.hotel-checkbox[data-index="${index}"]`);
+                    const row = document.getElementById(`hotel-row-${index}`);
+                    if (checkbox) {
+                        checkbox.checked = false;
+                        checkbox.disabled = true;
+                    }
+                    if (row) {
+                        row.style.opacity = '0.5';
+                        row.style.backgroundColor = '#d4edda';
+                    }
+                });
+                
+                selectedHotels.clear();
+                document.getElementById('selectedCount').textContent = '0';
+                
+                // Recarregar após 3 segundos
+                setTimeout(() => loadAllData(), 3000);
+                
+            } catch (error) {
+                alert('Erro ao adicionar hotéis. Verifique a URL do Google Apps Script.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-plus-circle"></i> Adicionar Selecionados';
+            }
+        }
+
+        // Funções auxiliares para processar dados
+        function extrairUF(endereco) {
+            if (!endereco) return '';
+            
+            const ufs = [
+                'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 
+                'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 
+                'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+            ];
+            
+            for (let uf of ufs) {
+                if (endereco.includes(` ${uf} `) || endereco.includes(`- ${uf}`) || endereco.includes(`, ${uf}`)) {
+                    return uf;
+                }
+            }
+            return '';
+        }
+
+        function extrairCidade(endereco) {
+            if (!endereco) return '';
+            const partes = endereco.split(/[-,]/);
+            return partes[0] ? partes[0].trim() : '';
+        }
+
+        function determinarCategoria(classificacao) {
+            if (!classificacao) return '';
+            const rating = parseFloat(classificacao.replace(',', '.'));
+            if (isNaN(rating)) return '';
+            if (rating >= 4.5) return 'Luxo';
+            if (rating >= 3.5) return 'Midscale';
+            return 'Econômico';
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // SCRAPING - APENAS ESTAS FUNÇÕES NOVAS
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        function toggleLeadMapper() {
+            const panel = document.getElementById('leadMapperPanel');
+            panel.classList.toggle('expanded');
+        }
+
+        async function iniciarScraping() {
+            const searchInput = document.getElementById('gmapsSearchInput');
+            const searchQuery = searchInput.value.trim();
+            
+            if (!searchQuery) {
+                alert('Digite uma pesquisa');
+                return;
+            }
+            
+            const searchBtn = document.getElementById('btnGmapsSearch');
+            searchBtn.disabled = true;
+            searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/scrape-hotels`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ searchQuery })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    scrapedHotels = data.hotels;
+                    exibirResultadosGmaps(data.hotels);
+                }
+            } catch (error) {
+                alert('Erro: ' + error.message);
+            } finally {
+                searchBtn.disabled = false;
+                searchBtn.innerHTML = '<i class="fas fa-search"></i> Buscar';
+            }
+        }
+
+        function exibirResultadosGmaps(hotels) {
+            const resultsBody = document.getElementById('gmapsResults');
+            const resultsCount = document.getElementById('gmapsResultsCount');
+            const resultsContainer = document.getElementById('gmapsResultsContainer');
+            
+            resultsCount.textContent = hotels.length;
+            
+            let html = '';
+            hotels.forEach((hotel, i) => {
+                html += `<tr id="hotel-row-${i}">
+                    <td><input type="checkbox" class="hotel-checkbox" data-index="${i}" onchange="toggleHotelSelection(${i})"></td>
+                    <td>${hotel.nome || '-'}</td>
+                    <td>${hotel.endereco || '-'}</td>
+                    <td>${hotel.telefone || '-'}</td>
+                    <td>${hotel.site ? `<a href="${hotel.site}" target="_blank">🔗</a>` : '-'}</td>
+                    <td>${hotel.classificacao || '-'}</td>
+                    <td>${hotel.latitude || '-'}</td>
+                    <td>${hotel.longitude || '-'}</td>
+                </tr>`;
+            });
+            
+            resultsBody.innerHTML = html;
+            resultsContainer.style.display = 'block';
+        }
+
+        function toggleHotelSelection(index) {
+            const checkbox = document.querySelector(`.hotel-checkbox[data-index="${index}"]`);
+            const row = document.getElementById(`hotel-row-${index}`);
+            
+            if (checkbox.checked) {
+                selectedHotels.add(index);
+                row.style.backgroundColor = '#e8f4ff';
+            } else {
+                selectedHotels.delete(index);
+                row.style.backgroundColor = '';
+            }
+            
+            document.getElementById('selectedCount').textContent = selectedHotels.size;
+            document.getElementById('btnAddSelected').disabled = selectedHotels.size === 0;
+        }
+
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAllCheckbox');
+            const checkboxes = document.querySelectorAll('.hotel-checkbox');
+            
+            selectedHotels.clear();
+            checkboxes.forEach((cb, i) => {
+                cb.checked = selectAll.checked;
+                const index = parseInt(cb.getAttribute('data-index'));
+                if (selectAll.checked) selectedHotels.add(index);
+                
+                const row = document.getElementById(`hotel-row-${index}`);
+                row.style.backgroundColor = selectAll.checked ? '#e8f4ff' : '';
+            });
+            
+            document.getElementById('selectedCount').textContent = selectedHotels.size;
+            document.getElementById('btnAddSelected').disabled = selectedHotels.size === 0;
+        }
+    </script>
+
+</body>
+
+</html>
