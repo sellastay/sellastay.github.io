@@ -3022,7 +3022,7 @@
             searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
             
             try {
-                const response = await fetch(`${BACKEND_URL}/api/sellastay-scraper`, {
+                const response = await fetch(`${BACKEND_URL}/api/scrape-hotels`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ searchQuery })
@@ -3300,4 +3300,5 @@
     </script>
 </body>
 </html>
+
 
