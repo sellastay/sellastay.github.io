@@ -6,7 +6,7 @@
     <title>SellaStay | Pesquisa-Prospecção</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="fav.png">
+    <link rel="icon" type="image/x-icon" href="img/lg.png">
 
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -102,7 +102,7 @@
 
         .header-actions {
             display: flex;
-            gap: 15px;
+            gap: 5px;
             align-items: center;
         }
 
@@ -112,6 +112,9 @@
             border: 2px solid var(--accent);
             padding: 10px 20px;
             border-radius: 8px;
+            text-align: center;
+            justify-content: center;
+            
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
@@ -123,6 +126,10 @@
 
         .btn-map-leads:hover {
             background: var(--accent);
+        }
+
+        .gpt {
+            padding: 9px 12px !important;
         }
 
         .header-stats {
@@ -138,6 +145,7 @@
             font-size: 24px;
             font-weight: 700;
             line-height: 1;
+            margin-left: 25px;
         }
 
         .stat-label {
@@ -145,6 +153,7 @@
             opacity: 0.8;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            margin-left: 25px;
         }
 
         /* Tabs de Navegação */
@@ -251,6 +260,49 @@
             box-shadow: 0 0 0 3px rgba(62, 1, 99, 0.1);
         }
 
+        #btn-branco {
+            border: 2px solid white; 
+            font-size: 22px; 
+            padding: 4px 10px;
+            transition: .4s ease;
+        }
+        #btn-branco:hover {
+            background: white; 
+            color: #3e0163 !important;
+            font-weight: 800; 
+            padding: 4px 10px;
+        }
+        #btn-branco-gpt {
+            border: 2px solid white; 
+            font-size: 22px; 
+            padding: 4px 10px;
+            transition: .4s ease;
+        }
+        #btn-branco-gpt:hover {
+            background: white; 
+            color: #3e0163 !important;
+            font-weight: 800; 
+            padding: 4px 10px;
+        }
+        #buttonxls {
+            background: transparent;
+            border: none;
+        }
+        #btn-brancoz {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 22px; 
+            padding: 5px 10px;
+            transition: .4s ease;
+        }
+        #btn-brancoz:hover {
+            background: white; 
+            color: #3e0163;
+        }
+            
         .btn-search {
             background: var(--primary);
             color: white;
@@ -599,10 +651,6 @@
         .leaflet-popup-content {
             width: 100% !important;
         }
-        /* .leaflet-popup-tip {
-            margin-top: -15px !important;
-            z-index: 99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999 !important;
-        } */
 
         .popup-header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
@@ -903,11 +951,17 @@
             .header-top {
                 flex-direction: column;
                 gap: 5px;
-                margin-left: -20px;
+            }
+            .header-actions {
+                zoom: 90%;
+            }
+            .logo-section {
+                margin-left: -30px;
             }
 
             .nav-tabs {
                 overflow-x: auto;
+                margin-left: -5px;
             }
 
             .map-sidebar {
@@ -981,6 +1035,15 @@
             #selectz {
                 font-size: 14px !important;
             }
+
+            .stat-number {
+                margin-left: 5px;
+                font-size: 20px;
+            }
+
+            .stat-label {
+                margin-left: 5px;
+            }
         }
 
         .btn-secondary {
@@ -1009,6 +1072,426 @@
         .hotel-row-selected {
             background-color: #e8f4ff !important;
         }
+
+        /* ═══════════════════════════════════════════════════════════════════
+        TOAST NOTIFICATIONS
+        ═══════════════════════════════════════════════════════════════════ */
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .toast {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast::before {
+            content: '✓';
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .toast-error::before {
+            content: '✕';
+        }
+
+
+        #hotelsTableBody td {
+            text-decoration: none;
+        }
+
+        /* ::::: ChatGPT :::::: */
+        #openModalBtn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Estilo do modal */
+        #iframeModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Fundo semitransparente */
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Estilo do conteúdo do modal */
+        #modalContent {
+            background-color: white;
+            padding: 20px;
+            width: 80%;
+            height: 80%;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        /* Botão de fechar */
+        #closeModalBtn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            font-size: 18px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Estilo do iframe */
+        #iframeModal iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+        MODAL BLOCO DE NOTAS | EDITOR RICO - FORMATAÇÃO DE TEXTO
+        ═══════════════════════════════════════════════════════════════════ */
+        /* ═══════════════════════════════════════════════════════════════════
+        MODAL BLOCO DE NOTAS
+        ═══════════════════════════════════════════════════════════════════ */
+
+        .modalx {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modalx-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease;
+        }
+
+        .modalx-header {
+            padding: 25px 30px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .modalx-header h2 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modalx-body {
+            padding: 25px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .notes-toolbar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .notes-toolbar button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-notes-save {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-notes-save:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-notes-clear {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-notes-clear:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-notes-copy {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-notes-copy:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(62, 1, 99, 0.3);
+        }
+
+        .last-saved {
+            margin-left: auto;
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        #notesTextarea {
+            flex: 1;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            resize: none;
+            outline: none;
+            transition: border-color 0.3s ease;
+            min-height: 400px;
+        }
+
+        #notesTextarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(62, 1, 99, 0.1);
+        }
+
+        .notes-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #999;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .modalx-content {
+                width: 95%;
+                max-height: 90vh;
+            }
+            
+            .modalx-header,
+            .modalx-body {
+                padding: 20px;
+            }
+            
+            .notes-toolbar button {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+        }
+
+        .formatting-toolbar {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .format-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid #d0d0d0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .format-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .format-btn:active,
+        .format-btn.active {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            height: 28px;
+            background: #d0d0d0;
+            margin: 0 5px;
+        }
+
+        .rich-text-editor {
+            flex: 1;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            line-height: 1.8;
+            min-height: 350px;
+            max-height: 500px;
+            overflow-y: auto;
+            outline: none;
+            transition: border-color 0.3s ease;
+            background: white;
+        }
+
+        .rich-text-editor:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(62, 1, 99, 0.1);
+        }
+
+        .rich-text-editor:empty:before {
+            content: attr(data-placeholder);
+            color: #999;
+            font-style: italic;
+            white-space: pre-wrap;
+        }
+
+        /* Estilos do conteúdo editável */
+        .rich-text-editor b,
+        .rich-text-editor strong {
+            font-weight: 700;
+        }
+
+        .rich-text-editor i,
+        .rich-text-editor em {
+            font-style: italic;
+        }
+
+        .rich-text-editor u {
+            text-decoration: underline;
+        }
+
+        .rich-text-editor s,
+        .rich-text-editor strike {
+            text-decoration: line-through;
+        }
+
+        .rich-text-editor ul,
+        .rich-text-editor ol {
+            margin: 10px 0;
+            padding-left: 30px;
+        }
+
+        .rich-text-editor li {
+            margin: 5px 0;
+        }
+
+        .rich-text-editor p {
+            margin: 8px 0;
+        }
     </style>
 
 </head>
@@ -1033,11 +1516,19 @@
             </div>
 
             <div class="header-actions">
-                <button style="border: 2px solid white; font-size: 22px; padding: 4px 10px;" class="btn-map-leads" onclick="location.reload()">
+                <button id="btn-branco-gpt" class="btn-map-leads gpt">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-google" viewBox="0 0 16 16">
+                        <path d="M15.545 6.558a9.4 9.4 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.7 7.7 0 0 1 5.352 2.082l-2.284 2.284A4.35 4.35 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.8 4.8 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.7 3.7 0 0 0 1.599-2.431H8v-3.08z"/>
+                    </svg>
+                </button>
+                <button id="btn-branco" class="btn-map-leads">
+                    <i class="bi bi-journal-text"></i>
+                </button>
+                <button id="btn-branco" class="btn-map-leads" onclick="location.reload()">
                     <i class="bi bi-arrow-clockwise"></i>
                 </button>
-                <button style="border: 2px solid white; font-size: 22px; padding: 4px 10px;" class="btn-map-leads">
-                    <a href="https://docs.google.com/spreadsheets/d/1gIvIC0IyuibAsHP09bs874oUIFIr6z8ZMK9nMSWw_hM/edit?gid=1470453367#gid=1470453367" target="_blank" style="text-decoration: none; color: white;"><i class="bi bi-filetype-xls"></i></a>
+                <button id="buttonxls">
+                    <a id="btn-brancoz" href="https://docs.google.com/spreadsheets/d/1gIvIC0IyuibAsHP09bs874oUIFIr6z8ZMK9nMSWw_hM/edit?gid=1470453367#gid=1470453367" target="_blank"><i class="bi bi-filetype-xls"></i></a>
                 </button>
                 <button class="btn-map-leads" id="btn-map-leads" onclick="toggleLeadMapper()">
                     <i class="fas fa-map-marked-alt"></i>
@@ -1266,7 +1757,7 @@
                     <i class="fas fa-clipboard-list"></i> Respostas do Survey
                 </h2>
                 <div class="table-actions">
-                    <button class="btn-action btn-refresh" onclick="loadSurveyTable()">
+                    <button class="btn-action btn-refresh"  onclick="location.reload()">
                         <i class="fas fa-sync-alt"></i> Atualizar
                     </button>
                     <button class="btn-action btn-export" onclick="exportSurveyCSV()">
@@ -1398,18 +1889,117 @@
             </div>
         </div>
     </main>
+
+    <!-- Modalz com iframe -->
+    <div id="iframeModal">
+        <div id="modalContent">
+        <button id="closeModalBtn">Fechar</button>
+        <!-- Iframe -->
+        <iframe src="https://example.com" id="iframe"></iframe>
+        </div>
+    </div>
+
+    <!-- MODAL BLOCO DE NOTAS COM EDITOR RICO -->
+    <div id="notesModal" class="modalx" style="display: none;">
+        <div class="modalx-content">
+            <div class="modalx-header">
+                <h2>
+                    <i class="bi bi-journal-text"></i> 
+                    Bloco de Notas
+                </h2>
+                <button id="closeNotesBtn" class="close-btn">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="modalx-body">
+                <!-- Barra de Formatação -->
+                <div class="formatting-toolbar">
+                    <button class="format-btn" data-command="bold" title="Negrito (Ctrl+B)">
+                        <i class="bi bi-type-bold"></i>
+                    </button>
+                    <button class="format-btn" data-command="italic" title="Itálico (Ctrl+I)">
+                        <i class="bi bi-type-italic"></i>
+                    </button>
+                    <button class="format-btn" data-command="underline" title="Sublinhado (Ctrl+U)">
+                        <i class="bi bi-type-underline"></i>
+                    </button>
+                    <button class="format-btn" data-command="strikeThrough" title="Tachado">
+                        <i class="bi bi-type-strikethrough"></i>
+                    </button>
+                    
+                    <div class="toolbar-divider"></div>
+                    
+                    <button class="format-btn" data-command="insertUnorderedList" title="Lista">
+                        <i class="bi bi-list-ul"></i>
+                    </button>
+                    <button class="format-btn" data-command="insertOrderedList" title="Lista Numerada">
+                        <i class="bi bi-list-ol"></i>
+                    </button>
+                    
+                    <div class="toolbar-divider"></div>
+                    
+                    <button class="format-btn" data-command="justifyLeft" title="Alinhar à Esquerda">
+                        <i class="bi bi-text-left"></i>
+                    </button>
+                    <button class="format-btn" data-command="justifyCenter" title="Centralizar">
+                        <i class="bi bi-text-center"></i>
+                    </button>
+                    <button class="format-btn" data-command="justifyRight" title="Alinhar à Direita">
+                        <i class="bi bi-text-right"></i>
+                    </button>
+                    
+                    <div class="toolbar-divider"></div>
+                    
+                    <button class="format-btn" id="clearFormatBtn" title="Limpar Formatação">
+                        <i class="bi bi-eraser"></i>
+                    </button>
+                </div>
+                
+                <!-- Editor Rico -->
+                <div 
+                    id="richTextEditor" 
+                    class="rich-text-editor"
+                    contenteditable="true" 
+                    spellcheck="true"
+                    data-placeholder="Digite suas anotações aqui...&#10;&#10;💡 Use os botões acima para formatar o texto ou atalhos do teclado (Ctrl+B, Ctrl+I, Ctrl+U)"
+                ></div>
+                
+                <!-- Barra de Ações -->
+                <div class="notes-toolbar">
+                    <button id="saveNotesBtn" class="btn-notes-save">
+                        <i class="bi bi-check-circle"></i> Salvar
+                    </button>
+                    <button id="clearNotesBtn" class="btn-notes-clear">
+                        <i class="bi bi-trash"></i> Limpar Tudo
+                    </button>
+                    <button id="copyNotesBtn" class="btn-notes-copy">
+                        <i class="bi bi-clipboard"></i> Copiar
+                    </button>
+                    <span id="lastSaved" class="last-saved"></span>
+                </div>
+                
+                <!-- Footer com Contadores -->
+                <div class="notes-footer">
+                    <span id="charCount">0 caracteres</span>
+                    <span id="wordCount">0 palavras</span>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
+    <!-- Global Settings -->
     <script>
         // ═══════════════════════════════════════════════════════════════════════════════
         // CONFIGURAÇÕES GLOBAIS
         // ═══════════════════════════════════════════════════════════════════════════════
         
         const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxgHxbekUL2KcoP_HghbRsKETz_k7OjTIF0WmIc9Dj9KY5OuKDeD9DvndNLz4OlvDQ1sQ/exec';
-        const BACKEND_URL = 'http://localhost:3000';
+        const BACKEND_URL = 'https://unredressed-billi-ropable.ngrok-free.dev';
+        // const BACKEND_URL = 'http://localhost:3000';
 
         // Estado Global
         let map;
@@ -1490,6 +2080,32 @@
             panel.classList.toggle('expanded');
         }
 
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // UTILITÁRIOS - NOTIFICAÇÕES TOAST
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                background: ${type === 'success' ? '#28a745' : '#dc3545'};
+                color: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
 
         function toggleMapSidebar() {
             document.getElementById('mapSidebar').classList.toggle('collapsed');
@@ -1594,7 +2210,7 @@
             showStatus('Buscando estabelecimentos...', 'info');
 
             try {
-                const response = await fetch(`${NGROK_BACKEND_URL}/api/scrape`, {
+                const response = await fetch(`${BACKEND_URL}/api/scrape`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ searchTerm: searchTerm })
@@ -1903,7 +2519,7 @@
                         <td><strong>${hotel.nome || 'N/A'}</strong></td>
                         <td>${hotel.endereco || '-'}</td>
                         <td>${hotel.telefone || '-'}</td>
-                        <td>${hotel.site ? `<a href="${hotel.site}" target="_blank">🔗 Site</a>` : '-'}</td>
+                        <td style="text-decoration: none;">${hotel.site ? `<a href="${hotel.site}" target="_blank">Site</a>` : '-'}</td>
                         <td>${hotel.classificacao || '-'}</td>
                         <td>${hotel.latitude || '-'}</td>
                         <td>${hotel.longitude || '-'}</td>
@@ -2117,6 +2733,7 @@
         }
     </script>
 
+    <!-- Scraping Settings -->
     <script>
         // ═══════════════════════════════════════════════════════════════════════════════
         // GOOGLE MAPS SCRAPING COM CHECKBOXES
@@ -2290,9 +2907,17 @@
             btnAddSelected.disabled = selectedHotels.size === 0;
         }
 
+        async function loadAllData() {
+            await Promise.all([
+                loadHotelsData(),
+                loadSurveyData()
+            ]);
+            updateStats();
+        }
+
         async function adicionarSelecionados() {
             if (selectedHotels.size === 0) {
-                alert('Selecione pelo menos um hotel');
+                showToast('Selecione pelo menos um hotel');
                 return;
             }
             
@@ -2311,7 +2936,7 @@
                 });
                 
                 // Com no-cors não temos resposta, então assumimos sucesso
-                alert(`✅ ${hotelsToAdd.length} hotéis enviados!`);
+                showToast(`✅ ${hotelsToAdd.length} hotéis enviados!`);
                 
                 // Desabilitar linhas adicionadas
                 selectedHotels.forEach(index => {
@@ -2334,7 +2959,7 @@
                 setTimeout(() => loadAllData(), 3000);
                 
             } catch (error) {
-                alert('Erro ao adicionar hotéis. Verifique a URL do Google Apps Script.');
+                showToast('Erro ao adicionar hotéis. Verifique a URL do Google Apps Script.');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-plus-circle"></i> Adicionar Selecionados';
@@ -2388,7 +3013,7 @@
             const searchQuery = searchInput.value.trim();
             
             if (!searchQuery) {
-                alert('Digite uma pesquisa');
+                showToast('Digite uma pesquisa');
                 return;
             }
             
@@ -2410,7 +3035,7 @@
                     exibirResultadosGmaps(data.hotels);
                 }
             } catch (error) {
-                alert('Erro: ' + error.message);
+                showToast('Erro: ' + error.message);
             } finally {
                 searchBtn.disabled = false;
                 searchBtn.innerHTML = '<i class="fas fa-search"></i> Buscar';
@@ -2475,7 +3100,203 @@
             document.getElementById('selectedCount').textContent = selectedHotels.size;
             document.getElementById('btnAddSelected').disabled = selectedHotels.size === 0;
         }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // UTILITÁRIOS - NOTIFICAÇÕES TOAST (NOTIFICAÇÕES)
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                background: ${type === 'success' ? '#28a745' : '#dc3545'};
+                color: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
     </script>
 
+    <!-- AI Chat Settings -->
+    <script>
+        // Abre o modal
+        document.getElementById("btn-branco-gpt").onclick = function() {
+        document.getElementById("iframeModal").style.display = "flex";
+        }
+
+        // Fecha o modal
+        document.getElementById("closeModalBtn").onclick = function() {
+        document.getElementById("iframeModal").style.display = "none";
+        }
+    
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // BLOCO DE NOTAS COM EDITOR RICO
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        const NOTES_STORAGE_KEY = 'sellastay_notes_rich';
+
+        // Abrir modal
+        document.getElementById('btn-branco').addEventListener('click', function() {
+            openNotesModal();
+        });
+
+        // Fechar modal
+        document.getElementById('closeNotesBtn').addEventListener('click', function() {
+            closeNotesModal();
+        });
+
+        // Fechar ao clicar fora
+        document.getElementById('notesModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeNotesModal();
+            }
+        });
+
+        // Botões de formatação
+        document.querySelectorAll('.format-btn[data-command]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const command = this.getAttribute('data-command');
+                document.execCommand(command, false, null);
+                document.getElementById('richTextEditor').focus();
+            });
+        });
+
+        // Limpar formatação
+        document.getElementById('clearFormatBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.execCommand('removeFormat', false, null);
+            document.getElementById('richTextEditor').focus();
+        });
+
+        // Salvar notas
+        document.getElementById('saveNotesBtn').addEventListener('click', function() {
+            saveNotes();
+        });
+
+        // Limpar notas
+        document.getElementById('clearNotesBtn').addEventListener('click', function() {
+            if (confirm('Tem certeza que deseja limpar todas as anotações?')) {
+                document.getElementById('richTextEditor').innerHTML = '';
+                saveNotes();
+                showToast('Notas limpas com sucesso', 'success');
+            }
+        });
+
+        // Copiar notas
+        document.getElementById('copyNotesBtn').addEventListener('click', function() {
+            const editor = document.getElementById('richTextEditor');
+            const range = document.createRange();
+            range.selectNodeContents(editor);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            document.execCommand('copy');
+            selection.removeAllRanges();
+            showToast('Notas copiadas para área de transferência', 'success');
+        });
+
+        // Auto-save ao digitar
+        let autoSaveTimeout;
+        document.getElementById('richTextEditor').addEventListener('input', function() {
+            updateCharCount();
+            
+            clearTimeout(autoSaveTimeout);
+            autoSaveTimeout = setTimeout(() => {
+                saveNotes(true);
+            }, 1000);
+        });
+
+        // Atalhos de teclado
+        document.getElementById('richTextEditor').addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + S para salvar
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveNotes();
+            }
+            
+            // Ctrl/Cmd + K para limpar formatação
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.execCommand('removeFormat', false, null);
+            }
+        });
+
+        function openNotesModal() {
+            const modal = document.getElementById('notesModal');
+            const editor = document.getElementById('richTextEditor');
+            
+            // Carregar notas do localStorage
+            const savedNotes = localStorage.getItem(NOTES_STORAGE_KEY);
+            if (savedNotes) {
+                editor.innerHTML = savedNotes;
+            }
+            
+            modal.style.display = 'flex';
+            editor.focus();
+            updateCharCount();
+            updateLastSaved();
+        }
+
+        function closeNotesModal() {
+            document.getElementById('notesModal').style.display = 'none';
+        }
+
+        function saveNotes(autoSave = false) {
+            const notes = document.getElementById('richTextEditor').innerHTML;
+            localStorage.setItem(NOTES_STORAGE_KEY, notes);
+            localStorage.setItem(NOTES_STORAGE_KEY + '_timestamp', new Date().toISOString());
+            
+            if (!autoSave) {
+                showToast('Notas salvas com sucesso', 'success');
+            }
+            
+            updateLastSaved();
+        }
+
+        function updateCharCount() {
+            const editor = document.getElementById('richTextEditor');
+            const text = editor.innerText || editor.textContent;
+            const charCount = text.length;
+            const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+            
+            document.getElementById('charCount').textContent = `${charCount} caracteres`;
+            document.getElementById('wordCount').textContent = `${wordCount} palavras`;
+        }
+
+        function updateLastSaved() {
+            const timestamp = localStorage.getItem(NOTES_STORAGE_KEY + '_timestamp');
+            if (timestamp) {
+                const date = new Date(timestamp);
+                const now = new Date();
+                const diff = Math.floor((now - date) / 1000);
+                
+                let timeAgo;
+                if (diff < 60) {
+                    timeAgo = 'agora mesmo';
+                } else if (diff < 3600) {
+                    timeAgo = `há ${Math.floor(diff / 60)} min`;
+                } else if (diff < 86400) {
+                    timeAgo = `há ${Math.floor(diff / 3600)}h`;
+                } else {
+                    timeAgo = date.toLocaleDateString('pt-BR');
+                }
+                
+                document.getElementById('lastSaved').textContent = `Salvo ${timeAgo}`;
+            }
+        }
+    </script>
 </body>
 </html>
