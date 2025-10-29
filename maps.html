@@ -2211,9 +2211,12 @@
 
             try {
                 const response = await fetch(`${BACKEND_URL}/api/scrape`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ searchTerm: searchTerm })
+                  method: 'POST',
+                  headers: { 
+                    'Content-Type': 'application/json',
+                    'x-auth-token': '34khQkEe50jqqYpfrp1QsUPCiMR_463Y318dEmJxKen9QFrZe'
+                  },
+                  body: JSON.stringify({ searchTerm: searchTerm })
                 });
 
                 const data = await response.json();
@@ -3300,5 +3303,6 @@
     </script>
 </body>
 </html>
+
 
 
