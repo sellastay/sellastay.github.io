@@ -688,21 +688,25 @@
         }
 
         .btn-export {
+            background: transparent;
+            border: 2px solid var(--success);
+            color: var(--success);
+        }
+
+        .btn-export:hover {
             background: var(--success);
             color: white;
         }
 
-        .btn-export:hover {
-            background: #218838;
-        }
-
         .btn-refresh {
-            background: var(--info);
-            color: white;
+            background: transparent;
+            border: 2px solid var(--info);
+            color: var(--info);
         }
 
         .btn-refresh:hover {
-            background: #138496;
+            background: var(--info);
+            color: white;
         }
 
         .data-table-container {
@@ -898,7 +902,8 @@
 
             .header-top {
                 flex-direction: column;
-                gap: 15px;
+                gap: 5px;
+                margin-left: -20px;
             }
 
             .nav-tabs {
@@ -910,11 +915,40 @@
             }
 
             .toggle-sidebar {
-                display: none;
+                position: absolute;
+                left: 345px;
+                top: 5px;
+                background: var(--primary);
+                color: white;
+                border: none;
+                padding: 12px;
+                border-radius: 8px;
+                cursor: pointer;
+                z-index: 501;
+                transition: all 0.3s ease;
+                box-shadow: var(--shadow);
             }
 
+            .toggle-sidebar:hover {
+                background: var(--secondary);
+            }
+
+            .map-sidebar.collapsed ~ .toggle-sidebar {
+                left: 75px;
+            }
+            #btn-txt {
+                display: none;
+            }
+    
             .table-view {
                 padding: 15px;
+            }
+            .table-title {
+                font-size: 18px;
+                line-height: 15px;
+            }
+            .dashboard-title {
+                font-size: 25px;
             }
 
             .data-table {
@@ -923,6 +957,29 @@
 
             .dashboard-grid {
                 grid-template-columns: 1fr;
+            }
+            .panel-title {
+                font-size: 14px;
+                margin-left: -12px;
+            }
+            .search-input {
+                margin-left: -15px;
+            }
+            .btn-search {
+                width: 135px auto;
+                margin-left: -5px;
+                text-align: left;
+            }
+            #btn-map-leads {
+                width: 70px;
+                text-align: center;
+            }
+            
+            #resultz {
+                font-size: 14px !important;
+            }
+            #selectz {
+                font-size: 14px !important;
             }
         }
 
@@ -982,9 +1039,9 @@
                 <button style="border: 2px solid white; font-size: 22px; padding: 4px 10px;" class="btn-map-leads">
                     <a href="https://docs.google.com/spreadsheets/d/1gIvIC0IyuibAsHP09bs874oUIFIr6z8ZMK9nMSWw_hM/edit?gid=1470453367#gid=1470453367" target="_blank" style="text-decoration: none; color: white;"><i class="bi bi-filetype-xls"></i></a>
                 </button>
-                <button class="btn-map-leads" onclick="toggleLeadMapper()">
+                <button class="btn-map-leads" id="btn-map-leads" onclick="toggleLeadMapper()">
                     <i class="fas fa-map-marked-alt"></i>
-                    Mapear Leads Locais
+                    <span id="btn-txt">Mapear Hotéis</span> 
                 </button>
                 <div class="header-stats">
                     <div class="stat-box">
@@ -1002,16 +1059,16 @@
         <!-- Tabs de Navegação -->
         <div class="nav-tabs">
             <button class="nav-tab active" onclick="switchView('map')" data-view="map">
-                <i class="fas fa-map"></i> Mapa
+                <i class="fas fa-map"></i> <span id="btn-txt">Mapa</span>
             </button>
             <button class="nav-tab" onclick="switchView('hotels')" data-view="hotels">
-                <i class="fas fa-list"></i> Lista Hotels
+                <i class="fas fa-list"></i> <span id="btn-txt">Lista Hotels</span>
             </button>
             <button class="nav-tab" onclick="switchView('survey')" data-view="survey">
-                <i class="fas fa-poll"></i> Respostas Survey
+                <i class="fas fa-poll"></i> <span id="btn-txt">Respostas Survey</span>
             </button>
             <button class="nav-tab" onclick="switchView('dashboard')" data-view="dashboard">
-                <i class="fas fa-chart-line"></i> Dashboard
+                <i class="fas fa-chart-line"></i> <span id="btn-txt">Dashboard</span>
             </button>
         </div>
     </header>
@@ -1037,7 +1094,7 @@
                 onkeypress="if(event.key==='Enter') iniciarScraping()"
             >
             <button class="btn-search" id="btnGmapsSearch" onclick="iniciarScraping()">
-                <i class="fas fa-search"></i> Buscar
+                <i class="fas fa-search"></i> <span id="btn-txt">Buscar</span>
             </button>
         </div>
 
@@ -1046,20 +1103,17 @@
         <div id="gmapsResultsContainer" style="display:none;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                 <div style="display:flex; gap:15px; align-items:center;">
-                    <div style="font-size:16px; font-weight:600; color:var(--primary);">
+                    <div id="resultz" style="font-size:16px; font-weight:600; color:var(--primary);">
                         <i class="fas fa-list-check"></i> 
                         Resultados: <span id="gmapsResultsCount">0</span>
                     </div>
-                    <div style="font-size:14px; color:#666;">
+                    <div id="selectz" style="font-size:14px; color:#666;">
                         Selecionados: <span id="selectedCount">0</span>
                     </div>
                 </div>
                 <div style="display:flex; gap:10px;">
-                    <!-- <button class="btn-secondary" onclick="toggleSelectAll()" id="btnSelectAll">
-                        <i class="fas fa-check-square"></i> Selecionar Todos
-                    </button> -->
                     <button class="btn-add-all" id="btnAddSelected" onclick="adicionarSelecionados()" disabled>
-                        <i class="fas fa-plus-circle"></i> Adicionar Selecionados
+                        <i class="fas fa-plus-circle"></i> <span id="btn-txt">Adicionar Selecionados</span>
                     </button>
                 </div>
             </div>
@@ -2424,6 +2478,4 @@
     </script>
 
 </body>
-
 </html>
-
