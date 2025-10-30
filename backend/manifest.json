@@ -3,8 +3,8 @@
   "short_name": "Survey",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#3e0163",
-  "theme_color": "#3e0163",
+  "background_color": "#f6f8fb",
+  "theme_color": "#f6f8fb",
   "icons": [
     {
       "src": "icon-192.png",
@@ -19,3 +19,4 @@
   ]
 
 }
+
