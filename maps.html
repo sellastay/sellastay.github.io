@@ -2770,8 +2770,9 @@
             try {
                 const response = await fetch(`${BACKEND_URL}/api/scrape-hotels`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-auth-token': '34khQkEe50jqqYpfrp1QsUPCiMR_463Y318dEmJxKen9QFrZe' // ← NGROK TOKEN
                     },
                     body: JSON.stringify({ searchQuery })
                 });
@@ -3303,6 +3304,7 @@
     </script>
 </body>
 </html>
+
 
 
 
