@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Opportunity: Group Hospitality</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0F172A',   // Slate 900
+                            primary: '#2563EB', // Blue 600
+                            secondary: '#06B6D4', // Cyan 500
+                            accent: '#F97316',  // Orange 500
+                            light: '#F1F5F9',   // Slate 100
+                            surface: '#FFFFFF'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%; 
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; 
+            max-height: 450px;
+        }
+
+        @media (max-width: 640px) {
+            .chart-container { height: 300px; }
+        }
+
+        @media (min-width: 768px) {
+            .chart-container { height: 400px; }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #2563EB; border-radius: 4px; }
+
+        .connector-line {
+            width: 2px; background-color: #CBD5E1; flex-grow: 1; min-height: 20px;
+        }
+        .connector-arrow {
+            width: 0; height: 0; 
+            border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid #CBD5E1;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="bg-brand-light text-slate-800 antialiased overflow-x-hidden">
+
+    <!-- Sticky Nav -->
+    <nav class="sticky top-0 z-50 bg-brand-dark shadow-lg border-b border-brand-primary/30 backdrop-blur-md bg-opacity-95">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <!-- LOGO IMAGEM -->
+                    <img src="img/logoheader_.png" alt="Sella Logo" class="h-8 md:h-10 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <!-- Fallback text if image fails -->
+                    <span class="text-2xl font-bold text-white tracking-tight hidden">
+                        <span class="text-brand-secondary">Group</span>Stay<span class="text-brand-accent">SaaS</span>
+                    </span>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
+                        <a href="#market" class="hover:text-brand-secondary transition-colors" data-i18n="nav_market">Market Size</a>
+                        <a href="#revenue" class="hover:text-brand-secondary transition-colors" data-i18n="nav_revenue">Revenue Impact</a>
+                        <a href="#workflow" class="hover:text-brand-secondary transition-colors" data-i18n="nav_solution">The Solution</a>
+                    </div>
+                    <button onclick="toggleLanguage()" class="px-3 py-1 bg-brand-primary text-white text-xs font-bold rounded hover:bg-blue-700 transition-colors border border-blue-400">
+                        PT / EN
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-gradient-to-r from-brand-dark to-blue-900 text-white pt-20 pb-16 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+                <span data-i18n="hero_title_1">Unlocking the</span> <span class="text-brand-accent" data-i18n="hero_title_highlight">Hidden Pillar</span> <span data-i18n="hero_title_2">of Hotel Revenue</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto font-light" data-i18n="hero_subtitle">
+                Why automating Group Bookings & Events is the next billion-dollar opportunity in hospitality SaaS.
+            </p>
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="bg-white/10 backdrop-blur rounded-lg p-6 border border-white/10">
+                    <div class="text-4xl font-bold text-brand-secondary mb-2">$29.8B</div>
+                    <div class="text-sm font-semibold uppercase tracking-wider text-blue-200" data-i18n="stat_1_label">Global Market by 2032</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-lg p-6 border border-white/10">
+                    <div class="text-4xl font-bold text-brand-accent mb-2">~35-60%</div>
+                    <div class="text-sm font-semibold uppercase tracking-wider text-blue-200" data-i18n="stat_2_label">Rev Share in Key Hotels</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-lg p-6 border border-white/10">
+                    <div class="text-4xl font-bold text-green-400 mb-2">30%</div>
+                    <div class="text-sm font-semibold uppercase tracking-wider text-blue-200" data-i18n="stat_3_label">Hotels Still on Excel</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-24">
+
+        <!-- SECTION 1: GLOBAL MARKET SIZE -->
+        <section id="market" class="scroll-mt-24">
+            <div class="mb-10 text-center md:text-left">
+                <div class="inline-block px-3 py-1 bg-brand-primary/10 text-brand-primary font-bold rounded-full text-sm mb-4" data-i18n="tag_tam">Total Addressable Market</div>
+                <h2 class="text-3xl font-bold text-slate-900" data-i18n="market_title">A Market on the Rise</h2>
+                <p class="mt-4 text-lg text-slate-600 max-w-4xl" data-i18n="market_desc">
+                    The Hospitality Management Software market is exploding. From a $12.1 billion base in 2024, it is projected to more than double by 2032.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-brand-primary">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="chart_1_title">Global Software Market Projection</h3>
+                    <div class="chart-container">
+                        <canvas id="marketGrowthChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="chart_2_title">The Brazilian Opportunity</h3>
+                        <div class="chart-container" style="height: 300px;">
+                            <div id="plotlySunburst"></div>
+                        </div>
+                        <div class="mt-4 text-slate-600 text-sm">
+                            <p data-i18n="sunburst_desc"><strong>Brazil</strong> represents nearly <strong>50%</strong> of the Latin American market, with an estimated annual turnover of <strong>R$ 1.5 Billion+</strong> for software solutions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: DIGITAL GAP -->
+        <section>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-1 flex flex-col justify-center">
+                    <div class="inline-block px-3 py-1 bg-brand-accent/10 text-brand-accent font-bold rounded-full text-sm mb-4 w-max" data-i18n="tag_gap">The Digital Gap</div>
+                    <h2 class="text-3xl font-bold text-slate-900" data-i18n="gap_title">The "Excel" Problem</h2>
+                    <p class="mt-4 text-lg text-slate-600" data-i18n="gap_desc">
+                        Despite the market size, a shocking <strong>30%</strong> of Brazilian hotels (approx. 3,500 properties) still rely on manual spreadsheets.
+                    </p>
+                    <div class="mt-6 p-4 bg-white rounded-lg shadow-sm border-l-4 border-red-500">
+                        <h4 class="font-bold text-red-600" data-i18n="pain_points_title">Pain Points:</h4>
+                        <ul class="list-disc list-inside text-sm text-slate-600 mt-2 space-y-1">
+                            <li data-i18n="pain_1">Frequent Overbooking</li>
+                            <li data-i18n="pain_2">Slow Response Times</li>
+                            <li data-i18n="pain_3">Lost Revenue Data</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-xl font-bold text-slate-800 mb-6 text-center" data-i18n="chart_3_title">Tech Adoption in Brazilian Hotels (Est. 2025)</h3>
+                    <div class="chart-container">
+                        <canvas id="maturityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: REVENUE IMPACT (The 36-60% Argument) -->
+        <section id="revenue" class="scroll-mt-24">
+            <div class="mb-10">
+                <div class="inline-block px-3 py-1 bg-green-100 text-green-700 font-bold rounded-full text-sm mb-4" data-i18n="tag_financial">Financial Core</div>
+                <h2 class="text-3xl font-bold text-slate-900" data-i18n="rev_title">Not Niche. Necessary.</h2>
+                <p class="mt-4 text-lg text-slate-600 max-w-4xl" data-i18n="rev_desc">
+                    For Convention Hotels and Full-Service properties, Groups & Events are not just a "nice to have" — they are the primary revenue driver, accounting for <strong>30% to 60%</strong> of the mix.
+                </p>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-xl font-bold text-slate-800 mb-2" data-i18n="chart_4_title">Revenue Mix: Group vs. Individual</h3>
+                <div class="chart-container">
+                    <canvas id="revenueMixChart"></canvas>
+                </div>
+                <p class="mt-4 text-sm text-slate-500 text-center italic" data-i18n="rev_source_note">
+                    Sources: STR Segmentation Data, JLL Convention Hotel Model, Kalibri Labs.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 4: WORKFLOW -->
+        <section id="workflow" class="scroll-mt-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900" data-i18n="workflow_title">Transforming Chaos into Clarity</h2>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Old Way -->
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 opacity-90">
+                    <h3 class="text-lg font-bold text-red-600 mb-6 flex items-center">
+                        <span class="text-2xl mr-2">❌</span> <span data-i18n="wf_old_title">The "Manual" Status Quo</span>
+                    </h3>
+                    <div class="flex flex-col space-y-2">
+                        <div class="p-4 bg-white shadow rounded border-l-4 border-slate-400">
+                            <span class="font-bold text-slate-700" data-i18n="wf_step_1">1. Inquiry (Email/Phone)</span>
+                        </div>
+                        <div class="h-6 flex justify-center"><div class="connector-line"></div></div>
+                        <div class="w-full flex justify-center"><div class="connector-arrow"></div></div>
+                        <div class="p-4 bg-white shadow rounded border-l-4 border-slate-400 mt-2">
+                            <span class="font-bold text-slate-700" data-i18n="wf_step_2">2. Manual Excel Check</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- New Way -->
+                <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                    <h3 class="text-lg font-bold text-brand-primary mb-6 flex items-center">
+                        <span class="text-2xl mr-2">✅</span> <span data-i18n="wf_new_title">The SaaS Solution</span>
+                    </h3>
+                    <div class="flex flex-col space-y-2">
+                        <div class="p-4 bg-white shadow-md rounded border-l-4 border-brand-primary relative">
+                            <span class="font-bold text-brand-dark" data-i18n="wf_new_step_1">1. Digital Request</span>
+                            <div class="absolute top-4 right-4 text-green-500 font-bold text-xs">INSTANT</div>
+                        </div>
+                        <div class="h-6 flex justify-center"><div class="w-0.5 h-full bg-brand-primary"></div></div>
+                        <div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-brand-primary mx-auto"></div>
+                        <div class="p-4 bg-white shadow-md rounded border-l-4 border-brand-primary mt-2 relative">
+                            <span class="font-bold text-brand-dark" data-i18n="wf_new_step_2">2. Automated Workflow</span>
+                            <div class="absolute top-4 right-4 text-green-500 font-bold text-xs">AUTO</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: AUDITABLE SOURCES (The Core Update) -->
+        <section class="bg-slate-100 p-8 rounded-xl border border-slate-200 mb-12" id="sources">
+            <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span data-i18n="sources_title">Auditable Data Sources (10+ Validated Links)</span>
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 text-sm text-slate-600">
+                
+                <!-- Global / Market Size -->
+                <a href="https://www.fortunebusinessinsights.com/hospitality-management-software-market-105658" target="_blank" class="group block bg-white p-4 rounded shadow-sm hover:shadow-md hover:ring-2 hover:ring-brand-primary transition-all">
+                    <strong class="text-brand-primary group-hover:underline">1. Fortune Business Insights</strong>
+                    <p class="mt-1">Projeção do mercado global de software: $29.8B até 2032.</p>
+                </a>
+
+                <a href="https://str.com/press/us-hotel-results-week-ending-28-september-2024" target="_blank" class="group block bg-white p-4 rounded shadow-sm hover:shadow-md hover:ring-2 hover:ring-brand-primary transition-all">
+                    <strong class="text-brand-primary group-hover:underline">2. STR (Smith Travel Research)</strong>
+                    <p class="mt-1">Dados de segmentação comprovando a demanda de grupos (Group vs Transient).</p>
+                </a>
+
+                <a href="https://www.amexglobalbusinesstravel.com/the-atlas/meetings-forecast/" target="_blank" class="group block bg-white p-4 rounded shadow-sm hover:shadow-md hover:ring-2 hover:ring-brand-primary transition-all">
+                    <strong class="text-brand-primary group-hover:underline">3. American Express GBT</strong>
+                    <p class="mt-1">Forecast 2025: Aumento de orçamentos e foco em ESG.</p>
+                </a>
+
+                <a href="https://www.cbre.com/insights/reports/us-hotels-state-of-the-union" target="_blank" class="group block bg-white p-4 rounded shadow-sm hover:shadow-md hover:ring-2 hover:ring-brand-primary transition-all">
+                    <strong class="text-brand-primary group-hover:underline">4. CBRE Hotel Outlook</strong>
+                    <p class="mt-1">Confirma crescimento da demanda de grupos corporativos em 2025.</p>
+                </a>
+
+                <a href="https://www.kalibrilabs.com/" target="_blank" class="group block bg-white p-4 rounded shadow-sm hover:shadow-md hover:ring-2 hover:ring-brand-primary transition-all">
+                    <strong class="text-brand-primary group-hover:underline">5. Kalibri Labs</strong>
+                    <p class="mt-1">Analisa o mix de receita, mostrando a dependência de 30-40% do segmento corporativo/grupo.</p>
+                </a>
+
+                <!-- Brazil Specific -->
+                <a href="https://fohb.com.br/pesquisas-e-dados/" target="_blank" class="group block bg-white p-4 rounded shadow-sm hover:shadow-md hover:ring-2 hover:ring-green-600 transition-all border-l-4 border-green-500">
+                    <strong class="text-green-700 group-hover:underline">6. FOHB (InFOHB)</strong>
+                    <p class="mt-1">Dados reais da hotelaria brasileira (crescimento de RevPAR e Ocupação em 2025).</p>
+                </a>
+
+                <a href="https://ubrafe.org.br/" target="_blank" class="group block bg-white p-4 rounded shadow-sm hover:shadow-md hover:ring-2 hover:ring-green-600 transition-all border-l-4 border-green-500">
+                    <strong class="text-green-700 group-hover:underline">7. UBRAFE</strong>
+                    <p class="mt-1">Confirma: Eventos corporativos em SP movimentam R$ 305 Bilhões anualmente.</p>
+                </a>
+
+                <a href="https://agenciabrasil.ebc.com.br/economia" target="_blank" class="group block bg-white p-4 rounded shadow-sm hover:shadow-md hover:ring-2 hover:ring-green-600 transition-all border-l-4 border-green-500">
+                    <strong class="text-green-700 group-hover:underline">8. ABIH / Agência Brasil</strong>
+                    <p class="mt-1">Dados de ocupação (97-100%) impulsionados por grandes eventos nacionais.</p>
+                </a>
+
+                <a href="https://www.gov.br/turismo/pt-br/assuntos/noticias/setor-hoteleiro-brasileiro-registra-crescimento-em-2024-e-prepara-investimentos-de-r-8-4-bilhoes-ate-2028" target="_blank" class="group block bg-white p-4 rounded shadow-sm hover:shadow-md hover:ring-2 hover:ring-green-600 transition-all border-l-4 border-green-500">
+                    <strong class="text-green-700 group-hover:underline">9. Gov.br (Ministério do Turismo)</strong>
+                    <p class="mt-1">Investimentos de R$ 8,4 Bilhões previstos na hotelaria até 2028.</p>
+                </a>
+
+                <a href="https://www.baguete.com.br/noticias/20/07/2023/hsystem-cresce-30-com-pms-hoteleiro" target="_blank" class="group block bg-white p-4 rounded shadow-sm hover:shadow-md hover:ring-2 hover:ring-green-600 transition-all border-l-4 border-green-500">
+                    <strong class="text-green-700 group-hover:underline">10. Baguete / HSystem</strong>
+                    <p class="mt-1">Prova de demanda local por tecnologia: player nacional crescendo 30%.</p>
+                </a>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark text-slate-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="text-sm">
+                &copy; 2025 SaaS Pitch Deck Visualizer.
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const translations = {
+            en: {
+                nav_market: "Market Size",
+                nav_revenue: "Revenue Impact",
+                nav_solution: "The Solution",
+                hero_title_1: "Unlocking the",
+                hero_title_highlight: "Hidden Pillar",
+                hero_title_2: "of Hotel Revenue",
+                hero_subtitle: "Why a Group Bookings & Events SaaS is the next <b>GREAT OPPORTUNITY</b> in hospitality market.",
+                stat_1_label: "Global Market by 2032",
+                stat_2_label: "Rev Share in Key Hotels",
+                stat_3_label: "Hotels Still on Excel",
+                tag_tam: "Total Addressable Market",
+                market_title: "A Market on the Rise",
+                market_desc: "The Hospitality Management Software market is exploding. From a $12.1 billion base in 2024, it is projected to more than double by 2032.",
+                chart_1_title: "Global Software Market Projection (USD Billions)",
+                chart_2_title: "The Brazilian Opportunity",
+                sunburst_desc: "<strong>Brazil</strong> represents nearly <strong>50%</strong> of the Latin American market, with an estimated annual turnover of <strong>R$ 1.5 Billion+</strong> for software solutions.",
+                tag_gap: "The Digital Gap",
+                gap_title: "The 'Excel' Problem",
+                gap_desc: "Despite the market size, a shocking <strong>30%</strong> of Brazilian hotels (approx. 3,500 properties) still rely on manual spreadsheets.",
+                pain_points_title: "Pain Points:",
+                pain_1: "Frequent Overbooking",
+                pain_2: "Slow Response Times",
+                pain_3: "Lost Revenue Data",
+                chart_3_title: "Tech Adoption in Brazilian Hotels (Est. 2025)",
+                tag_financial: "Financial Core",
+                rev_title: "Not Niche. Necessary.",
+                rev_desc: "Investors often mistake 'Groups & Events' for a side business. Data proves otherwise. For Convention Hotels and Resorts, this segment is the primary revenue driver.",
+                rev_source_note: "Sources: STR Segmentation Data, JLL Convention Hotel Model, Kalibri Labs.",
+                chart_4_title: "Revenue Mix: Group vs. Individual",
+                workflow_title: "Transforming Chaos into Clarity",
+                wf_old_title: "The 'Manual' Status Quo",
+                wf_step_1: "1. Inquiry (Email/Phone)",
+                wf_step_2: "2. Manual Excel Check",
+                wf_new_title: "The SaaS Solution",
+                wf_new_step_1: "1. Digital Request",
+                wf_new_step_2: "2. Automated Workflow",
+                sources_title: "Auditable Data Sources (10+ Validated Links)",
+                // Chart strings
+                chart_market_label: "Global Market Size (USD Billions)",
+                chart_market_title: "CAGR: 11.9% Growth Trajectory",
+                chart_maturity_labels: ['Fully Digitized (PMS)', 'Manual / Excel / Legacy'],
+                chart_maturity_center_2: "Opportunity",
+                chart_revenue_labels: ['Convention Hotels', 'Full Service / Resorts', 'Luxury City Hotels', 'Midscale / Budget'],
+                chart_revenue_ds1: "Group & Events Revenue",
+                chart_revenue_ds2: "Individual (Transient) Revenue",
+                chart_sunburst_labels: ["Global<br>Market", "Rest of<br>World", "Latin<br>America", "Other<br>Latam", "Brazil", "BRL<br>1.5B+"],
+                chart_sunburst_parents: ["", "Global<br>Market", "Global<br>Market", "Latin<br>America", "Latin<br>America", "Brazil"],
+            },
+            pt: {
+                nav_market: "Tamanho do Mercado",
+                nav_revenue: "Impacto na Receita",
+                nav_solution: "A Solução",
+                hero_title_1: "Desbloqueando o",
+                hero_title_highlight: "Pilar Oculto",
+                hero_title_2: "da Receita Hoteleira",
+                hero_subtitle: "Por que um SaaS de Grupos e Eventos é a próxima <b>GRANDE OPORTUNIDADE</b> no setor hoteleiro.",
+                stat_1_label: "Mercado Global até 2032",
+                stat_2_label: "Receita em Hotéis Chave",
+                stat_3_label: "Hotéis ainda no Excel",
+                tag_tam: "Mercado Total Endereçável",
+                market_title: "Um Mercado em Ascensão",
+                market_desc: "O mercado de Software de Gestão Hoteleira está explodindo. De uma base de $12,1 bilhões em 2024, projeta-se mais que dobrar até 2032.",
+                chart_1_title: "Projeção do Mercado Global de Software (Bilhões USD)",
+                chart_2_title: "A Oportunidade Brasileira",
+                sunburst_desc: "O <strong>Brasil</strong> representa quase <strong>50%</strong> do mercado latino-americano, com um faturamento anual estimado de <strong>R$ 1,5 Bilhão+</strong> em soluções de software.",
+                tag_gap: "A Lacuna Digital",
+                gap_title: "O Problema do 'Excel'",
+                gap_desc: "Apesar do tamanho do mercado, chocantes <strong>30%</strong> dos hotéis brasileiros (aprox. 3.500 propriedades) ainda dependem de planilhas manuais.",
+                pain_points_title: "Dores do Cliente:",
+                pain_1: "Overbooking Frequente",
+                pain_2: "Tempo de Resposta Lento",
+                pain_3: "Perda de Dados de Receita",
+                chart_3_title: "Adoção Tecnológica no Brasil (Est. 2025)",
+                tag_financial: "Núcleo Financeiro",
+                rev_title: "Não é Nicho. É Necessário.",
+                rev_desc: "Para Hotéis de Convenção e propriedades Full-Service, Grupos e Eventos não são apenas 'algo a mais' — são o principal motor de receita, representando de <strong>30% a 60%</strong> do mix.",
+                rev_source_note: "Fontes: Dados de Segmentação STR, Modelo de Hotel de Convenção JLL, Kalibri Labs.",
+                chart_4_title: "Mix de Receita: Grupo vs. Individual",
+                workflow_title: "Transformando Caos em Clareza",
+                wf_old_title: "Status Quo 'Manual'",
+                wf_step_1: "1. Consulta (Email/Tel)",
+                wf_step_2: "2. Checagem Manual Excel",
+                wf_new_title: "A Solução SaaS",
+                wf_new_step_1: "1. Solicitação Digital",
+                wf_new_step_2: "2. Fluxo Automatizado",
+                sources_title: "Fontes Auditáveis (10+ Links Validados)",
+                // Chart strings
+                chart_market_label: "Tamanho do Mercado Global (Bilhões USD)",
+                chart_market_title: "CAGR: Trajetória de 11,9%",
+                chart_maturity_labels: ['Totalmente Digitalizado (PMS)', 'Manual / Excel / Legado'],
+                chart_maturity_center_2: "Oportunidade",
+                chart_revenue_labels: ['Hotéis Convenção', 'Serviço Completo / Resorts', 'Luxo Urbano', 'Econômico / Midscale'],
+                chart_revenue_ds1: "Receita de Grupos e Eventos",
+                chart_revenue_ds2: "Receita Individual (Transiente)",
+                chart_sunburst_labels: ["Mercado<br>Global", "Resto do<br>Mundo", "América<br>Latina", "Outros<br>Latam", "Brasil", "BRL<br>1.5B+"],
+                chart_sunburst_parents: ["", "Mercado<br>Global", "Mercado<br>Global", "América<br>Latina", "América<br>Latina", "Brasil"],
+            }
+        };
+
+        let currentLang = 'pt';
+        let chartMarket, chartMaturity, chartRevenue;
+
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#64748B';
+
+        function wrapLabel(label, maxLen = 16) {
+            if (label.length <= maxLen) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + " " + words[i]).length <= maxLen) {
+                    currentLine += " " + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        const tooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) return label.join(' ');
+                    return label;
+                }
+            }
+        };
+
+        function initCharts() {
+            const ctxMarket = document.getElementById('marketGrowthChart').getContext('2d');
+            chartMarket = new Chart(ctxMarket, {
+                type: 'line',
+                data: {
+                    labels: ['2024', '2025 (Est)', '2026', '2027', '2028', '2029', '2030', '2031', '2032'],
+                    datasets: [{
+                        label: translations[currentLang].chart_market_label,
+                        data: [12.1, 13.5, 15.1, 16.9, 18.9, 21.2, 23.7, 26.5, 29.8],
+                        borderColor: '#2563EB',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#F97316',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: tooltipConfig,
+                        title: { display: true, text: translations[currentLang].chart_market_title }
+                    },
+                    scales: { y: { grid: { color: '#E2E8F0' } }, x: { grid: { display: false } } }
+                }
+            });
+
+            const ctxMaturity = document.getElementById('maturityChart').getContext('2d');
+            chartMaturity = new Chart(ctxMaturity, {
+                type: 'doughnut',
+                data: {
+                    labels: translations[currentLang].chart_maturity_labels.map(l => wrapLabel(l)),
+                    datasets: [{
+                        data: [70, 30],
+                        backgroundColor: ['#CBD5E1', '#F97316'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 20 } },
+                        tooltip: tooltipConfig
+                    }
+                },
+                plugins: [{
+                    id: 'textCenter',
+                    beforeDraw: function(chart) {
+                        var width = chart.width, height = chart.height, ctx = chart.ctx;
+                        ctx.restore();
+                        var fontSize = (height / 114).toFixed(2);
+                        ctx.font = "bold " + fontSize + "em Inter";
+                        ctx.textBaseline = "middle";
+                        ctx.fillStyle = "#1E293B";
+                        var text = "30%",
+                            textX = Math.round((width - ctx.measureText(text).width) / 2),
+                            textY = height / 2.2;
+                        ctx.fillText(text, textX, textY);
+                        
+                        ctx.font = "normal " + (fontSize*0.4).toFixed(2) + "em Inter";
+                        var text2 = translations[currentLang].chart_maturity_center_2,
+                            text2X = Math.round((width - ctx.measureText(text2).width) / 2),
+                            text2Y = height / 1.8;
+                        ctx.fillText(text2, text2X, text2Y);
+                        ctx.save();
+                    }
+                }]
+            });
+
+            const ctxRevenue = document.getElementById('revenueMixChart').getContext('2d');
+            chartRevenue = new Chart(ctxRevenue, {
+                type: 'bar',
+                data: {
+                    labels: translations[currentLang].chart_revenue_labels.map(l => wrapLabel(l)),
+                    datasets: [
+                        {
+                            label: translations[currentLang].chart_revenue_ds1,
+                            data: [65, 50, 40, 10], // Convention, Full Svc, Luxury, Budget
+                            backgroundColor: '#2563EB',
+                            borderRadius: 4
+                        },
+                        {
+                            label: translations[currentLang].chart_revenue_ds2,
+                            data: [35, 50, 60, 90],
+                            backgroundColor: '#CBD5E1',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, beginAtZero: true, max: 100, ticks: { callback: function(value) { return value + "%" } } }
+                    },
+                    plugins: { tooltip: tooltipConfig, legend: { position: 'top' } }
+                }
+            });
+
+            renderSunburst();
+        }
+
+        function renderSunburst() {
+            var dataSunburst = [{
+                type: "sunburst",
+                labels: translations[currentLang].chart_sunburst_labels,
+                parents: translations[currentLang].chart_sunburst_parents,
+                values:  [100, 94, 6, 3, 3, 3],
+                leaf: {opacity: 0.4},
+                marker: {line: {width: 2}, colors: ["#0F172A", "#CBD5E1", "#2563EB", "#93C5FD", "#06B6D4", "#F97316"]},
+                branchvalues: 'total',
+                hoverinfo: 'label+value',
+                insidetextorientation: 'radial'
+            }];
+
+            var layoutSunburst = {
+                margin: {l: 0, r: 0, b: 0, t: 0},
+                font: {family: "Inter, sans-serif"},
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)'
+            };
+
+            Plotly.react('plotlySunburst', dataSunburst, layoutSunburst, {responsive: true, displayModeBar: false});
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'pt' : 'en';
+            updateContent();
+        }
+
+        function updateContent() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.innerHTML = translations[currentLang][key];
+                }
+            });
+
+            if(chartMarket) {
+                chartMarket.data.datasets[0].label = translations[currentLang].chart_market_label;
+                chartMarket.options.plugins.title.text = translations[currentLang].chart_market_title;
+                chartMarket.update();
+            }
+
+            if(chartMaturity) {
+                chartMaturity.data.labels = translations[currentLang].chart_maturity_labels.map(l => wrapLabel(l));
+                chartMaturity.update();
+            }
+
+            if(chartRevenue) {
+                chartRevenue.data.labels = translations[currentLang].chart_revenue_labels.map(l => wrapLabel(l));
+                chartRevenue.data.datasets[0].label = translations[currentLang].chart_revenue_ds1;
+                chartRevenue.data.datasets[1].label = translations[currentLang].chart_revenue_ds2;
+                chartRevenue.update();
+            }
+
+            renderSunburst();
+        }
+
+        window.onload = function() {
+            // Correct order: Init charts first, then update translations
+            initCharts();
+            updateContent();
+        };
+
+    </script>
+</body>
+</html>
