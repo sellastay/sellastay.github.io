@@ -1,0 +1,1007 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pesquisa - SellaStay WebApp</title>
+<link rel="icon" type="image/x-icon" href="img/lg.png">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<!-- Json manifest for mobile icon App -->
+<link rel="manifest" href="js/manifest.json">
+<meta name="theme-color" content="#eef4fb">
+
+<!-- SEO Meta Tags -->
+<meta name="description" data-i18n="meta_description" content="SellaStay é a ferramenta feita sob medida que revoluciona a gestão de leads no setor hoteleiro para demandas de eventos e grupos.">
+<meta name="keywords" data-i18n="meta_keywords" content="CRM hotelaria, hospedagem em grupo, grupos, eventos, gestão leads hotéis, software hoteleiro">
+<meta name="author" content="SellaStay">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.sellastay.com">
+<meta property="og:title" data-i18n="og_title" content="SellaStay - Hospitality Solutions">
+<meta property="og:description" data-i18n="og_description" content="Hospitality Solutions">
+<meta property="og:image" content="https://www.sellastay.com/og-image.jpg">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="img/lg.png">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+<meta name="theme-color" content="#4A1A5C">
+
+<style>
+  :root{
+    --bg:#f6f8fb;
+    --card:#fff;
+    --primary:#3e0163;
+    --accent:#ff914d;
+    --muted:#7b8794;
+    --radius:12px;
+    --shadow: 0 10px 30px rgba(18,33,48,0.08);
+  }
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg,#eef4fb 0%, #f6f8fb 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px;
+    color:#0f1724;
+  }
+
+  .card{
+    width:100%;
+    max-width:760px;
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:28px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    position:relative;
+  }
+
+  .language-selector {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 4px;
+    border-radius: 6px;
+    z-index: 1000;
+  }
+
+  .language-btn {
+    background: transparent;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .language-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+
+  .language-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e5e5;
+    margin-top: 30px;
+   }
+
+  .logo img {
+    height: 40px;
+    width: auto;
+    display: block;
+   }
+
+  .brand{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+
+  .title{
+    font-size:18px;font-weight:700;color:var(--primary);
+  }
+  .subtitle{color:var(--muted);font-size:13px;}
+
+  .progress-wrap{
+    margin-top:10px;
+  }
+  .progress{
+    width:100%;
+    height:8px;
+    background:#eef2f6;
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .progress > .bar{
+    height:100%;
+    width:0%;
+    background: linear-gradient(90deg,var(--accent), #ffd580);
+    border-radius:999px;
+    transition: width 300ms ease;
+  }
+  .question-wrap{
+    display:flex;
+    align-items:flex-start;
+    gap:28px;
+    margin-top:22px;
+  }
+
+  .step-indicator{
+    min-width:56px;
+    text-align:center;
+  }
+  .step-indicator .num{
+    background:#f0f6fb;color:var(--primary);width:44px;height:44px;border-radius:10px;display:inline-flex;
+    align-items:center;justify-content:center;font-weight:700;font-size:15px;
+  }
+  .step-indicator p{margin-top:8px;color:var(--muted);font-size:13px;}
+
+  .question-body{flex:1;}
+  .question-text{font-size:20px;font-weight:700;color:#0b2340;margin-bottom:8px;}
+  .question-desc{color:var(--muted);font-size:13px;margin-bottom:16px;}
+
+  .input, textarea {
+    width: 95%;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid #e6eef6;
+    background:#fff;
+    font-size:15px;
+    outline:none;
+    box-shadow:none;
+    transition: box-shadow .15s ease, border-color .15s ease;
+  }
+  select.input {
+    width: 100%;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid #e6eef6;
+    background:#fff;
+    font-size:15px;
+    outline:none;
+    box-shadow:none;
+    transition: box-shadow .15s ease, border-color .15s ease;
+  }
+  .input:focus, select:focus, textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 6px 20px rgba(32,58,67,0.06);
+  }
+  .row { display:flex; gap:12px; }
+  .row .col { flex:1; }
+
+  .actions{
+    display:flex;
+    justify-content:space-between;
+    margin-top:18px;
+    gap:12px;
+  }
+  .btn {
+    padding:10px 16px;border-radius:10px;border:none;cursor:pointer;font-weight:700;
+    box-shadow: 0 6px 18px rgba(20,40,60,0.06);
+  }
+  .btn.primary{
+    background:#3e0163;
+    color:#fff;
+  }
+  .btn:hover {
+    background: #7202b7;
+  }
+  .btn.ghost{
+    background:transparent;color:var(--primary);border:1px solid #eaf0f6;
+  }
+
+  .small { font-size:13px;color:var(--muted);margin-top:10px; }
+
+  .thankyou{
+    text-align:center;padding:40px 10px;
+  }
+  .thankyou h2{color:var(--primary);margin-bottom:8px;}
+  .thankyou p{color:var(--muted); font-size:15px;}
+
+  @media (max-width:768px){
+    body {
+      padding: 16px;
+    }
+
+    .card {
+      padding: 20px 16px;
+    }
+
+    .language-selector {
+      position: static;
+      margin: 0 auto 16px;
+      justify-content: center;
+      width: fit-content;
+    }
+
+    .topbar {
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px;
+      margin-top: 0;
+    }
+
+    .topbar > div:last-child {
+      margin-left: 0 !important;
+      text-align: center;
+    }
+
+    .question-wrap{
+      flex-direction:column; 
+      gap:12px;
+    }
+
+    .step-indicator{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .input, textarea {
+      width: 100%;
+    }
+
+    .actions {
+      flex-direction: column-reverse;
+    }
+
+    .actions > div:last-child {
+      margin-left: 0 !important;
+      width: 100%;
+    }
+
+    .btn {
+      width: 100%;
+    }
+  }
+
+  @media (max-width:480px){
+    .language-btn {
+      padding: 5px 8px;
+      font-size: 10px;
+    }
+
+    .title {
+      font-size: 16px;
+    }
+
+    .subtitle {
+      font-size: 12px;
+    }
+
+    .question-text {
+      font-size: 18px;
+    }
+  }
+</style>
+</head>
+<body>
+    <main class="card" role="main" aria-labelledby="surveyTitle">
+        <div class="language-selector">
+            <button class="language-btn active" data-lang="pt" title="Português">🇧🇷 PT</button>
+            <button class="language-btn" data-lang="en" title="English">🇺🇸 EN</button>
+            <button class="language-btn" data-lang="es" title="Español">🇪🇸 ES</button>
+        </div>
+
+        <div class="topbar">
+            <div class="brand">
+            <div class="logo">
+                <img src="img/lg.png" alt="SellaStay" />
+            </div>
+
+            <div>
+                <div class="title" data-i18n="survey_title">Pesquisa — SellaStay WebApp</div>
+                <div class="subtitle" data-i18n="survey_subtitle">Ajude-nos a construir a melhor ferramenta para negociação de grupos</div>
+            </div>
+            </div>
+            <div style="margin-left:auto; color:var(--muted); font-size:13px;" data-i18n="estimated_time">Tempo estimado: 2 minutos</div>
+        </div>
+
+        <div class="progress-wrap" aria-hidden="true">
+            <div class="progress"><div class="bar" id="progressBar"></div></div>
+        </div>
+
+        <form id="surveyForm" autocomplete="off" novalidate>
+            <div id="questionContainer" class="question-wrap" role="group" aria-live="polite"></div>
+
+            <div class="actions" id="actions">
+            <button type="button" class="btn ghost" id="backBtn" style="visibility:hidden;"><i class="fa fa-arrow-left"></i> <span data-i18n="back_btn">Voltar</span></button>
+            <div style="margin-left:auto; display:flex; gap:12px;">
+                <button type="button" class="btn ghost" id="skipBtn" style="display:none;" data-i18n="skip_btn">Pular</button>
+                <button type="submit" class="btn primary" id="nextBtn"><span data-i18n="next_btn">Próximo</span> <i class="fa fa-arrow-right" style="margin-left:10px;"></i></button>
+            </div>
+            </div>
+
+            <div class="small" id="stepMeta" aria-hidden="true"></div>
+        </form>
+
+        <div id="thankyou" class="thankyou" style="display:none;">
+            <h2 data-i18n="thank_you_title">Obrigado! 🙏</h2>
+            <p data-i18n="thank_you_text">Sua resposta foi registrada. Podemos entrar em contato para participar do piloto (se você optou por isso).</p>
+            <p style="margin-top:12px;"><a id="restart" href="#" style="color:var(--primary); font-weight:700;" data-i18n="restart_link">Enviar outra resposta</a></p>
+        </div>
+    </main>
+
+    <script>
+        const translations = {
+            pt: {
+                survey_title: "Pesquisa — SellaStay WebApp",
+                survey_subtitle: "Ajude-nos a construir a melhor ferramenta para negociação de grupos",
+                estimated_time: "Tempo estimado: 2 minutos",
+                back_btn: "Voltar",
+                skip_btn: "Pular",
+                next_btn: "Próximo",
+                submit_btn: "Enviar",
+                sending: "Enviando...",
+                thank_you_title: "Obrigado! 🙏",
+                thank_you_text: "Sua resposta foi registrada. Podemos entrar em contato para participar do piloto (se você optou por isso).",
+                restart_link: "Enviar outra resposta",
+                step_indicator: "Passo",
+                question_of: "de",
+                question_num: "Pergunta",
+                validation_required: "Por favor responda esta pergunta.",
+                validation_multiselect: "Por favor selecione ao menos uma opção.",
+                validation_max_choices: "Você pode selecionar no máximo",
+                validation_max_choices_end: "opções.",
+                validation_scale: "Selecione um valor na escala.",
+                error_send: "Ocorreu um erro ao enviar. Tente novamente mais tarde.",
+                error_connection: "Falha ao enviar. Verifique sua conexão."
+            },
+            en: {
+                survey_title: "Survey — SellaStay WebApp",
+                survey_subtitle: "Help us build the best tool for group negotiations",
+                estimated_time: "Estimated time: 2 minutes",
+                back_btn: "Back",
+                skip_btn: "Skip",
+                next_btn: "Next",
+                submit_btn: "Submit",
+                sending: "Sending...",
+                thank_you_title: "Thank you! 🙏",
+                thank_you_text: "Your response has been recorded. We may contact you to participate in the pilot (if you opted for it).",
+                restart_link: "Submit another response",
+                step_indicator: "Step",
+                question_of: "of",
+                question_num: "Question",
+                validation_required: "Please answer this question.",
+                validation_multiselect: "Please select at least one option.",
+                validation_max_choices: "You can select a maximum of",
+                validation_max_choices_end: "options.",
+                validation_scale: "Select a value on the scale.",
+                error_send: "An error occurred while sending. Please try again later.",
+                error_connection: "Failed to send. Check your connection."
+            },
+            es: {
+                survey_title: "Encuesta — SellaStay WebApp",
+                survey_subtitle: "Ayúdanos a construir la mejor herramienta para negociaciones de grupos",
+                estimated_time: "Tiempo estimado: 2 minutos",
+                back_btn: "Atrás",
+                skip_btn: "Omitir",
+                next_btn: "Siguiente",
+                submit_btn: "Enviar",
+                sending: "Enviando...",
+                thank_you_title: "¡Gracias! 🙏",
+                thank_you_text: "Su respuesta ha sido registrada. Podemos contactarle para participar en el piloto (si optó por ello).",
+                restart_link: "Enviar otra respuesta",
+                step_indicator: "Paso",
+                question_of: "de",
+                question_num: "Pregunta",
+                validation_required: "Por favor responda esta pregunta.",
+                validation_multiselect: "Por favor seleccione al menos una opción.",
+                validation_max_choices: "Puede seleccionar un máximo de",
+                validation_max_choices_end: "opciones.",
+                validation_scale: "Seleccione un valor en la escala.",
+                error_send: "Ocurrió un error al enviar. Intente nuevamente más tarde.",
+                error_connection: "Error al enviar. Verifique su conexión."
+            }
+        };
+
+        const questionsTranslations = {
+            pt: {
+                "Nome do hotel ou rede hoteleira": "Nome do hotel ou rede hoteleira",
+                "Ex.: Hotel Aurora": "Ex.: Hotel Aurora",
+                "Cidade / Estado": "Cidade / Estado",
+                "Ex.: São Paulo, SP": "Ex.: São Paulo, SP",
+                "Categoria do hotel": "Categoria do hotel",
+                "Número aproximado de quartos": "Número aproximado de quartos",
+                "Possui salas de eventos / reuniões?": "Possui salas de eventos / reuniões?",
+                "Seu hotel já trabalha (ou deseja trabalhar) com negociação de tarifa para hospedagem em grupos e/ou eventos?": "Seu hotel já trabalha (ou deseja trabalhar) com negociação de tarifa para hospedagem em grupos e/ou eventos?",
+                "Como atualmente recebem solicitações de orçamento de eventos e/ou hospedagem em grupo?": "Como atualmente recebem solicitações de orçamento de eventos e/ou hospedagem em grupo?",
+                "Com que frequência o hotel recebe solicitações de grupos?": "Com que frequência o hotel recebe solicitações de grupos?",
+                "Em média, quanto tempo leva da solicitação até o envio da proposta?": "Em média, quanto tempo leva da solicitação até o envio da proposta?",
+                "Quais são os maiores desafios no processo de negociação de grupos/eventos?": "Quais são os maiores desafios no processo de negociação de grupos/eventos?",
+                "Qual sistema/ferramenta o hotel utiliza hoje para registrar, acompanhar e enviar propostas dessas negociações?": "Qual sistema/ferramenta o hotel utiliza hoje para registrar, acompanhar e enviar propostas dessas negociações?",
+                "O que você gostaria que este sistema/ferramenta tivesse de recurso para que seu processo de envio de proposta e negociação fosse mais prático e eficiente?": "O que você gostaria que este sistema/ferramenta tivesse de recurso para que seu processo de envio de proposta e negociação fosse mais prático e eficiente?",
+                "Se existisse uma ferramenta com todos os recursos que você selecionou na pergunta anterior, toparia testar gratuitamente por um período?": "Se existisse uma ferramenta com todos os recursos que você selecionou na pergunta anterior, toparia testar gratuitamente por um período?",
+                "Gostaria de participar como hotel piloto (fase de testes) e obter benefícios vitalícios exclusivos?": "Gostaria de participar como hotel piloto (fase de testes) e obter benefícios vitalícios exclusivos?",
+                "Digite seu nome": "Digite seu nome",
+                "Nome completo": "Nome completo",
+                "Seu E-mail": "Seu E-mail",
+                "email@empresa.com": "email@empresa.com",
+                "Seu Telefone": "Seu Telefone",
+                "De preferência WhatsApp": "De preferência WhatsApp",
+                "Alguma sugestão adicional ou comentário?": "Alguma sugestão adicional ou comentário?",
+                "Escreva aqui...": "Escreva aqui...",
+                "Econômico": "Econômico",
+                "Midscale": "Midscale",
+                "Luxo": "Luxo",
+                "Resort": "Resort",
+                "Rede hoteleira": "Rede hoteleira",
+                "Até 50": "Até 50",
+                "51–100": "51–100",
+                "101–200": "101–200",
+                "Acima de 200": "Acima de 200",
+                "Sim": "Sim",
+                "Não": "Não",
+                "Talvez": "Talvez",
+                "E-mail": "E-mail",
+                "WhatsApp": "WhatsApp",
+                "Telefone": "Telefone",
+                "Site do hotel": "Site do hotel",
+                "Redes sociais": "Redes sociais",
+                "Agências/OTAs": "Agências/OTAs",
+                "Outro...": "Outro...",
+                "Diariamente": "Diariamente",
+                "Semanalmente": "Semanalmente",
+                "Quinzenalmente": "Quinzenalmente",
+                "Mensalmente": "Mensalmente",
+                "Raramente": "Raramente",
+                "Menos de 1h": "Menos de 1h",
+                "1–3h": "1–3h",
+                "3–6h": "3–6h",
+                "6–12h": "6–12h",
+                "12–24h": "12–24h",
+                "Mais de 24h": "Mais de 24h",
+                "Disponibilidade do hotel": "Disponibilidade do hotel",
+                "Bater o preço da concorrência": "Bater o preço da concorrência",
+                "Volume alto de solicitações": "Volume alto de solicitações",
+                "Controlar o status de cada negociação": "Controlar o status de cada negociação",
+                "Falta de integração entre ferramentas": "Falta de integração entre ferramentas",
+                "Falta de histórico de negociações": "Falta de histórico de negociações",
+                "Dificuldade em gerar relatórios": "Dificuldade em gerar relatórios",
+                "Retrabalho / erros manuais": "Retrabalho / erros manuais",
+                "Comunicação fragmentada com clientes": "Comunicação fragmentada com clientes",
+                "Tempo excessivo em tarefas operacionais": "Tempo excessivo em tarefas operacionais",
+                "Outros...": "Outros...",
+                "Nenhum / Planilhas": "Nenhum / Planilhas",
+                "CRM (Salesforce, Monday, Hubspot, etc...)": "CRM (Salesforce, Monday, Hubspot, etc...)",
+                "PMS (Opera, TOTVS, Mews...)": "PMS (Opera, TOTVS, Mews...)",
+                "Evnt": "Evnt",
+                "Sistema próprio": "Sistema próprio",
+                "Integração perfeita com outros sistemas/plataformas": "Integração perfeita com outros sistemas/plataformas",
+                "Integração perfeita com e-mail e WhatsApp": "Integração perfeita com e-mail e WhatsApp",
+                "Reconhecimento automático de disponibilidade de salas/quartos para data solicitada": "Reconhecimento automático de disponibilidade de salas/quartos para data solicitada",
+                "Mapeamento de eventos e datas que impactam a demanda": "Mapeamento de eventos e datas que impactam a demanda",
+                "Calculadora automática de proposta final": "Calculadora automática de proposta final",
+                "Painel de indicadores": "Painel de indicadores",
+                "Histórico de cotações enviadas": "Histórico de cotações enviadas",
+                "Relatórios automatizados": "Relatórios automatizados",
+                "Análises personalizadas com IA": "Análises personalizadas com IA",
+                "Automatização de tarefas com IA": "Automatização de tarefas com IA",
+                "Espião de preço da concorrência com IA": "Espião de preço da concorrência com IA",
+                "Outros recursos com IA": "Outros recursos com IA",
+                "Nenhum destes": "Nenhum destes",
+                "Sim, claro!": "Sim, claro!",
+                "Provavelmente sim.": "Provavelmente sim.",
+                "Talvez...": "Talvez...",
+                "Provavelmente não.": "Provavelmente não.",
+                "Não, definitivamente!": "Não, definitivamente!"
+            },
+            en: {
+                "Nome do hotel ou rede hoteleira": "Hotel or hotel chain name",
+                "Ex.: Hotel Aurora": "Ex.: Aurora Hotel",
+                "Cidade / Estado": "City / State",
+                "Ex.: São Paulo, SP": "Ex.: Miami, FL",
+                "Categoria do hotel": "Hotel category",
+                "Número aproximado de quartos": "Approximate number of rooms",
+                "Possui salas de eventos / reuniões?": "Do you have event/meeting rooms?",
+                "Seu hotel já trabalha (ou deseja trabalhar) com negociação de tarifa para hospedagem em grupos e/ou eventos?": "Does your hotel already work (or wish to work) with rate negotiation for group accommodations and/or events?",
+                "Como atualmente recebem solicitações de orçamento de eventos e/ou hospedagem em grupo?": "How do you currently receive event or group accommodation budget requests?",
+                "Com que frequência o hotel recebe solicitações de grupos?": "How often does the hotel receive group requests?",
+                "Em média, quanto tempo leva da solicitação até o envio da proposta?": "On average, how long does it take from request to proposal submission?",
+                "Quais são os maiores desafios no processo de negociação de grupos/eventos?": "What are the biggest challenges in group/event negotiation?",
+                "Qual sistema/ferramenta o hotel utiliza hoje para registrar, acompanhar e enviar propostas dessas negociações?": "What system/tool does the hotel currently use to register, track, and send proposals for these negotiations?",
+                "O que você gostaria que este sistema/ferramenta tivesse de recurso para que seu processo de envio de proposta e negociação fosse mais prático e eficiente?": "What features would you like this system/tool to have to make your proposal and negotiation process more practical and efficient?",
+                "Se existisse uma ferramenta com todos os recursos que você selecionou na pergunta anterior, toparia testar gratuitamente por um período?": "If a tool with all the features you selected in the previous question existed, would you be willing to test it for free for a period?",
+                "Gostaria de participar como hotel piloto (fase de testes) e obter benefícios vitalícios exclusivos?": "Would you like to participate as a pilot hotel (testing phase) and obtain exclusive lifetime benefits?",
+                "Digite seu nome": "Enter your name",
+                "Nome completo": "Full name",
+                "Seu E-mail": "Your Email",
+                "email@empresa.com": "email@company.com",
+                "Seu Telefone": "Your Phone",
+                "De preferência WhatsApp": "Preferably WhatsApp",
+                "Alguma sugestão adicional ou comentário?": "Any additional suggestions or comments?",
+                "Escreva aqui...": "Write here...",
+                "Econômico": "Economy",
+                "Midscale": "Midscale",
+                "Luxo": "Luxury",
+                "Resort": "Resort",
+                "Rede hoteleira": "Hotel chain",
+                "Até 50": "Up to 50",
+                "51–100": "51–100",
+                "101–200": "101–200",
+                "Acima de 200": "Above 200",
+                "Sim": "Yes",
+                "Não": "No",
+                "Talvez": "Maybe",
+                "E-mail": "Email",
+                "WhatsApp": "WhatsApp",
+                "Telefone": "Phone",
+                "Site do hotel": "Hotel website",
+                "Redes sociais": "Social media",
+                "Agências/OTAs": "Agencies/OTAs",
+                "Outro...": "Other...",
+                "Diariamente": "Daily",
+                "Semanalmente": "Weekly",
+                "Quinzenalmente": "Biweekly",
+                "Mensalmente": "Monthly",
+                "Raramente": "Rarely",
+                "Menos de 1h": "Less than 1h",
+                "1–3h": "1–3h",
+                "3–6h": "3–6h",
+                "6–12h": "6–12h",
+                "12–24h": "12–24h",
+                "Mais de 24h": "More than 24h",
+                "Disponibilidade do hotel": "Hotel availability",
+                "Bater o preço da concorrência": "Matching competitor prices",
+                "Volume alto de solicitações": "High volume of requests",
+                "Controlar o status de cada negociação": "Controlling negotiation status",
+                "Falta de integração entre ferramentas": "Lack of tool integration",
+                "Falta de histórico de negociações": "Lack of negotiation history",
+                "Dificuldade em gerar relatórios": "Difficulty generating reports",
+                "Retrabalho / erros manuais": "Rework / manual errors",
+                "Comunicação fragmentada com clientes": "Fragmented client communication",
+                "Tempo excessivo em tarefas operacionais": "Excessive time on operational tasks",
+                "Outros...": "Others...",
+                "Nenhum / Planilhas": "None / Spreadsheets",
+                "CRM (Salesforce, Monday, Hubspot, etc...)": "CRM (Salesforce, Monday, Hubspot, etc...)",
+                "PMS (Opera, TOTVS, Mews...)": "PMS (Opera, TOTVS, Mews...)",
+                "Evnt": "Evnt",
+                "Sistema próprio": "Own system",
+                "Integração perfeita com outros sistemas/plataformas": "Perfect integration with other systems/platforms",
+                "Integração perfeita com e-mail e WhatsApp": "Perfect integration with email and WhatsApp",
+                "Reconhecimento automático de disponibilidade de salas/quartos para data solicitada": "Automatic recognition of room/space availability for requested dates",
+                "Mapeamento de eventos e datas que impactam a demanda": "Mapping of events and dates that impact demand",
+                "Calculadora automática de proposta final": "Automatic final proposal calculator",
+                "Painel de indicadores": "Dashboard",
+                "Histórico de cotações enviadas": "History of sent quotations",
+                "Relatórios automatizados": "Automated reports",
+                "Análises personalizadas com IA": "Personalized AI analysis",
+                "Automatização de tarefas com IA": "AI task automation",
+                "Espião de preço da concorrência com IA": "AI competitor price spy",
+                "Outros recursos com IA": "Other AI features",
+                "Nenhum destes": "None of these",
+                "Sim, claro!": "Yes, of course!",
+                "Provavelmente sim.": "Probably yes.",
+                "Talvez...": "Maybe...",
+                "Provavelmente não.": "Probably not.",
+                "Não, definitivamente!": "No, definitely not!"
+            },
+            es: {
+                "Nome do hotel ou rede hoteleira": "Nombre del hotel o cadena hotelera",
+                "Ex.: Hotel Aurora": "Ej.: Hotel Aurora",
+                "Cidade / Estado": "Ciudad / Estado",
+                "Ex.: São Paulo, SP": "Ej.: Madrid, España",
+                "Categoria do hotel": "Categoría del hotel",
+                "Número aproximado de quartos": "Número aproximado de habitaciones",
+                "Possui salas de eventos / reuniões?": "¿Tiene salas de eventos/reuniones?",
+                "Seu hotel já trabalha (ou deseja trabalhar) com negociação de tarifa para hospedagem em grupos e/ou eventos?": "¿Su hotel ya trabaja (o desea trabajar) con negociación de tarifas para hospedaje en grupos y/o eventos?",
+                "Como atualmente recebem solicitações de orçamento de eventos e/ou hospedagem em grupo?": "¿Cómo reciben actualmente solicitudes de presupuesto de eventos u hospedaje en grupo?",
+                "Com que frequência o hotel recebe solicitações de grupos?": "¿Con qué frecuencia recibe el hotel solicitudes de grupos?",
+                "Em média, quanto tempo leva da solicitação até o envio da proposta?": "En promedio, ¿cuánto tiempo toma desde la solicitud hasta el envío de la propuesta?",
+                "Quais são os maiores desafios no processo de negociação de grupos/eventos?": "¿Cuáles son los mayores desafíos en la negociación de grupos/eventos?",
+                "Qual sistema/ferramenta o hotel utiliza hoje para registrar, acompanhar e enviar propostas dessas negociações?": "¿Qué sistema/herramienta usa el hotel actualmente para registrar, hacer seguimiento y enviar propuestas de estas negociaciones?",
+                "O que você gostaria que este sistema/ferramenta tivesse de recurso para que seu processo de envio de proposta e negociação fosse mais prático e eficiente?": "¿Qué características le gustaría que tuviera este sistema/herramienta para que su proceso de envío de propuestas y negociación fuera más práctico y eficiente?",
+                "Se existisse uma ferramenta com todos os recursos que você selecionou na pergunta anterior, toparia testar gratuitamente por um período?": "Si existiera una herramienta con todas las características que seleccionó en la pregunta anterior, ¿estaría dispuesto a probarla gratis por un período?",
+                "Gostaria de participar como hotel piloto (fase de testes) e obter benefícios vitalícios exclusivos?": "¿Le gustaría participar como hotel piloto (fase de pruebas) y obtener beneficios exclusivos de por vida?",
+                "Digite seu nome": "Ingrese su nombre",
+                "Nome completo": "Nombre completo",
+                "Seu E-mail": "Su Email",
+                "email@empresa.com": "email@empresa.com",
+                "Seu Telefone": "Su Teléfono",
+                "De preferência WhatsApp": "Preferiblemente WhatsApp",
+                "Alguma sugestão adicional ou comentário?": "¿Alguna sugerencia adicional o comentario?",
+                "Escreva aqui...": "Escriba aquí...",
+                "Econômico": "Económico",
+                "Midscale": "Escala media",
+                "Luxo": "Lujo",
+                "Resort": "Resort",
+                "Rede hoteleira": "Cadena hotelera",
+                "Até 50": "Hasta 50",
+                "51–100": "51–100",
+                "101–200": "101–200",
+                "Acima de 200": "Más de 200",
+                "Sim": "Sí",
+                "Não": "No",
+                "Talvez": "Tal vez",
+                "E-mail": "Email",
+                "WhatsApp": "WhatsApp",
+                "Telefone": "Teléfono",
+                "Site do hotel": "Sitio web del hotel",
+                "Redes sociais": "Redes sociales",
+                "Agências/OTAs": "Agencias/OTAs",
+                "Outro...": "Otro...",
+                "Diariamente": "Diariamente",
+                "Semanalmente": "Semanalmente",
+                "Quinzenalmente": "Quincenalmente",
+                "Mensualmente": "Mensualmente",
+                "Raramente": "Raramente",
+                "Menos de 1h": "Menos de 1h",
+                "1–3h": "1–3h",
+                "3–6h": "3–6h",
+                "6–12h": "6–12h",
+                "12–24h": "12–24h",
+                "Mais de 24h": "Más de 24h",
+                "Disponibilidade do hotel": "Disponibilidad del hotel",
+                "Bater o preço da concorrência": "Igualar precios de la competencia",
+                "Volume alto de solicitações": "Alto volumen de solicitudes",
+                "Controlar o status de cada negociação": "Controlar el estado de cada negociación",
+                "Falta de integração entre ferramentas": "Falta de integración entre herramientas",
+                "Falta de histórico de negociações": "Falta de historial de negociaciones",
+                "Dificuldade em gerar relatórios": "Dificultad para generar reportes",
+                "Retrabalho / erros manuais": "Retrabajo / errores manuales",
+                "Comunicação fragmentada com clientes": "Comunicación fragmentada con clientes",
+                "Tempo excessivo em tarefas operacionais": "Tiempo excesivo en tareas operacionales",
+                "Outros...": "Otros...",
+                "Nenhum / Planilhas": "Ninguno / Hojas de cálculo",
+                "CRM (Salesforce, Monday, Hubspot, etc...)": "CRM (Salesforce, Monday, Hubspot, etc...)",
+                "PMS (Opera, TOTVS, Mews...)": "PMS (Opera, TOTVS, Mews...)",
+                "Evnt": "Evnt",
+                "Sistema próprio": "Sistema propio",
+                "Integração perfeita com outros sistemas/plataformas": "Integración perfecta con otros sistemas/plataformas",
+                "Integração perfeita com e-mail e WhatsApp": "Integración perfecta con email y WhatsApp",
+                "Reconhecimento automático de disponibilidade de salas/quartos para data solicitada": "Reconocimiento automático de disponibilidad de salas/habitaciones para fecha solicitada",
+                "Mapeamento de eventos e datas que impactam a demanda": "Mapeo de eventos y fechas que impactan la demanda",
+                "Calculadora automática de proposta final": "Calculadora automática de propuesta final",
+                "Painel de indicadores": "Panel de indicadores",
+                "Histórico de cotações enviadas": "Historial de cotizaciones enviadas",
+                "Relatórios automatizados": "Reportes automatizados",
+                "Análises personalizadas com IA": "Análisis personalizados con IA",
+                "Automatização de tarefas com IA": "Automatización de tareas con IA",
+                "Espião de preço da concorrência com IA": "Espía de precios de la competencia con IA",
+                "Outros recursos com IA": "Otras características con IA",
+                "Nenhum destes": "Ninguno de estos",
+                "Sim, claro!": "¡Sí, claro!",
+                "Provavelmente sim.": "Probablemente sí.",
+                "Talvez...": "Tal vez...",
+                "Provavelmente não.": "Probablemente no.",
+                "Não, definitivamente!": "¡No, definitivamente!"
+            }
+        };
+
+        class LanguageManager {
+            constructor() {
+                this.currentLang = this.detectLanguage();
+                this.init();
+            }
+
+            detectLanguage() {
+                const saved = localStorage.getItem('sellastay-survey-language');
+                if (saved && translations[saved]) return saved;
+                const browserLang = navigator.language || navigator.userLanguage;
+                const langCode = browserLang.split('-')[0].toLowerCase();
+                const langMap = { 'pt': 'pt', 'en': 'en', 'es': 'es' };
+                return langMap[langCode] || 'pt';
+            }
+
+            init() {
+                this.updateLanguageButtons();
+                this.translatePage();
+                this.attachEventListeners();
+            }
+
+            updateLanguageButtons() {
+                document.querySelectorAll('.language-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === this.currentLang);
+                });
+            }
+
+            translatePage() {
+                const texts = translations[this.currentLang];
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.dataset.i18n;
+                    if (texts[key]) element.textContent = texts[key];
+                });
+                const langMap = { 'pt': 'pt-BR', 'en': 'en-US', 'es': 'es-ES' };
+                document.documentElement.lang = langMap[this.currentLang];
+                document.title = texts.survey_title;
+            }
+
+            switchLanguage(lang) {
+                if (translations[lang]) {
+                    this.currentLang = lang;
+                    localStorage.setItem('sellastay-survey-language', lang);
+                    this.updateLanguageButtons();
+                    this.translatePage();
+                    if (typeof currentIndex !== 'undefined' && currentIndex >= 0) {
+                        renderQuestion(currentIndex);
+                    }
+                }
+            }
+
+            attachEventListeners() {
+                document.querySelectorAll('.language-btn').forEach(btn => {
+                    btn.addEventListener('click', () => this.switchLanguage(btn.dataset.lang));
+                });
+            }
+
+            translate(text) {
+                const currentTranslations = questionsTranslations[this.currentLang];
+                return currentTranslations[text] || text;
+            }
+        }
+
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwKxUdtaNdc1qW2OG6y1UesR5Wk7PzXDznaCJmXk4Y7Q8u9F87OGDuE8psZYGAh0xy8Q/exec";
+
+        const QUESTIONS = [
+        { key: "nome_hotel", type: "text", label: "Nome do hotel ou rede hoteleira", placeholder: "Ex.: Hotel Aurora", required: true },
+        { key: "cidade_estado", type: "text", label: "Cidade / Estado", placeholder: "Ex.: São Paulo, SP", required: true },
+        { key: "categoria", type: "select", label: "Categoria do hotel", options: ["Econômico","Midscale","Luxo","Resort","Rede hoteleira"], required: true },
+        { key: "num_quartos", type: "select", label: "Número aproximado de quartos", options: ["Até 50","51–100","101–200","Acima de 200"], required: true },
+        { key: "possui_salas", type: "select", label: "Possui salas de eventos / reuniões?", options: ["Sim","Não"], required: true },
+        { key: "trabalha_grupos", type: "select", label: "Seu hotel já trabalha (ou deseja trabalhar) com negociação de tarifa para hospedagem em grupos e/ou eventos?", options: ["Sim","Não","Talvez"], required: true },
+        { key: "como_recebe_solicitacoes", type: "multiselect", label: "Como atualmente recebem solicitações de orçamento de eventos e/ou hospedagem em grupo?", options: ["E-mail","WhatsApp","Telefone","Site do hotel","Redes sociais","Agências/OTAs","Outro..."], required: true },
+        { key: "frequencia_solicitacoes", type: "select", label: "Com que frequência o hotel recebe solicitações de grupos?", options: ["Diariamente","Semanalmente","Quinzenalmente","Mensalmente","Raramente"], required: true },
+        { key: "tempo_ate_proposta", type: "select", label: "Em média, quanto tempo leva da solicitação até o envio da proposta?", options: ["Menos de 1h","1–3h","3–6h","6–12h","12–24h","Mais de 24h"], required: true },
+        { key: "maiores_desafios", type: "multiselect", label: "Quais são os maiores desafios no processo de negociação de grupos/eventos?", options: ["Disponibilidade do hotel","Bater o preço da concorrência","Volume alto de solicitações","Controlar o status de cada negociação","Falta de integração entre ferramentas","Falta de histórico de negociações","Dificuldade em gerar relatórios","Retrabalho / erros manuais","Comunicação fragmentada com clientes","Tempo excessivo em tarefas operacionais","Outros..."], required: true },
+        { key: "sistema_registro", type: "multiselect", label: "Qual sistema/ferramenta o hotel utiliza hoje para registrar, acompanhar e enviar propostas dessas negociações?", options: ["Nenhum / Planilhas","CRM (Salesforce, Monday, Hubspot, etc...)","PMS (Opera, TOTVS, Mews...)","Evnt","Sistema próprio","Outro..."], required: true },
+        { key: "que_gostaria", type: "multiselect", label: "O que você gostaria que este sistema/ferramenta tivesse de recurso para que seu processo de envio de proposta e negociação fosse mais prático e eficiente?", options: ["Integração perfeita com outros sistemas/plataformas","Integração perfeita com e-mail e WhatsApp","Reconhecimento automático de disponibilidade de salas/quartos para data solicitada","Mapeamento de eventos e datas que impactam a demanda","Calculadora automática de proposta final","Painel de indicadores","Histórico de cotações enviadas","Relatórios automatizados","Análises personalizadas com IA","Automatização de tarefas com IA","Espião de preço da concorrência com IA","Outros recursos com IA","Nenhum destes"], required: true},
+        { key: "interesse_teste", type: "select", label: "Se existisse uma ferramenta com todos os recursos que você selecionou na pergunta anterior, toparia testar gratuitamente por um período?", options:["Sim, claro!","Provavelmente sim.","Talvez...","Provavelmente não.","Não, definitivamente!"], required:true },
+        { key: "participar_piloto", type: "select", label: "Gostaria de participar como hotel piloto (fase de testes) e obter benefícios vitalícios exclusivos?", options:["Sim","Não"], required:true },
+        { key: "responsavel_nome", type: "text", label: "Digite seu nome", placeholder:"Nome completo", required:true },
+        { key: "responsavel_email", type: "email", label: "Seu E-mail", placeholder:"email@empresa.com", required:true },
+        { key: "responsavel_telefone", type: "text", label: "Seu Telefone", placeholder:"De preferência WhatsApp", required:true },
+        { key: "comentarios", type: "textarea", label: "Alguma sugestão adicional ou comentário?", placeholder:"Escreva aqui...", required:false }
+        ];
+
+        let currentIndex = 0;
+        const state = {};
+        const Qcontainer = document.getElementById("questionContainer");
+        const progressBar = document.getElementById("progressBar");
+        const backBtn = document.getElementById("backBtn");
+        const skipBtn = document.getElementById("skipBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const stepMeta = document.getElementById("stepMeta");
+        const form = document.getElementById("surveyForm");
+        const thankyou = document.getElementById("thankyou");
+        const restart = document.getElementById("restart");
+
+        function updateProgress(){
+        const pct = Math.round((currentIndex) / QUESTIONS.length * 100);
+        progressBar.style.width = pct + "%";
+        const texts = translations[window.languageManager.currentLang];
+        stepMeta.textContent = `${texts.question_num} ${Math.min(currentIndex+1, QUESTIONS.length)} ${texts.question_of} ${QUESTIONS.length}`;
+        }
+
+        function renderQuestion(idx){
+        Qcontainer.innerHTML = "";
+        const q = QUESTIONS[idx];
+        if(!q) return;
+
+        const stepDiv = document.createElement("div");
+        stepDiv.className = "step-indicator";
+        const stepText = translations[window.languageManager.currentLang].step_indicator;
+        stepDiv.innerHTML = `<div class="num">${idx+1}</div><p>${stepText}</p>`;
+
+        const body = document.createElement("div");
+        body.className = "question-body";
+        const translatedLabel = window.languageManager.translate(q.label);
+        const translatedPlaceholder = q.placeholder ? window.languageManager.translate(q.placeholder) : '';
+        body.innerHTML = `<div class="question-text">${translatedLabel}</div>
+                            ${translatedPlaceholder ? `<div class="question-desc">${translatedPlaceholder}</div>` : ''}`;
+
+        let inputEl;
+        if(q.type === "text" || q.type === "email"){
+            inputEl = document.createElement("input");
+            inputEl.type = q.type === "email" ? "email" : "text";
+            inputEl.className = "input";
+            inputEl.placeholder = translatedPlaceholder || "";
+            inputEl.value = state[q.key] || "";
+            inputEl.id = "inputField";
+            inputEl.required = !!q.required;
+            body.appendChild(inputEl);
+        } else if(q.type === "textarea"){
+            inputEl = document.createElement("textarea");
+            inputEl.className = "input";
+            inputEl.placeholder = translatedPlaceholder || "";
+            inputEl.rows = 4;
+            inputEl.id = "inputField";
+            inputEl.value = state[q.key] || "";
+            inputEl.required = !!q.required;
+            body.appendChild(inputEl);
+        } else if(q.type === "select"){
+            inputEl = document.createElement("select");
+            inputEl.className = "input";
+            inputEl.id = "inputField";
+            q.options.forEach(opt => {
+            const o = document.createElement("option");
+            o.value = opt; 
+            o.textContent = window.languageManager.translate(opt);
+            inputEl.appendChild(o);
+            });
+            if(state[q.key]) inputEl.value = state[q.key];
+            inputEl.required = !!q.required;
+            body.appendChild(inputEl);
+        } else if(q.type === "multiselect"){
+            inputEl = document.createElement("div");
+            q.options.forEach(opt => {
+            const id = `chk_${q.key}_${opt.replace(/\s+/g,'_')}`;
+            const label = document.createElement("label");
+            label.style.display="block";
+            label.style.marginBottom="8px";
+            const translatedOpt = window.languageManager.translate(opt);
+            label.innerHTML = `<input type="checkbox" id="${id}" value="${opt}" ${ (state[q.key]||[]).includes(opt) ? 'checked' : ''}> ${translatedOpt}`;
+            inputEl.appendChild(label);
+            });
+            body.appendChild(inputEl);
+        } else if(q.type === "scale"){
+            inputEl = document.createElement("div");
+            inputEl.className = "row";
+            for(let i=q.min;i<=q.max;i++){
+            const id = `scale_${q.key}_${i}`;
+            const label = document.createElement("label");
+            label.style.display="inline-block"; label.style.textAlign="center";
+            label.style.width="40px"; label.innerHTML = `<input type="radio" name="scale_${q.key}" value="${i}" ${ (state[q.key]==i) ? 'checked' : '' }> <div style="margin-top:6px;">${i}</div>`;
+            inputEl.appendChild(label);
+            }
+            body.appendChild(inputEl);
+        }
+
+        Qcontainer.appendChild(stepDiv);
+        Qcontainer.appendChild(body);
+
+        backBtn.style.visibility = idx === 0 ? "hidden" : "visible";
+        skipBtn.style.display = (q.required ? "none" : "inline-block");
+
+        setTimeout(()=> {
+            const f = document.getElementById("inputField");
+            if(f) f.focus();
+        },50);
+
+        updateProgress();
+        }
+
+        function collectAnswer(){
+        const q = QUESTIONS[currentIndex];
+        if(!q) return true;
+        let val = null;
+        const texts = translations[window.languageManager.currentLang];
+
+        if(q.type === "text" || q.type === "email" || q.type === "textarea" || q.type === "select"){
+            const el = document.getElementById("inputField");
+            if(!el) return true;
+            val = el.value && el.value.trim();
+            if(q.required && (!val || val.length === 0)){
+            alert(texts.validation_required);
+            el.focus();
+            return false;
+            }
+        } else if(q.type === "multiselect"){
+            const checkboxes = Qcontainer.querySelectorAll(`input[type="checkbox"]`);
+            val = [];
+            checkboxes.forEach(cb => { if(cb.checked) val.push(cb.value) });
+            if(q.required && (!val || val.length === 0)){
+            alert(texts.validation_multiselect);
+            return false;
+            }
+            if(q.maxChoices && val.length > q.maxChoices){
+            alert(`${texts.validation_max_choices} ${q.maxChoices} ${texts.validation_max_choices_end}`);
+            return false;
+            }
+        } else if(q.type === "scale"){
+            const sel = Qcontainer.querySelector(`input[type="radio"]:checked`);
+            if(sel) val = sel.value;
+            if(q.required && !val){
+            alert(texts.validation_scale);
+            return false;
+            }
+        }
+
+        state[q.key] = val === null ? "" : val;
+        return true;
+        }
+
+        form.addEventListener("submit", async (ev) => {
+        ev.preventDefault();
+        const ok = collectAnswer();
+        if(!ok) return;
+
+        if(currentIndex < QUESTIONS.length - 1){
+            currentIndex++;
+            renderQuestion(currentIndex);
+        } else {
+            await submitSurvey();
+        }
+        });
+
+        backBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if(currentIndex > 0) { currentIndex--; renderQuestion(currentIndex); }
+        });
+
+        skipBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        state[QUESTIONS[currentIndex].key] = "";
+        if(currentIndex < QUESTIONS.length - 1){
+            currentIndex++; renderQuestion(currentIndex);
+        } else {
+            submitSurvey();
+        }
+        });
+
+        restart.addEventListener("click", (e) => {
+        e.preventDefault();
+        location.reload();
+        });
+
+        async function submitSurvey(){
+        nextBtn.disabled = true;
+        backBtn.disabled = true;
+        const texts = translations[window.languageManager.currentLang];
+        nextBtn.innerHTML = `${texts.sending}...`;
+
+        try {
+            const payload = {};
+            QUESTIONS.forEach(q => {
+            let v = state[q.key];
+            if(Array.isArray(v)) v = v.join(" | ");
+            payload[q.key] = v || "";
+            });
+            payload.submitted_at = new Date().toISOString();
+            payload.language = window.languageManager.currentLang;
+
+            const res = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: new URLSearchParams(payload)
+            });
+
+            if(!res.ok){
+            const txt = await res.text();
+            console.error("Erro no envio:", txt);
+            alert(texts.error_send);
+            nextBtn.disabled = false; backBtn.disabled = false; 
+            nextBtn.innerHTML = `${texts.submit_btn} <i class="fa fa-arrow-right" style="margin-left:10px;"></i>`;
+            return;
+            }
+
+            form.style.display = "none";
+            document.getElementById("thankyou").style.display = "block";
+            progressBar.style.width = "100%";
+
+        } catch(err){
+            console.error(err);
+            alert(texts.error_connection);
+            nextBtn.disabled = false; backBtn.disabled = false; 
+            nextBtn.innerHTML = `${texts.submit_btn} <i class="fa fa-arrow-right" style="margin-left:10px;"></i>`;
+        }
+        }
+
+        window.languageManager = new LanguageManager();
+        renderQuestion(0);
+        updateProgress();
+    </script>
+</body>
+</html>
