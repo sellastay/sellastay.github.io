@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SellaStay | Serviços</title>
+    <link rel="icon" type="image/x-icon" href="img/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        .page-shell { padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+        .list-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+        .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .actions button { border: none; border-radius: 10px; padding: 10px 14px; font-weight: 600; cursor: pointer; }
+        .primary { background: linear-gradient(135deg, #ff914d, #ffb347); color: #0f172a; }
+        .ghost { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; }
+        .meta { color: var(--text-color); font-size: 0.9rem; }
+        .group-block { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+        .group-title { display: flex; justify-content: space-between; align-items: center; }
+        .item-card { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 12px; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(255,255,255,0.06); }
+        .item-card h4 { margin: 0; }
+        .item-meta { font-size: 0.9rem; color: var(--text-color); display: flex; gap: 12px; flex-wrap: wrap; }
+        .badge { display: inline-block; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,0.1); font-size: 0.8rem; }
+        .modal-overlay { position: fixed; inset:0; background: rgba(0,0,0,0.65); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-overlay.open { display: flex; }
+        .modal-card { background: var(--sidebar-color); border-radius: 16px; padding: 18px; width: min(720px, 94vw); box-shadow: 0 20px 40px rgba(0,0,0,0.35); max-height: 90vh; overflow: auto; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 12px; }
+        .form-grid label { display: flex; flex-direction: column; gap: 6px; font-size: 0.9rem; }
+        .form-grid input, .form-grid select, .form-grid textarea { padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: var(--body-color); color: var(--text-color); }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th, .table td { border: 1px solid rgba(255,255,255,0.15); padding: 8px; text-align: left; }
+        .table th { background: rgba(255,255,255,0.08); }
+    </style>
+</head>
+<body>
+
+    <!-- Menu -->
+    <nav class="sidebar close">
+
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <img src="img/logo.png" alt="">
+                </span>
+
+                <div class="text logo-text">
+                    <span class="name" id="nome">SellaStay</span>
+                    <span class="profession">EGRC Control</span>
+                </div>
+            </div>
+
+            <i class='bx bx-chevron-right toggle'></i>
+        </header>
+
+        <div class="menu-bar">
+            <div class="menu-scrollable">
+
+                <ul class="menu-links">
+
+                    <br>
+                    <br>
+
+                    <li class="nav-link">
+                        <a href="home.html">
+                            <i class='bx bxs-home icon' ></i>
+                            <span class="text nav-text">Home</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="dashboard.html">
+                            <i class='bx bxs-dashboard icon' ></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link has-submenu">
+                        <a href="leads.html">
+                            <i class='bx bxs-grid icon' ></i>
+                            <span class="text nav-text">Operacional <i class='bx bx-chevron-down arrow'></i></span>
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="leads.html"><i class='bx bxs-chevrons-right icon' ></i>Negociações</a></li>
+                            <li><a href="propostas.html"><i class='bx bx-mail-send icon' ></i>Propostas</a></li>
+                            <li><a href="follow-up.html"><i class='bx bx-transfer icon' ></i>Follow Up log</a></li>
+                            <li><a href="clients.html"><i class='bx bx-id-card icon' ></i>Carteira de Clientes</a></li>
+                            <li><a href="vendas.html"><i class='bx bx-history icon'></i></i>Histórico de Vendas</a></li>
+                            <li><a href="tasks.html"><i class='bx bx-task icon'></i></i>Gestor de Tarefas</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="calendar.html">
+                            <i class='bx bxs-calendar-event icon'></i>
+                            <span class="text nav-text">Mapa de Eventos</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="pricespy.html">
+                            <i class='bx bx-radar icon'></i>
+                            <span class="text nav-text">Radar de Preços</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="reminder.html">
+                            <i class='bx bxs-bell-ring icon' ></i>
+                            <span class="text nav-text">Lembretes</span>
+                        </a>
+                    </li>
+
+                    <!-- ::::::: VERIFICAR NECESSIDADE ::::::::-->
+                    <!-- <li class="nav-link">
+                        <a href="contratos.html">
+                            <i class='bx bx-briefcase icon' ></i>
+                            <span class="text nav-text">Contratos</span>
+                        </a>
+                    </li> -->
+
+                    <li class="nav-link" id="navselected">
+                        <a href="services.html">
+                            <i class='bx bx-box icon'></i>
+                            <span class="text nav-text">Serviços</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="relatorios.html">
+                            <i class='bx bx-line-chart icon'></i>
+                            <span class="text nav-text">Relatórios</span>
+                        </a>
+                    </li>
+
+                    <!-- ::::::: REALOCAR PARA OUTRO LUGAR ::::::::-->
+                    <!-- <li class="nav-link"> 
+                        <a href="doc.html">
+                            <i class='bx bx-help-circle icon' ></i>
+                            <span class="text nav-text">Ajuda</span>
+                        </a>
+                    </li> -->
+
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <ul class="menu-links">
+                    <li class="nav-link has-submenu">
+                        <a href="#">
+                            <img id="profile-pic" src="img/profile_pic_F.png" alt="Usuário logado">
+                            <span class="text nav-text"><span id="menuUserName">Usuário</span> <i class='bx bx-chevron-down arrow'></i></span>
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="profile.html"><i class='bx bx-user icon'></i> Perfil</a></li>
+                            <li class="has-submenu">
+                                <a href="empresas.html">
+                                    <i class='bx bxs-building icon'></i> Empresa <i class='bx bx-chevron-down arrow'></i>
+                                </a>
+                                <ul class="submenu">
+                                    <li><a href="#empresa-config"><i class='bx bx-briefcase icon'></i> Configurações da Empresa</a></li>
+                                    <li><a href="#hoteis-config"><i class='bx bx-hotel icon'></i> Cadastro de Hotéis</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="settings.html"><i class='bx bx-cog icon'></i> Configurações</a></li>
+                            <li><a href="help.html"><i class='bx bx-support icon'></i> Suporte</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="logout" id="logout">
+                        <a href="index.html">
+                            <i class='bx bx-log-out icon' ></i>
+                            <span class="text nav-text">Logout</span>
+                        </a>
+                    </li>
+
+                    <li class="mode">
+                        <div class="sun-moon">
+                            <i class='bx bx-moon icon moon'></i>
+                            <i class='bx bx-sun icon sun'></i>
+                        </div>
+                        <span class="mode-text text">Dark mode</span>
+
+                        <div class="toggle-switch">
+                            <span class="switch"></span>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- /Menu -->
+
+    <section class="home">
+        <div class="page-shell">
+            <div class="list-header">
+                <div>
+                    <p class="home-eyebrow">Catálogo</p>
+                    <h1>Cadastros P&S - A&B</h1>
+                </div>
+                <div class="actions">
+                    <button class="ghost" id="exportCatalog">Exportar JSON</button>
+                    <button class="primary" id="addItem" aria-label="Adicionar item"><i class='bx bx-plus'></i></button>
+                    <button class="primary" id="saveCatalog">Salvar catálogo</button>
+                </div>
+            </div>
+            <p class="meta">Os itens são salvos localmente (localStorage.servicesCatalog) e aparecem no modal de propostas.</p>
+
+            <div class="group-block" id="roomsBlock">
+                <div class="group-title">
+                    <h3>Tabela de preços (Quartos)</h3>
+                    <div class="actions">
+                        <input type="number" id="roomsPercent" placeholder="% ajuste" style="width:120px;">
+                        <button class="ghost" id="applyPercent">Aplicar %</button>
+                        <button class="primary" id="manageRooms">Gerir quartos</button>
+                    </div>
+                </div>
+                <table class="table" id="roomsTable">
+                    <thead><tr><th>Tipo</th><th>1 pessoa</th><th>10+ pessoas</th><th>Foto</th><th>Ações</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="group-block">
+                <div class="group-title"><h3>Auditórios</h3></div>
+                <div id="auditoriumList" class="services-list"></div>
+            </div>
+
+            <div class="group-block">
+                <div class="group-title"><h3>Serviços (buffet, refeições)</h3></div>
+                <div id="serviceList" class="services-list"></div>
+            </div>
+
+            <div class="group-block">
+                <div class="group-title"><h3>Locações / Equipamentos</h3></div>
+                <div id="rentalList" class="services-list"></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-card">
+            <div class="list-header">
+                <h3 id="modalTitle">Editar item</h3>
+                <button class="ghost" id="closeModal">Fechar</button>
+            </div>
+            <div class="form-grid">
+                <label>Nome <input type="text" id="editName"></label>
+                <label>Grupo
+                    <select id="editGroup">
+                        <option value="room">Quarto</option>
+                        <option value="auditorium">Auditório</option>
+                        <option value="service">Serviço</option>
+                        <option value="rental">Locação</option>
+                    </select>
+                </label>
+                <label>Tipo <input type="text" id="editType" placeholder="Standard, Buffet, Equipamento..."></label>
+                <label>Preço base <input type="number" step="0.01" id="editPrice"></label>
+                <label class="photo-field" style="display:none;">Foto <input type="file" id="editPhoto" accept="image/*"></label>
+            </div>
+            <div class="form-grid" id="roomFields" style="display:none;">
+                <label>Single <input type="number" step="0.01" id="editSingle"></label>
+                <label>Duplo <input type="number" step="0.01" id="editDouble"></label>
+                <label>Triplo <input type="number" step="0.01" id="editTriple"></label>
+            </div>
+            <div class="actions" style="margin-top:12px; justify-content:flex-end;">
+                <button class="primary" id="saveItem">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="roomsModal">
+        <div class="modal-card">
+            <div class="list-header">
+                <h3>Gerir quartos</h3>
+                <button class="ghost" id="closeRooms">Fechar</button>
+            </div>
+            <div class="actions" style="gap:8px; flex-wrap:wrap; margin-bottom:8px;">
+                <input type="number" id="modalPercent" placeholder="% quartos" style="width:120px;">
+                <button class="ghost" id="modalApplyPercent">Aplicar %</button>
+                <input type="number" id="modalAddValue" placeholder="+R$" style="width:120px;">
+                <button class="ghost" id="modalApplyValue">Aplicar valor</button>
+                <button class="ghost" id="resetRooms">Resetar preços</button>
+                <button class="primary" id="openBasePrices">Editar preço base</button>
+            </div>
+            <table class="table">
+                <thead><tr><th>Tipo</th><th>1 pessoa</th><th>10+ pessoas</th><th>Foto</th><th></th></tr></thead>
+                <tbody id="roomsEditor"></tbody>
+            </table>
+            <div class="actions" style="margin-top:10px;">
+                <button class="primary" id="addRoomRow"><i class='bx bx-plus'></i> Adicionar tipo</button>
+                <button class="primary" id="saveRooms">Salvar quartos</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="baseModal">
+        <div class="modal-card">
+            <div class="list-header">
+                <h3>Preço base - quartos</h3>
+                <button class="ghost" id="closeBase">Fechar</button>
+            </div>
+            <table class="table">
+                <thead><tr><th>Tipo</th><th>1 pessoa</th><th>10+ pessoas</th></tr></thead>
+                <tbody id="baseEditor"></tbody>
+            </table>
+            <div class="actions" style="margin-top:10px;">
+                <button class="primary" id="saveBase">Salvar preço base</button>
+            </div>
+        </div>
+    </div>
+
+    <Footer style="line-height: 15px;">
+        &copy; <span id="anoAtual"></span> SellaStay - Soluções Comerciais para Hotelaria. <br> <span style="font-size: 10px; cursor: pointer;">Desenvolvido por <a href="https://www.syncsoftware.com.br" style="text-decoration: none; color: var(--text-color);" onmouseover="this.style.color='#ff914d';" onmouseout="this.style.color='var(--text-color)';" target="_blank"> <b>Sync Software LTDA</b></a></span>
+    </Footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        const yearEl = document.getElementById("anoAtual");
+        yearEl.textContent = new Date().getFullYear();
+
+        const roomsTableBody = document.querySelector("#roomsTable tbody");
+        const auditoriumList = document.getElementById("auditoriumList");
+        const serviceList = document.getElementById("serviceList");
+        const rentalList = document.getElementById("rentalList");
+        const addItemBtn = document.getElementById("addItem");
+        const saveBtn = document.getElementById("saveCatalog");
+        const exportBtn = document.getElementById("exportCatalog");
+        const applyPercentBtn = document.getElementById("applyPercent");
+        const roomsPercentInput = document.getElementById("roomsPercent");
+        const editModal = document.getElementById("editModal");
+        const roomsModal = document.getElementById("roomsModal");
+        const closeModalBtn = document.getElementById("closeModal");
+        const closeRoomsBtn = document.getElementById("closeRooms");
+        const modalTitle = document.getElementById("modalTitle");
+        const editName = document.getElementById("editName");
+        const editGroup = document.getElementById("editGroup");
+        const editType = document.getElementById("editType");
+        const editPrice = document.getElementById("editPrice");
+        const editPhoto = document.getElementById("editPhoto");
+        const roomFields = document.getElementById("roomFields");
+        const editSingle = document.getElementById("editSingle");
+        const editDouble = document.getElementById("editDouble");
+        const editTriple = document.getElementById("editTriple");
+        const saveItemBtn = document.getElementById("saveItem");
+        const roomsEditor = document.getElementById("roomsEditor");
+        const addRoomRowBtn = document.getElementById("addRoomRow");
+        const saveRoomsBtn = document.getElementById("saveRooms");
+        const manageRoomsBtn = document.getElementById("manageRooms");
+        const baseModal = document.getElementById("baseModal");
+        const baseEditor = document.getElementById("baseEditor");
+        const openBasePricesBtn = document.getElementById("openBasePrices");
+        const closeBaseBtn = document.getElementById("closeBase");
+        const saveBaseBtn = document.getElementById("saveBase");
+        const modalPercentInput = document.getElementById("modalPercent");
+        const modalApplyPercentBtn = document.getElementById("modalApplyPercent");
+        const modalAddValueInput = document.getElementById("modalAddValue");
+        const modalApplyValueBtn = document.getElementById("modalApplyValue");
+        const resetRoomsBtn = document.getElementById("resetRooms");
+        const setBasePricesBtn = document.getElementById("setBasePrices");
+
+        function loadCatalog(){
+            try{
+                const raw = localStorage.getItem("servicesCatalog");
+                const parsed = JSON.parse(raw || "[]");
+                return Array.isArray(parsed) ? parsed : [];
+            }catch(err){
+                return [];
+            }
+        }
+
+        function loadBaseRooms(){
+            try{
+                const raw = localStorage.getItem("roomsBasePrices");
+                const parsed = JSON.parse(raw || "[]");
+                return Array.isArray(parsed) ? parsed : [];
+            }catch(err){
+                return [];
+            }
+        }
+
+        function saveBaseRooms(base){
+            localStorage.setItem("roomsBasePrices", JSON.stringify(base));
+        }
+
+        function loadVendors(){
+            try{
+                const raw = localStorage.getItem("vendorsList");
+                const parsed = JSON.parse(raw || "[]");
+                return Array.isArray(parsed) && parsed.length ? parsed : [
+                    { id:"v1", name:"Ana Souza", email:"ana@sellastay.com" },
+                    { id:"v2", name:"Bruno Lima", email:"bruno@sellastay.com" },
+                    { id:"v3", name:"Carla Mendes", email:"carla@sellastay.com" }
+                ];
+            }catch(err){
+                return [
+                    { id:"v1", name:"Ana Souza", email:"ana@sellastay.com" },
+                    { id:"v2", name:"Bruno Lima", email:"bruno@sellastay.com" },
+                    { id:"v3", name:"Carla Mendes", email:"carla@sellastay.com" }
+                ];
+            }
+        }
+
+        function saveCatalog(items){
+            localStorage.setItem("servicesCatalog", JSON.stringify(items));
+        }
+
+        function formatBR(value){
+            return (Number(value)||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+        }
+
+        function renderLists(items){
+            const rooms = items.filter(i => i.group === 'room');
+            const auditoriums = items.filter(i => i.group === 'auditorium');
+            const services = items.filter(i => i.group === 'service');
+            const rentals = items.filter(i => i.group === 'rental');
+
+            roomsTableBody.innerHTML = rooms.map((room, idx) => `
+                <tr data-id="${room.id}">
+                    <td>${room.name}</td>
+                    <td>${formatBR((room.price1 || room.single || 0).toFixed ? Number(room.price1 || 0).toFixed(2) : room.price1 || 0)}</td>
+                    <td>${formatBR((room.price10 || room.double || 0).toFixed ? Number(room.price10 || 0).toFixed(2) : room.price10 || 0)}</td>
+                    <td>${room.photo ? 'Imagem' : '-'}</td>
+                    <td><button class="ghost" data-edit="${room.id}">Editar</button></td>
+                </tr>
+            `).join("");
+            roomsTableBody.querySelectorAll("[data-edit]").forEach(btn => btn.addEventListener("click", () => openModal(btn.dataset.edit)));
+
+            const renderGroupList = (listEl, data) => {
+                listEl.innerHTML = data.map(item => `
+                    <div class="item-card" data-id="${item.id}">
+                        <div>
+                            <div class="badge">${item.group}</div>
+                            <h4>${item.name}</h4>
+                            <div class="item-meta">
+                                <span>${item.type || ""}</span>
+                                <span>${formatBR(item.price)}</span>
+                                ${item.photo ? "<span>Foto anexada</span>" : ""}
+                            </div>
+                        </div>
+                        <button class="ghost" data-edit="${item.id}">Editar</button>
+                    </div>
+                `).join("");
+                listEl.querySelectorAll("[data-edit]").forEach(btn => btn.addEventListener("click", () => openModal(btn.dataset.edit)));
+            };
+
+            renderGroupList(auditoriumList, auditoriums);
+            renderGroupList(serviceList, services);
+            renderGroupList(rentalList, rentals);
+        }
+
+        function handlePhotoUpload(input, target){
+            const file = input.files?.[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                target.photo = reader.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        function renderRoomEditor(){
+            const rooms = loadCatalog().filter(i => i.group === "room");
+            roomsEditor.innerHTML = rooms.map(room => `
+                <tr data-id="${room.id}">
+                    <td><input type="text" value="${room.name || ""}"></td>
+                    <td><input type="number" step="0.01" value="${Number(room.price1 || 0).toFixed(2)}"></td>
+                    <td><input type="number" step="0.01" value="${Number(room.price10 || 0).toFixed(2)}"></td>
+                    <td><input type="file" accept="image/*"></td>
+                    <td><button class="ghost" data-remove="${room.id}">Remover</button></td>
+                </tr>
+            `).join("");
+            roomsEditor.querySelectorAll("[data-remove]").forEach(btn => btn.addEventListener("click", () => {
+                const id = btn.dataset.remove;
+                const catalog = loadCatalog().filter(i => i.id !== id);
+                saveCatalog(catalog);
+                renderRoomEditor();
+                renderLists(catalog);
+            }));
+            roomsEditor.querySelectorAll("input[type='file']").forEach(input => {
+                input.addEventListener("change", (ev) => {
+                    const tr = ev.target.closest("tr");
+                    const id = tr.dataset.id;
+                    const catalog = loadCatalog();
+                    const target = catalog.find(i => i.id === id);
+                    if(target) handlePhotoUpload(ev.target, target);
+                    saveCatalog(catalog);
+                });
+            });
+        }
+
+        function addRoomRow(){
+            saveRoomsFromEditor();
+            const catalog = loadCatalog();
+            catalog.push({ id:"room"+Date.now(), group:"room", name:"Novo quarto", price1:0, price10:0, photo:"" });
+            saveCatalog(catalog);
+            renderRoomEditor();
+            renderLists(catalog);
+        }
+
+        function saveRoomsFromEditor(){
+            const catalog = loadCatalog().filter(i => i.group !== "room");
+            const rows = Array.from(roomsEditor.querySelectorAll("tr"));
+            rows.forEach(tr => {
+                const inputs = tr.querySelectorAll("input");
+                const name = inputs[0].value.trim();
+                const price1 = Number(inputs[1].value) || 0;
+                const price10 = Number(inputs[2].value) || 0;
+                const id = tr.dataset.id || ("room"+Date.now());
+                catalog.push({ id, group:"room", name, price1, price10, photo:"" });
+            });
+            saveCatalog(catalog);
+        }
+
+        function saveRooms(){
+            saveRoomsFromEditor();
+            renderLists(loadCatalog());
+            roomsModal.classList.remove("open");
+        }
+
+        function applyPercentToRooms(){
+            const pct = Number(modalPercentInput.value) || 0;
+            roomsEditor.querySelectorAll("tr").forEach(tr => {
+                const price1 = tr.querySelectorAll("input")[1];
+                const price10 = tr.querySelectorAll("input")[2];
+                price1.value = ((Number(price1.value)||0) * (1+pct/100)).toFixed(2);
+                price10.value = ((Number(price10.value)||0) * (1+pct/100)).toFixed(2);
+            });
+            saveRoomsFromEditor();
+        }
+
+        function applyValueToRooms(){
+            const add = Number(modalAddValueInput.value) || 0;
+            roomsEditor.querySelectorAll("tr").forEach(tr => {
+                const price1 = tr.querySelectorAll("input")[1];
+                const price10 = tr.querySelectorAll("input")[2];
+                price1.value = ((Number(price1.value)||0) + add).toFixed(2);
+                price10.value = ((Number(price10.value)||0) + add).toFixed(2);
+            });
+            saveRoomsFromEditor();
+        }
+
+        function resetRooms(){
+            const base = loadBaseRooms();
+            if(!base.length) return;
+            const catalog = loadCatalog().filter(i => i.group !== "room").concat(base);
+            saveCatalog(catalog);
+            renderRoomEditor();
+            renderLists(catalog);
+        }
+
+        function renderBaseEditor(){
+            const base = loadBaseRooms();
+            baseEditor.innerHTML = base.map(room => `
+                <tr data-id="${room.id}">
+                    <td><input type="text" value="${room.name || ""}"></td>
+                    <td><input type="number" step="0.01" value="${Number(room.price1 || 0).toFixed(2)}"></td>
+                    <td><input type="number" step="0.01" value="${Number(room.price10 || 0).toFixed(2)}"></td>
+                </tr>
+            `).join("");
+        }
+
+        function saveBasePrices(){
+            const rows = Array.from(baseEditor.querySelectorAll("tr"));
+            const base = rows.map(tr => {
+                const inputs = tr.querySelectorAll("input");
+                return {
+                    id: tr.dataset.id || ("base"+Date.now()),
+                    group:"room",
+                    name: inputs[0].value.trim(),
+                    price1: Number(inputs[1].value) || 0,
+                    price10: Number(inputs[2].value) || 0
+                };
+            }).filter(r => r.name);
+            saveBaseRooms(base);
+            alert("Preço base salvo.");
+            baseModal.classList.remove("open");
+        }
+
+
+        function newItem(group){
+            return { id:"svc"+Date.now(), name:"Novo item", group, type:"", price:0, rooms:0, auditoriums:0, photo:"", single:0, double:0, triple:0 };
+        }
+
+        function openModal(id){
+            const catalog = loadCatalog();
+            currentEdit = id ? catalog.find(i => i.id === id) : newItem("service");
+            if(!currentEdit) currentEdit = newItem("service");
+            modalTitle.textContent = currentEdit.id ? "Editar item" : "Novo item";
+            editName.value = currentEdit.name || "";
+            editGroup.value = currentEdit.group || "service";
+            editType.value = currentEdit.type || "";
+            editPrice.value = currentEdit.price || 0;
+            editSingle.value = currentEdit.price1 || currentEdit.single || 0;
+            editDouble.value = currentEdit.price10 || currentEdit.double || 0;
+            editTriple.value = currentEdit.triple || 0;
+            roomFields.style.display = editGroup.value === "room" ? "grid" : "none";
+            editPhoto.parentElement.style.display = (editGroup.value === "room" || editGroup.value === "auditorium") ? "block" : "none";
+            editPhoto.value = "";
+            editModal.classList.add("open");
+        }
+
+        function saveItem(){
+            const catalog = loadCatalog().filter(i => i.id !== (currentEdit?.id));
+            const updated = {
+                ...currentEdit,
+                id: currentEdit?.id || ("svc"+Date.now()),
+                name: editName.value.trim(),
+                group: editGroup.value,
+                type: editType.value,
+                price: Number(editPrice.value) || 0,
+                price1: Number(editSingle.value) || 0,
+                price10: Number(editDouble.value) || 0,
+                triple: Number(editTriple.value) || 0
+            };
+            if(updated.group !== "room"){
+                updated.price1 = updated.price10 = updated.triple = 0;
+            }
+            catalog.push(updated);
+            saveCatalog(catalog);
+            renderLists(catalog);
+            editModal.classList.remove("open");
+        }
+
+        addItemBtn.addEventListener("click", () => { openModal(null); });
+
+        applyPercentBtn.addEventListener("click", () => {
+            const pct = Number(roomsPercentInput.value) || 0;
+            const catalog = loadCatalog().map(item => {
+                if(item.group === "room"){
+                    return {...item, price1: (item.price1 || 0) * (1+pct/100), price10: (item.price10 || 0) * (1+pct/100)};
+                }
+                return item;
+            });
+            saveCatalog(catalog);
+            renderLists(catalog);
+        });
+
+        saveItemBtn.addEventListener("click", saveItem);
+        closeModalBtn.addEventListener("click", () => editModal.classList.remove("open"));
+        editPhoto.addEventListener("change", (ev) => handlePhotoUpload(ev.target, currentEdit));
+        manageRoomsBtn.addEventListener("click", () => { renderRoomEditor(); roomsModal.classList.add("open"); });
+        closeRoomsBtn.addEventListener("click", () => roomsModal.classList.remove("open"));
+        addRoomRowBtn.addEventListener("click", addRoomRow);
+        saveRoomsBtn.addEventListener("click", saveRooms);
+        modalApplyPercentBtn.addEventListener("click", applyPercentToRooms);
+        modalApplyValueBtn.addEventListener("click", applyValueToRooms);
+        resetRoomsBtn.addEventListener("click", resetRooms);
+        openBasePricesBtn.addEventListener("click", () => { renderBaseEditor(); baseModal.classList.add("open"); });
+        closeBaseBtn.addEventListener("click", () => baseModal.classList.remove("open"));
+        saveBaseBtn.addEventListener("click", saveBasePrices);
+
+        // Expor vendedores pre-cadastrados para outras telas
+        const vendors = loadVendors();
+        localStorage.setItem("vendorsList", JSON.stringify(vendors));
+
+        saveBtn.addEventListener("click", () => {
+            alert("Catálogo salvo (localStorage.servicesCatalog).");
+        });
+
+        exportBtn.addEventListener("click", () => {
+            const items = loadCatalog();
+            const blob = new Blob([JSON.stringify(items, null, 2)], {type:"application/json"});
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "catalogo-servicos.json";
+            link.click();
+        });
+
+        const initial = loadCatalog();
+        renderLists(initial);
+    </script>
+</body>
+</html>

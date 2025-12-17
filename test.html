@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRC - Group Rooms Control - Simulação</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #e9e9e9;
+            color: #333;
+        }
+        .valor-total, .valor-final {
+            font-weight: bold;
+        }
+        .text-left {
+            text-align: left;
+        }
+        .header-section {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-section">GRC - GROUP ROOMS CONTROL & LOST BUSINESS</div>
+
+    <h2>Tabela de Tipos de Quarto e Preços</h2>
+    <table id="tabela-precos">
+        <thead>
+            <tr>
+                <th class="text-left">Tipos de Quarto</th>
+                <th>Standard</th>
+                <th>Superior</th>
+                <th>Luxo</th>
+                <th>Business</th>
+                <th>Royal</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+
+    <h2>Cálculo de Valores</h2>
+    <table>
+        <tbody>
+            <tr>
+                <td class="text-left">ISS Rate</td>
+                <td id="iss-rate">5,0%</td>
+            </tr>
+            <tr>
+                <td class="text-left">VALOR TOTAL (Exemplo)</td>
+                <td class="valor-total" id="valor-total">R$ 0,00</td>
+            </tr>
+            <tr>
+                <td class="text-left">VALOR FINAL com ISS incluso</td>
+                <td class="valor-final" id="valor-final">R$ 0,00</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <p><i>Nota: O Valor Total é um valor de exemplo (R$ 27.625,00) para demonstrar a lógica do cálculo do ISS.</i></p>
+
+</div>
+
+<script>
+    // ** Lógica da Planilha - Aba "Calc" **
+
+    // 1. Dados de Preços (Simulação das células B6:H10)
+    const roomRates = [
+        { tipo: 'Single', Standard: 300.00, Superior: 400.00, Luxo: 500.00, Business: 600.00, Royal: 1000.00 },
+        { tipo: 'Duplo Casal', Standard: 350.00, Superior: 450.00, Luxo: 550.00, Business: 650.00, Royal: 1200.00 },
+        { tipo: 'Duplo Twin', Standard: 350.00, Superior: 450.00, Luxo: 550.00, Business: 650.00, Royal: null },
+        { tipo: 'Triplo', Standard: 400.00, Superior: 500.00, Luxo: 600.00, Business: 700.00, Royal: null },
+        { tipo: 'Quadruplo', Standard: 450.00, Superior: 550.00, Luxo: 650.00, Business: 750.00, Royal: null }
+    ];
+
+    // 2. Dados de Cálculo (Simulação das células H5, J6, J7)
+    const ISS_RATE = 0.05; // 5,0%
+    const VALOR_TOTAL_EXEMPLO = 27625.00; // Valor Total de exemplo
+    
+    // Formatação de Moeda
+    const formatter = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+    });
+
+    // Função para preencher a Tabela de Preços
+    function preencherTabelaPrecos() {
+        const tbody = document.querySelector('#tabela-precos tbody');
+        roomRates.forEach(rate => {
+            const row = tbody.insertRow();
+            row.insertCell().textContent = rate.tipo; // Coluna Tipos de quarto (C)
+            
+            // Colunas de Categorias/Preços (D, E, F, G, H)
+            ['Standard', 'Superior', 'Luxo', 'Business', 'Royal'].forEach(key => {
+                const cell = row.insertCell();
+                if (rate[key] !== null) {
+                    cell.textContent = formatter.format(rate[key]);
+                } else {
+                    cell.textContent = ''; // Célula vazia
+                }
+            });
+        });
+    }
+
+    // Função para calcular o Valor Final
+    function calcularValores() {
+        // Lógica: VALOR FINAL = VALOR TOTAL * (1 + ISS Rate)
+        const valorFinal = VALOR_TOTAL_EXEMPLO * (1 + ISS_RATE);
+
+        // Atualizar a interface
+        document.getElementById('valor-total').textContent = formatter.format(VALOR_TOTAL_EXEMPLO);
+        document.getElementById('valor-final').textContent = formatter.format(valorFinal);
+    }
+    
+    // Executar a lógica ao carregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+        preencherTabelaPrecos();
+        calcularValores();
+    });
+
+</script>
+</body>
+</html>

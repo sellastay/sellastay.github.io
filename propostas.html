@@ -1,0 +1,2533 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>SellaStay | Propostas</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="img/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--body-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+        .home {
+            position: absolute;
+            top: 0;
+            left: 250px;
+            min-height: 100vh;
+            width: calc(100% - 250px);
+            text-align: left;
+            background-color: blur var(--body-color);
+            transition: var(--tran-05);
+            padding: 35px 35px 120px;
+            color: var(--text-color);
+        }
+        .proposal-modal .modal-shell{
+            margin-left: 0;
+            transition: margin-left var(--tran-05);
+        }
+        .sidebar.close ~ .proposal-modal .modal-shell{
+            margin-left: 0;
+        }
+        .sidebar.close ~ .home {
+            left: 90px;
+            width: calc(100% - 90px);
+        }
+        @media (max-width: 768px) {
+            .sidebar.close ~ .home,
+            .sidebar ~ .home {
+                left: 0;
+                width: 100%;
+            }
+        }
+        .home-overview {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+        .home-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .home-header-text h1 {
+            margin: 0;
+            font-size: clamp(2rem, 4vw, 2.6rem);
+        }
+        .home-subtitle {
+            margin: 4px 0 0;
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .btn-primary, .btn-ghost {
+            border: none;
+            border-radius: 14px;
+            padding: 12px 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform .15s ease, box-shadow .2s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #9333ea);
+            color: #fff;
+            box-shadow: 0 12px 30px rgba(59,130,246,.25);
+        }
+        .btn-primary:hover { transform: translateY(-1px); }
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-color);
+            border: 1px solid rgba(255,255,255,.1);
+        }
+        .notification-bell {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: transform .15s ease, box-shadow .2s ease;
+        }
+        .notification-bell:hover { transform: translateY(-1px); }
+        .notification-bell .bell-icon i{
+            font-size: 30px;
+            color: #111;
+        }
+        body.dark .notification-bell .bell-icon i{
+            color: #fff;
+        }
+        .notification-bell .badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: #ef4444;
+            color: #fff;
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-weight: 700;
+            min-width: 24px;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 0 rgba(239,68,68,0.35);
+            animation: bellPulse 1.4s ease infinite;
+        }
+        .notification-bell .badge.empty {
+            background: #22c55e;
+            color: #0f172a;
+        }
+        .notification-bell .badge-num{ display:inline-block; min-width:14px; text-align:center; }
+        .notification-panel {
+            position: absolute;
+            right: 0;
+            top: 60px;
+            width: 320px;
+            max-height: 360px;
+            background: var(--sidebar-color);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 16px;
+            box-shadow: 0 24px 60px rgba(0,0,0,.28);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            z-index: 10;
+        }
+        .notification-panel.open { display: flex; }
+        .notification-panel header {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            font-weight: 700;
+        }
+        .notification-list {
+            overflow-y: auto;
+            max-height: 320px;
+        }
+        .notification-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255,255,255,.04);
+            line-height: 1.4;
+        }
+        .notification-item small {
+            display: block;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+        .home-cards.summary {
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        }
+        .proposal-list {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 16px 40px rgba(0,0,0,.18);
+        }
+        .proposal-list header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .filters {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .filters select, .filters input {
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.08);
+            background: rgba(255,255,255,.03);
+            color: var(--text-color);
+        }
+        .proposal-cards {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .proposal-card {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr 0.8fr 0.7fr 0.6fr auto;
+            gap: 14px;
+            align-items: center;
+            padding: 16px 18px;
+            background: linear-gradient(120deg, rgba(255,255,255,0.03), rgba(59,130,246,0.05));
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            backdrop-filter: blur(2px);
+        }
+        .proposal-card > div { min-width: 0; }
+        .proposal-card h3, .proposal-card p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .proposal-card h3 { margin: 0 0 4px; font-size: 1rem; }
+        .proposal-card .subtitle { color: #94a3b8; margin: 0; font-size: .9rem; }
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(255,255,255,.08);
+            color: #e2e8f0;
+        }
+        .status-chip.sent { background: rgba(14,165,233,.14); color: #38bdf8; }
+        .status-chip.draft { background: rgba(234,179,8,.16); color: #facc15; }
+        .status-chip.accepted { background: rgba(74,222,128,.14); color: #4ade80; }
+        .status-chip.refused { background: rgba(248,113,113,.14); color: #f87171; }
+        .proposal-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+        .proposal-actions button {
+            border: 1px solid rgba(255,255,255,.12);
+            background: rgba(255,255,255,.04);
+            color: var(--text-color);
+            padding: 8px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background .15s ease;
+        }
+        .proposal-actions button:hover { background: rgba(255,255,255,.08); }
+        .proposal-modal,
+        .send-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            /* alinhar com o offset do sidebar aberto */
+            left: 250px;
+            right: 0;
+            z-index: 99;
+            transition: left .28s ease, right .28s ease;
+        }
+        .proposal-modal.open,
+        .send-modal.open { display: flex; }
+        /* sidebar fechado (85px) */
+        .sidebar.close ~ .proposal-modal,
+        .sidebar.close ~ .send-modal,
+        .sidebar.close ~ .manager-modal {
+            left: 85px;
+            right: 0;
+        }
+        .modal-shell {
+            width: min(1200px, 96vw);
+            background: var(--sidebar-color);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 18px;
+            box-shadow: 0 30px 80px rgba(0,0,0,.38);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+        .modal-body {
+            padding: 24px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-body h2 { margin-top: 0; }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+        .form-grid label {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 12px;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+        .form-grid input,
+        .form-grid select,
+        .form-grid textarea {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,.1);
+            background: rgba(255,255,255,.03);
+            color: var(--text-color);
+        }
+        .group-planner {
+            margin: 18px 0 10px;
+            padding: 14px;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 14px;
+            background: rgba(255,255,255,.02);
+        }
+        .group-planner h3 { margin: 0; }
+        .planner-header {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .policy-block {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+        }
+        .planner-section {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,.06);
+        }
+        .planner-section header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .planner-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .segment-row {
+            display: grid;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .segment-row input,
+        .segment-row select,
+        .segment-row textarea {
+            width: 100%;
+            min-width: 0;
+        }
+        .stays-grid {
+            grid-template-columns: 1fr 0.9fr 0.9fr 0.9fr 0.7fr 0.7fr 0.7fr 0.7fr 0.6fr auto;
+        }
+        .events-grid {
+            grid-template-columns: 1fr 0.8fr 0.8fr 0.8fr 0.8fr 0.6fr auto;
+        }
+        .equip-grid {
+            grid-template-columns: 1fr 0.8fr 1fr 0.8fr 0.6fr auto;
+        }
+        .fnb-grid {
+            grid-template-columns: 0.9fr 0.9fr 1fr 0.8fr 1fr 0.6fr auto;
+        }
+        @media (max-width: 1280px) {
+            .stays-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+            .events-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            .equip-grid,
+            .fnb-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+        }
+        @media (max-width: 960px) {
+            .planner-header {
+                grid-template-columns: 1fr;
+            }
+        }
+        .group-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .summary-card {
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 12px;
+            background: rgba(255,255,255,.03);
+        }
+        .summary-card p { margin: 2px 0; }
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .btn-cta {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            color: #fff;
+            box-shadow: 0 10px 28px rgba(99,102,241,0.25);
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 700;
+        }
+        .btn-contract {
+            background: linear-gradient(135deg, #f97316, #fb7185);
+            color: #fff;
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 700;
+            box-shadow: 0 10px 28px rgba(249,115,22,0.25);
+        }
+        .contract-pulse {
+            position: relative;
+            overflow: hidden;
+            animation: pulseGlow 1.6s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(249,115,22,0.32); }
+            70% { box-shadow: 0 0 0 12px rgba(249,115,22,0); }
+            100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); }
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 700;
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            color: #fff;
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 700;
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            color: #fff;
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 700;
+        }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            color: #cbd5e1;
+            font-size: 22px;
+            cursor: pointer;
+        }
+        .pdf-preview {
+            background: #fff;
+            color: #0f172a;
+            padding: 22px;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+        .pdf-preview h3 { margin: 0 0 10px; }
+        .pdf-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .pdf-meta strong { font-weight: 800; }
+        .pdf-prices table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            font-size: 13px;
+        }
+        .pdf-prices th, .pdf-prices td {
+            border: 1px solid #e2e8f0;
+            padding: 8px;
+        }
+        .pdf-photos {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+        }
+        .pdf-photos img {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            object-fit: cover;
+            height: 100px;
+        }
+        .send-options {
+            padding: 22px;
+            background: var(--sidebar-color);
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,.1);
+            width: min(520px, 95vw);
+            box-shadow: 0 20px 60px rgba(0,0,0,.35);
+            position: relative;
+        }
+        .close-send {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .close-send:hover { color: #fff; }
+        .send-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .send-actions button {
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 12px;
+            padding: 12px;
+            background: rgba(255,255,255,.04);
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        .send-actions button.primary { background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; }
+        .send-actions button.whatsapp-accent { background: linear-gradient(135deg, #25d366, #128c7e); color: #fff; box-shadow: 0 10px 25px rgba(37,211,102,0.25); }
+        .send-actions button.email-accent { background: linear-gradient(135deg, #f97316, #ec4899); color: #fff; box-shadow: 0 10px 25px rgba(249,115,22,0.25); }
+        .send-actions button.danger { background: linear-gradient(135deg, #ef4444, #b91c1c); color: #fff; }
+        .empty-state {
+            padding: 22px;
+            text-align: center;
+            border: 1px dashed rgba(255,255,255,.2);
+            border-radius: 12px;
+            color: #94a3b8;
+        }
+        @media (max-width: 1080px) {
+            .proposal-card { grid-template-columns: 1.4fr 1.2fr 1fr; grid-auto-rows: auto; }
+            .proposal-actions { grid-column: 1 / -1; }
+            .modal-shell { grid-template-columns: 1fr; }
+            /* em telas menores, ocupar a largura total */
+            .proposal-modal,
+            .send-modal,
+            .manager-modal {
+                left: 0;
+                right: 0;
+            }
+        }
+        @media (max-width: 768px){
+            .proposal-modal .modal-shell{ width: 100%; }
+        }
+        .manager-modal{
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            left: 250px;
+            right: 0;
+            z-index: 120;
+            padding: 20px;
+            transition: left .28s ease, right .28s ease;
+        }
+        .manager-modal.open{ display: flex; }
+        .manager-card{
+            background: var(--sidebar-color);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 16px;
+            padding: 18px;
+            width: min(360px, 90vw);
+            box-shadow: 0 24px 60px rgba(0,0,0,.35);
+        }
+        .manager-card h3{ margin-top: 0; }
+        .manager-card input{
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.12);
+            background: rgba(255,255,255,.04);
+            color: var(--text-color);
+            margin: 10px 0;
+        }
+        .manager-actions{
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Menu -->
+    <nav class="sidebar close">
+
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <img src="img/logo.png" alt="">
+                </span>
+
+                <div class="text logo-text">
+                    <span class="name" id="nome">SellaStay</span>
+                    <span class="profession">EGRC Control</span>
+                </div>
+            </div>
+
+            <i class='bx bx-chevron-right toggle'></i>
+        </header>
+
+        <div class="menu-bar">
+            <div class="menu-scrollable">
+
+                <ul class="menu-links">
+
+                    <br>
+                    <br>
+
+                    <li class="nav-link">
+                        <a href="home.html">
+                            <i class='bx bxs-home icon' ></i>
+                            <span class="text nav-text">Home</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="dashboard.html">
+                            <i class='bx bxs-dashboard icon' ></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link has-submenu">
+                        <a href="leads.html" id="navselected">
+                            <i class='bx bxs-grid icon' ></i>
+                            <span class="text nav-text">Operacional <i class='bx bx-chevron-down arrow'></i></span>
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="leads.html"><i class='bx bxs-chevrons-right icon' ></i>Negociações</a></li>
+                            <li id="subactive"><a href="propostas.html"><i class='bx bx-mail-send icon' ></i>Propostas</a></li>
+                            <li><a href="follow-up.html"><i class='bx bx-transfer icon' ></i>Follow Up log</a></li>
+                            <li><a href="clients.html"><i class='bx bx-id-card icon' ></i>Carteira de Clientes</a></li>
+                            <li><a href="vendas.html"><i class='bx bx-history icon'></i></i>Histórico de Vendas</a></li>
+                            <li><a href="tasks.html"><i class='bx bx-task icon'></i></i>Gestor de Tarefas</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="calendar.html">
+                            <i class='bx bxs-calendar-event icon'></i>
+                            <span class="text nav-text">Mapa de Eventos</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="pricespy.html">
+                            <i class='bx bx-radar icon'></i>
+                            <span class="text nav-text">Radar de Preços</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="reminder.html">
+                            <i class='bx bxs-bell-ring icon' ></i>
+                            <span class="text nav-text">Lembretes</span>
+                        </a>
+                    </li>
+
+                    <!-- ::::::: VERIFICAR NECESSIDADE ::::::::-->
+                    <!-- <li class="nav-link">
+                        <a href="contratos.html">
+                            <i class='bx bx-briefcase icon' ></i>
+                            <span class="text nav-text">Contratos</span>
+                        </a>
+                    </li> -->
+
+                    <li class="nav-link">
+                        <a href="services.html">
+                            <i class='bx bx-box icon'></i>
+                            <span class="text nav-text">Serviços</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="relatorios.html">
+                            <i class='bx bx-line-chart icon'></i>
+                            <span class="text nav-text">Relatórios</span>
+                        </a>
+                    </li>
+
+                    <!-- ::::::: REALOCAR PARA OUTRO LUGAR ::::::::-->
+                    <!-- <li class="nav-link"> 
+                        <a href="doc.html">
+                            <i class='bx bx-help-circle icon' ></i>
+                            <span class="text nav-text">Ajuda</span>
+                        </a>
+                    </li> -->
+
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <ul class="menu-links">
+                    <li class="nav-link has-submenu">
+                        <a href="#">
+                            <img id="profile-pic" src="img/profile_pic_F.png" alt="Usuário logado">
+                            <span class="text nav-text"><span id="menuUserName">Usuário</span> <i class='bx bx-chevron-down arrow'></i></span>
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="profile.html"><i class='bx bx-user icon'></i> Perfil</a></li>
+                            <li class="has-submenu">
+                                <a href="empresas.html">
+                                    <i class='bx bxs-building icon'></i> Empresa <i class='bx bx-chevron-down arrow'></i>
+                                </a>
+                                <ul class="submenu">
+                                    <li><a href="#empresa-config"><i class='bx bx-briefcase icon'></i> Configurações da Empresa</a></li>
+                                    <li><a href="#hoteis-config"><i class='bx bx-hotel icon'></i> Cadastro de Hotéis</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="settings.html"><i class='bx bx-cog icon'></i> Configurações</a></li>
+                            <li><a href="help.html"><i class='bx bx-support icon'></i> Suporte</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="logout" id="logout">
+                        <a href="index.html">
+                            <i class='bx bx-log-out icon' ></i>
+                            <span class="text nav-text">Logout</span>
+                        </a>
+                    </li>
+
+                    <li class="mode">
+                        <div class="sun-moon">
+                            <i class='bx bx-moon icon moon'></i>
+                            <i class='bx bx-sun icon sun'></i>
+                        </div>
+                        <span class="mode-text text">Dark mode</span>
+
+                        <div class="toggle-switch">
+                            <span class="switch"></span>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- /Menu -->
+
+    <section class="home">
+        <div class="home-overview">
+            <div class="home-header">
+                <div class="home-header-text">
+                    <p class="home-eyebrow">Pipeline comercial</p>
+                    <h1>Propostas em grupo</h1>
+                    <p class="home-subtitle">Modelos, envio e tracking automático no Kanban.</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-primary" id="newProposalBtn"><i class='bx bx-edit-alt'></i> Nova proposta</button>
+                    <div class="notification-wrapper" data-notification-anchor></div>
+                </div>
+            </div>
+            <div class="home-cards summary">
+                <article class="home-card">
+                    <header>
+                        <p class="card-eyebrow">Total</p>
+                        <h3>Propostas cadastradas</h3>
+                    </header>
+                    <p class="home-card-value" id="totalProposals">0</p>
+                    <p class="home-card-meta meta-description">Rascunhos e enviadas.</p>
+                </article>
+                <article class="home-card home-card-receita">
+                    <header>
+                        <p class="card-eyebrow">Envios</p>
+                        <h3>Propostas enviadas</h3>
+                    </header>
+                    <p class="home-card-value" id="sentProposals">0</p>
+                    <p class="home-card-meta meta-description">Movimentadas para a coluna "Proposta enviada".</p>
+                </article>
+                <article class="home-card">
+                    <header>
+                        <p class="card-eyebrow">Conversão</p>
+                        <h3>Aceitas</h3>
+                    </header>
+                    <p class="home-card-value" id="acceptedProposals">0</p>
+                    <p class="home-card-meta meta-description">Controle automático pelo clique do cliente.</p>
+                </article>
+            </div>
+            <section class="proposal-list">
+                <header>
+                    <div>
+                        <h2>Propostas em aberto</h2>
+                        <p class="home-subtitle">Cards em retângulo para visualizar rapidamente as propostas do time.</p>
+                    </div>
+                    <div class="filters">
+                        <input type="search" id="searchInput" placeholder="Buscar cliente ou evento">
+                        <select id="statusFilter">
+                            <option value="all">Todos os status</option>
+                            <option value="draft">Rascunho</option>
+                            <option value="sent">Proposta enviada</option>
+                            <option value="accepted">Proposta aceita</option>
+                            <option value="refused">Proposta negada</option>
+                        </select>
+                        <select id="companyFilter"></select>
+                    </div>
+                </header>
+                <div class="proposal-cards" id="proposalCards"></div>
+                <div class="empty-state" id="emptyProposals" style="display:none;">Nenhuma proposta encontrada.</div>
+            </section>
+        </div>
+    </section>
+    <div class="proposal-modal" id="proposalModal" aria-hidden="true">
+        <div class="modal-shell">
+            <div class="modal-body">
+                <h2 id="proposalModalTitle">Nova proposta</h2>
+                <form id="proposalForm">
+                    <input type="hidden" id="proposalId">
+                    <div class="group-planner" id="groupPlanner">
+                        <div class="planner-header">
+                            <div>
+                                <h3>Planejamento do grupo</h3>
+                                <p style="margin:4px 0;color:#94a3b8;font-size:13px;">Monte hospedagem, salas, equipamentos e A&B.</p>
+                            </div>
+                            <div class="policy-block">
+                                <label> Cidade
+                                    <input type="text" id="groupCity" placeholder="Cidade" value="Belo Horizonte">
+                                </label>
+                                <label> ISS (%)
+                                    <input type="number" id="issPercent" min="0" step="0.1" value="5">
+                                </label>
+                                <label> Check-in padrão
+                                    <input type="time" id="policyCheckin" value="14:00">
+                                </label>
+                                <label> Check-out padrão
+                                    <input type="time" id="policyCheckout" value="12:00">
+                                </label>
+                                <label> Early check-in
+                                    <select id="policyEarly">
+                                        <option value="none">Não cobrar</option>
+                                        <option value="half">Meia diária</option>
+                                        <option value="full">Diária cheia</option>
+                                    </select>
+                                </label>
+                                <label> Late check-out
+                                    <select id="policyLate">
+                                        <option value="none">Não cobrar</option>
+                                        <option value="half">Meia diária</option>
+                                        <option value="full">Diária cheia</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="planner-section" id="staysSection">
+                            <header>
+                                <h4 style="margin:0;">Hospedagem (hóspedes/quartos)</h4>
+                                <div class="planner-actions">
+                                    <button type="button" class="btn-ghost" id="addStayBtn">Adicionar hóspede/quarto</button>
+                                    <button type="button" class="btn-ghost" id="clearStaysBtn">Limpar</button>
+                                </div>
+                            </header>
+                            <div id="staysContainer"></div>
+                        </div>
+                        <div class="planner-section" id="eventsSection">
+                            <header>
+                                <h4 style="margin:0;">Salas de eventos</h4>
+                                <div class="planner-actions">
+                                    <button type="button" class="btn-ghost" id="addEventRoomBtn">Adicionar sala</button>
+                                    <button type="button" class="btn-ghost" id="clearEventRoomsBtn">Limpar</button>
+                                </div>
+                            </header>
+                            <div id="eventRoomsContainer"></div>
+                        </div>
+                        <div class="planner-section" id="equipmentSection">
+                            <header>
+                                <h4 style="margin:0;">Aluguel de equipamentos</h4>
+                                <div class="planner-actions">
+                                    <button type="button" class="btn-ghost" id="addEquipBtn">Adicionar equipamento</button>
+                                    <button type="button" class="btn-ghost" id="clearEquipBtn">Limpar</button>
+                                </div>
+                            </header>
+                            <div id="equipmentContainer"></div>
+                        </div>
+                        <div class="planner-section" id="fnbSection">
+                            <header>
+                                <h4 style="margin:0;">A&B (Alimentos e Bebidas)</h4>
+                                <div class="planner-actions">
+                                    <button type="button" class="btn-ghost" id="addFnbBtn">Adicionar serviço</button>
+                                    <button type="button" class="btn-ghost" id="clearFnbBtn">Limpar</button>
+                                </div>
+                            </header>
+                            <div id="fnbContainer"></div>
+                        </div>
+                        <div class="group-summary" id="groupSummary">
+                            <div class="summary-card">
+                                <strong>Período do grupo</strong>
+                                <p id="summaryPeriod">--</p>
+                            </div>
+                            <div class="summary-card">
+                                <strong>Aptos x Noites</strong>
+                                <p id="summaryNights">--</p>
+                            </div>
+                            <div class="summary-card">
+                                <strong>Hóspedes</strong>
+                                <p id="summaryGuests">--</p>
+                            </div>
+                            <div class="summary-card">
+                                <strong>Valores</strong>
+                                <p id="summaryValues">--</p>
+                            </div>
+                        </div>
+                        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px;flex-wrap:wrap;">
+                            <button type="button" class="btn-ghost" id="exportPlannerBtn">Exportar JSON</button>
+                            <button type="button" class="btn-ghost" id="importPlannerBtn">Importar JSON</button>
+                            <input type="file" id="importPlannerFile" accept="application/json" style="display:none;">
+                            <button type="button" class="btn-primary" id="applyGroupBtn">Aplicar na proposta</button>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <label>Cliente
+                            <input type="text" id="cliente" placeholder="Nome do cliente" list="clienteOptions" autocomplete="off" required>
+                            <datalist id="clienteOptions"></datalist>
+                        </label>
+                        <label>Empresa / Hotel
+                            <select id="empresaSelect" required></select>
+                        </label>
+                        <label>Evento / Grupo
+                            <input type="text" id="titulo" placeholder="Hospedagem para congresso">
+                        </label>
+                        <label>Lead ID (Kanban)
+                            <input type="text" id="leadId" placeholder="ID do lead no Kanban">
+                        </label>
+                        <label>Linha do lead
+                            <input type="text" id="leadLinha" placeholder="Linha (se existir)">
+                        </label>
+                        <label>Proposta válida até:
+                            <input type="date" id="validadeData">
+                        </label>
+                        <label>ADR (Average Daily Rate)
+                            <input type="number" id="adr" min="0" step="0.01" readonly>
+                        </label>
+                        <label>RNS (Room Nights Sold)
+                            <input type="number" id="rns" min="0" step="1" readonly>
+                        </label>
+                        <label>Valor total (auto)
+                            <input type="number" id="valorTotal" min="0" step="0.01" readonly>
+                        </label>
+                        <label>E-mail do cliente
+                            <input type="email" id="emailCliente" placeholder="cliente@email.com">
+                        </label>
+                        <label>WhatsApp
+                            <input type="tel" id="whatsappCliente" placeholder="55999999999">
+                        </label>
+                        <label>Observações comerciais
+                            <textarea id="observacoes" rows="3" placeholder="Regras de pagamento, cortesias, política de cancelamento"></textarea>
+                        </label>
+                        <input type="hidden" id="checkin">
+                        <input type="hidden" id="checkinHora" value="14:00">
+                        <input type="hidden" id="checkout">
+                        <input type="hidden" id="checkoutHora" value="12:00">
+                        <input type="hidden" id="apartamentos" value="0">
+                        <input type="hidden" id="hospedes" value="0">
+                    </div>
+            <div class="form-actions">
+                <div>
+                    <button type="button" class="btn-ghost" id="deleteProposalBtn">Excluir</button>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <button type="button" class="btn-contract contract-pulse" id="contractProposalBtn" style="display:none;">Gerar contrato</button>
+                            <button type="button" class="btn-danger" id="closeProposalBtn">Cancelar</button>
+                            <button type="submit" class="btn-success">Salvar</button>
+                            <button type="button" class="btn-primary" id="sendProposalBtn"><i class='bx bx-paper-plane'></i> Enviar proposta</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="pdf-preview" id="pdfPreview">
+                <h3>Pré-visualização da proposta</h3>
+                <p>Os campos preenchidos aparecem em negrito e serão usados para gerar o PDF e os links de aceite/recusa.</p>
+            </div>
+        </div>
+    </div>
+    <div class="proposal-modal" id="summaryModal" aria-hidden="true">
+        <div class="modal-shell" style="grid-template-columns: 1fr; position:relative;">
+            <button class="modal-close" id="summaryClose" aria-label="Fechar"><i class='bx bx-x'></i></button>
+            <div class="modal-body">
+                <h2>Resumo da proposta</h2>
+                <div id="summaryContent"></div>
+                <div class="form-actions" style="justify-content:flex-end;">
+                    <button type="button" class="btn-contract contract-pulse" id="summaryContract" style="display:none;">Gerar contrato</button>
+                    <button type="button" class="btn-danger" id="summaryReject">Rejeitar</button>
+                    <button type="button" class="btn-success" id="summaryAccept">Aceitar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="manager-modal" id="managerModal" aria-hidden="true">
+        <div class="manager-card">
+            <h3>Senha do gerente</h3>
+            <p>Informe a senha para editar propostas enviadas.</p>
+            <input type="password" id="managerPassword" placeholder="Senha do gerente">
+            <div class="manager-actions">
+                <button class="btn-ghost" id="managerCancel">Cancelar</button>
+                <button class="btn-primary" id="managerConfirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+    <div class="proposal-modal" id="contractModal" aria-hidden="true">
+        <div class="modal-shell" style="grid-template-columns: 1fr; position:relative;">
+            <button class="modal-close" id="closeContractBtn" aria-label="Fechar"><i class='bx bx-x'></i></button>
+            <div class="modal-body">
+                <h2>Contrato</h2>
+                <p class="subtitle">Visualize e envie para assinatura digital.</p>
+                <textarea id="contractPreview" rows="12" style="width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.1);padding:12px;background:rgba(255,255,255,0.02);color:var(--text-color);"></textarea>
+                <div class="form-actions" style="justify-content:flex-end;">
+                    <a id="contractPdfLink" class="btn-ghost" download="contrato.pdf" target="_blank">Baixar PDF</a>
+                    <button type="button" class="btn-cta" id="sendContractBtn">Enviar para assinatura</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="send-modal" id="sendModal" aria-hidden="true">
+        <div class="send-options">
+            <button class="close-send" id="closeSendModal" aria-label="Fechar envio"><i class='bx bx-x'></i></button>
+            <h3>Enviar proposta</h3>
+            <p>Escolha como disparar. O lead será movido para "Proposta enviada" automaticamente.</p>
+            <div class="send-actions">
+                <button class="primary whatsapp-accent" id="sendWhatsapp"><i class='bx bxl-whatsapp'></i> WhatsApp</button>
+                <button class="primary email-accent" id="sendEmail"><i class='bx bx-envelope'></i> E-mail</button>
+                <button class="btn-ghost" id="downloadPdf"><i class='bx bx-download'></i> Baixar PDF</button>
+            </div>
+            <p style="margin-top:12px;font-size:12px;color:#94a3b8;">O corpo da mensagem contém links de aceite e recusa; o clique atualiza o Kanban automaticamente.</p>
+        </div>
+    </div>
+    <Footer style="line-height: 15px;">
+        &copy; <span id="anoAtual"></span> SellaStay - Soluções Comerciais para Hotelaria. <br> <span style="font-size: 10px; cursor: pointer;">Desenvolvido por <a href="https://www.syncsoftware.com.br" style="text-decoration: none; color: var(--text-color);" onmouseover="this.style.color='#ff914d';" onmouseout="this.style.color='var(--text-color)';" target="_blank"> <b>Sync Software LTDA</b></a></span>
+    </Footer>
+    <script src="js/script.js"></script>
+    <script>
+        (() => {
+            const GROUP_SEGMENTS_KEY = "sellastay_group_segments_v1";
+            const PROPOSALS_KEY = "sellastay_propostas_v1";
+            const COMPANIES_KEY = "empresas_data";
+            const CLIENTS_KEY = "sellastay_clients";
+            const TOKEN_KEY = "sellastay_send_tokens";
+            const ATTACH_KEY = "sellastay_pdf_attachments";
+            const MANAGER_PASS = "GERENTE2024";
+            const scriptURL = "api/leads.php";
+            const notify = window.pushNotification || ((message) => console.log("[notify]", message));
+            const ensureNotificationCenter = window.initNotificationCenter || (() => {});
+            const managerModal = document.getElementById("managerModal");
+            const managerInput = document.getElementById("managerPassword");
+            const managerConfirm = document.getElementById("managerConfirm");
+            const managerCancel = document.getElementById("managerCancel");
+            const cardsContainer = document.getElementById("proposalCards");
+            const emptyState = document.getElementById("emptyProposals");
+            const statusFilter = document.getElementById("statusFilter");
+            const companyFilter = document.getElementById("companyFilter");
+            const searchInput = document.getElementById("searchInput");
+            const newProposalBtn = document.getElementById("newProposalBtn");
+            const modal = document.getElementById("proposalModal");
+            const modalTitle = document.getElementById("proposalModalTitle");
+            const form = document.getElementById("proposalForm");
+            const pdfPreview = document.getElementById("pdfPreview");
+            const sendModal = document.getElementById("sendModal");
+            const contractModal = document.getElementById("contractModal");
+            const contractPreview = document.getElementById("contractPreview");
+            const contractPdfLink = document.getElementById("contractPdfLink");
+            const sendContractBtn = document.getElementById("sendContractBtn");
+            const closeContractBtn = document.getElementById("closeContractBtn");
+            const sendWhatsappBtn = document.getElementById("sendWhatsapp");
+            const sendEmailBtn = document.getElementById("sendEmail");
+            const downloadPdfBtn = document.getElementById("downloadPdf");
+            const closeSendModalBtn = document.getElementById("closeSendModal");
+            const deleteProposalBtn = document.getElementById("deleteProposalBtn");
+            const closeProposalBtn = document.getElementById("closeProposalBtn");
+            const sendProposalBtn = document.getElementById("sendProposalBtn");
+            const clienteInput = document.getElementById("cliente");
+            const clienteOptions = document.getElementById("clienteOptions");
+            const contractProposalBtn = document.getElementById("contractProposalBtn");
+            const staysContainer = document.getElementById("staysContainer");
+            const eventRoomsContainer = document.getElementById("eventRoomsContainer");
+            const equipmentContainer = document.getElementById("equipmentContainer");
+            const fnbContainer = document.getElementById("fnbContainer");
+            const groupCityInput = document.getElementById("groupCity");
+            const issPercentInput = document.getElementById("issPercent");
+            const addStayBtn = document.getElementById("addStayBtn");
+            const clearStaysBtn = document.getElementById("clearStaysBtn");
+            const addEventRoomBtn = document.getElementById("addEventRoomBtn");
+            const clearEventRoomsBtn = document.getElementById("clearEventRoomsBtn");
+            const addEquipBtn = document.getElementById("addEquipBtn");
+            const clearEquipBtn = document.getElementById("clearEquipBtn");
+            const addFnbBtn = document.getElementById("addFnbBtn");
+            const clearFnbBtn = document.getElementById("clearFnbBtn");
+            const exportPlannerBtn = document.getElementById("exportPlannerBtn");
+            const importPlannerBtn = document.getElementById("importPlannerBtn");
+            const importPlannerFile = document.getElementById("importPlannerFile");
+            const applyGroupBtn = document.getElementById("applyGroupBtn");
+            const summaryPeriod = document.getElementById("summaryPeriod");
+            const summaryNights = document.getElementById("summaryNights");
+            const summaryGuests = document.getElementById("summaryGuests");
+            const summaryValues = document.getElementById("summaryValues");
+            let proposals = [];
+            let companies = [];
+            let leadsCache = [];
+            let clientsCache = [];
+            let activeProposal = null;
+            let formDirty = false;
+            let summaryTarget = null;
+            let pendingManagerAuth = null;
+            let contractPdfUrl = "";
+            const occupancyMap = { single: 1, "duplo casal": 2, "duplo twin": 2, triplo: 3, quadruplo: 4 };
+            let plannerState = {
+                city: "Belo Horizonte",
+                iss: 5,
+                policy: { checkin: "14:00", checkout: "12:00", early: "none", late: "none" },
+                stays: [],
+                eventRooms: [],
+                equipment: [],
+                fnb: []
+            };
+            const defaultCompanies = [
+                { id: "empresa-1", name: "Aurora Grand", cnpj: "12.345.678/0001-90", contact: "Lucas", email: "contato@aurora.com.br", meta: 850000, photo: "img/aurora_logo1.png", logo: "img/aurora_logo1.png", rooms: [] },
+                { id: "empresa-2", name: "Viva Suites", cnpj: "98.765.432/0001-60", contact: "Marina", email: "suporte@vivahotels.com", meta: 450000, photo: "img/aurora_logo2.png", logo: "img/aurora_logo2.png", rooms: [] },
+                { id: "empresa-3", name: "SkyLine Resorts", cnpj: "23.456.789/0001-12", contact: "Paulo", email: "reservas@skyline.com", meta: 680000, photo: "img/aurora_logo3.png", logo: "img/aurora_logo3.png", rooms: [] }
+            ];
+            function parseDateTime(date, time="00:00"){
+                if(!date) return null;
+                return new Date(`${date}T${time || "00:00"}`);
+            }
+            function diffDays(start, end){
+                if(!start || !end) return 1;
+                return Math.max(1, Math.ceil((end - start)/86400000));
+            }
+            function calcStayNights(stay, policy){
+                const ci = parseDateTime(stay.checkin, stay.checkinHora);
+                const co = parseDateTime(stay.checkout, stay.checkoutHora);
+                const base = diffDays(ci, co);
+                let extra = 0;
+                if(ci && policy.early !== "none"){
+                    const ciDefault = parseDateTime(stay.checkin, policy.checkin);
+                    if(ciDefault && ci < ciDefault) extra += policy.early === "half" ? 0.5 : 1;
+                }
+                if(co && policy.late !== "none"){
+                    const coDefault = parseDateTime(stay.checkout, policy.checkout);
+                    if(coDefault && co > coDefault) extra += policy.late === "half" ? 0.5 : 1;
+                }
+                return base + extra;
+            }
+            function loadPlannerState(proposalId){
+                try{
+                    const raw = localStorage.getItem(GROUP_SEGMENTS_KEY);
+                    const parsed = raw ? JSON.parse(raw) : {};
+                    const state = parsed[proposalId] || {};
+                    plannerState = {
+                        city: state.city || "Belo Horizonte",
+                        iss: Number(state.iss || 5),
+                        policy: {
+                            checkin: state.policy?.checkin || "14:00",
+                            checkout: state.policy?.checkout || "12:00",
+                            early: state.policy?.early || "none",
+                            late: state.policy?.late || "none",
+                        },
+                        stays: Array.isArray(state.stays) ? state.stays : [],
+                        eventRooms: Array.isArray(state.eventRooms) ? state.eventRooms : [],
+                        equipment: Array.isArray(state.equipment) ? state.equipment : [],
+                        fnb: Array.isArray(state.fnb) ? state.fnb : [],
+                    };
+                }catch(e){
+                    /* fallback defaults already set */
+                }
+                syncPlannerInputs();
+                renderPlanner();
+                renderGroupSummary();
+            }
+            function savePlannerState(){
+                try{
+                    const raw = localStorage.getItem(GROUP_SEGMENTS_KEY);
+                    const parsed = raw ? JSON.parse(raw) : {};
+                    parsed[activeProposal?.id || "global"] = plannerState;
+                    localStorage.setItem(GROUP_SEGMENTS_KEY, JSON.stringify(parsed));
+                }catch(e){}
+            }
+            function syncPlannerInputs(){
+                if(groupCityInput) groupCityInput.value = plannerState.city || "";
+                if(issPercentInput) issPercentInput.value = plannerState.iss || 0;
+                const policyCheckin = document.getElementById("policyCheckin");
+                const policyCheckout = document.getElementById("policyCheckout");
+                const policyEarly = document.getElementById("policyEarly");
+                const policyLate = document.getElementById("policyLate");
+                if(policyCheckin) policyCheckin.value = plannerState.policy.checkin;
+                if(policyCheckout) policyCheckout.value = plannerState.policy.checkout;
+                if(policyEarly) policyEarly.value = plannerState.policy.early;
+                if(policyLate) policyLate.value = plannerState.policy.late;
+            }
+            function addStay(defaults={}){
+                const today = new Date().toISOString().slice(0,10);
+                const base = {
+                    nome: "",
+                    funcao: "",
+                    tipo: "single",
+                    categoria: "",
+                    checkin: today,
+                    checkinHora: plannerState.policy.checkin || "14:00",
+                    checkout: today,
+                    checkoutHora: plannerState.policy.checkout || "12:00",
+                    quartos: 1,
+                    diaria: Number(document.getElementById("adr")?.value || 0)
+                };
+                plannerState.stays.push({ ...base, ...defaults });
+                renderPlanner();
+                renderGroupSummary(true);
+                savePlannerState();
+            }
+            function removeStay(idx){
+                plannerState.stays.splice(idx,1);
+                renderPlanner();
+                renderGroupSummary(true);
+                savePlannerState();
+            }
+            function addEventRoom(defaults={}){
+                const today = new Date().toISOString().slice(0,10);
+                const base = {
+                    nome: "",
+                    montagem: "",
+                    diaria: 0,
+                    checkin: today,
+                    checkinHora: "08:00",
+                    checkout: today,
+                    checkoutHora: "23:59"
+                };
+                plannerState.eventRooms.push({ ...base, ...defaults });
+                renderPlanner();
+                renderGroupSummary(true);
+                savePlannerState();
+            }
+            function removeEventRoom(idx){
+                plannerState.eventRooms.splice(idx,1);
+                renderPlanner();
+                renderGroupSummary(true);
+                savePlannerState();
+            }
+            function addEquipment(defaults={}){
+                const base = {
+                    equipamento: "",
+                    sala: "",
+                    datas: "",
+                    diaria: 0,
+                    quantidade: 1
+                };
+                plannerState.equipment.push({ ...base, ...defaults });
+                renderPlanner();
+                renderGroupSummary(true);
+                savePlannerState();
+            }
+            function removeEquipment(idx){
+                plannerState.equipment.splice(idx,1);
+                renderPlanner();
+                renderGroupSummary(true);
+                savePlannerState();
+            }
+            function addFnb(defaults={}){
+                const base = {
+                    tipoServico: "",
+                    refeicao: "",
+                    datas: "",
+                    valor: 0,
+                    observacoes: "",
+                    quantidade: 1
+                };
+                plannerState.fnb.push({ ...base, ...defaults });
+                renderPlanner();
+                renderGroupSummary(true);
+                savePlannerState();
+            }
+            function removeFnb(idx){
+                plannerState.fnb.splice(idx,1);
+                renderPlanner();
+                renderGroupSummary(true);
+                savePlannerState();
+            }
+            function renderPlanner(){
+                if(staysContainer){
+                    staysContainer.innerHTML = plannerState.stays.map((s, idx) => `
+                        <div class="segment-row stays-grid" data-stay="${idx}">
+                            <input type="text" data-field="nome" value="${s.nome || ""}" placeholder="Hóspede/Equipe">
+                            <input type="text" data-field="funcao" value="${s.funcao || ""}" placeholder="Função">
+                            <select data-field="tipo">
+                                ${["single","duplo casal","duplo twin","triplo","quadruplo"].map(opt => `<option value="${opt}" ${s.tipo===opt?"selected":""}>${opt}</option>`).join("")}
+                            </select>
+                            <select data-field="categoria">
+                                ${["","Standard","Standard Plus","Business","Luxo","Royal Master"].map(opt => `<option value="${opt}" ${s.categoria===opt?"selected":""}>${opt||"Categoria"}</option>`).join("")}
+                            </select>
+                            <input type="date" data-field="checkin" value="${s.checkin || ""}">
+                            <input type="time" data-field="checkinHora" value="${s.checkinHora || ""}">
+                            <input type="date" data-field="checkout" value="${s.checkout || ""}">
+                            <input type="time" data-field="checkoutHora" value="${s.checkoutHora || ""}">
+                            <input type="number" min="1" data-field="quartos" value="${s.quartos || 1}" title="Aptos">
+                            <input type="number" min="0" step="0.01" data-field="diaria" value="${s.diaria || 0}" title="Diária">
+                            <button type="button" class="btn-ghost" data-remove-stay="${idx}">Remover</button>
+                        </div>
+                    `).join("") || `<p style="color:#94a3b8;">Nenhuma hospedagem adicionada. Clique em "Adicionar hóspede/quarto".</p>`;
+                }
+                if(eventRoomsContainer){
+                    eventRoomsContainer.innerHTML = plannerState.eventRooms.map((r, idx) => `
+                        <div class="segment-row events-grid" data-event="${idx}">
+                            <input type="text" data-field="nome" value="${r.nome || ""}" placeholder="Nome da sala">
+                            <input type="text" data-field="montagem" value="${r.montagem || ""}" placeholder="Montagem (Auditório, U...)">
+                            <input type="number" min="0" step="0.01" data-field="diaria" value="${r.diaria || 0}" placeholder="Diária">
+                            <input type="date" data-field="checkin" value="${r.checkin || ""}">
+                            <input type="time" data-field="checkinHora" value="${r.checkinHora || ""}">
+                            <input type="date" data-field="checkout" value="${r.checkout || ""}">
+                            <input type="time" data-field="checkoutHora" value="${r.checkoutHora || ""}">
+                            <button type="button" class="btn-ghost" data-remove-event="${idx}">Remover</button>
+                        </div>
+                    `).join("") || `<p style="color:#94a3b8;">Nenhuma sala adicionada.</p>`;
+                }
+                if(equipmentContainer){
+                    equipmentContainer.innerHTML = plannerState.equipment.map((e, idx) => `
+                        <div class="segment-row equip-grid" data-equip="${idx}">
+                            <input type="text" data-field="equipamento" value="${e.equipamento || ""}" placeholder="Equipamento">
+                            <input type="text" data-field="sala" value="${e.sala || ""}" placeholder="Sala vinculada">
+                            <input type="text" data-field="datas" value="${e.datas || ""}" placeholder="Datas (separe por vírgula)">
+                            <input type="number" min="0" step="0.01" data-field="diaria" value="${e.diaria || 0}" placeholder="Diária">
+                            <input type="number" min="1" data-field="quantidade" value="${e.quantidade || 1}" placeholder="Qtd">
+                            <button type="button" class="btn-ghost" data-remove-equip="${idx}">Remover</button>
+                        </div>
+                    `).join("") || `<p style="color:#94a3b8;">Nenhum equipamento adicionado.</p>`;
+                }
+                if(fnbContainer){
+                    fnbContainer.innerHTML = plannerState.fnb.map((f, idx) => `
+                        <div class="segment-row fnb-grid" data-fnb="${idx}">
+                            <select data-field="tipoServico">
+                                ${["","Buffet","À la carte"].map(opt => `<option value="${opt}" ${f.tipoServico===opt?"selected":""}>${opt || "Tipo de serviço"}</option>`).join("")}
+                            </select>
+                            <select data-field="refeicao">
+                                ${["","Café da manhã","Café da tarde","Coffee Break","Almoço","Jantar"].map(opt => `<option value="${opt}" ${f.refeicao===opt?"selected":""}>${opt || "Refeição"}</option>`).join("")}
+                            </select>
+                            <input type="text" data-field="datas" value="${f.datas || ""}" placeholder="Datas (separe por vírgula)">
+                            <input type="number" min="0" step="0.01" data-field="valor" value="${f.valor || 0}" placeholder="Valor do serviço">
+                            <input type="text" data-field="observacoes" value="${f.observacoes || ""}" placeholder="Observações">
+                            <input type="number" min="1" data-field="quantidade" value="${f.quantidade || 1}" placeholder="Qtd">
+                            <button type="button" class="btn-ghost" data-remove-fnb="${idx}">Remover</button>
+                        </div>
+                    `).join("") || `<p style="color:#94a3b8;">Nenhum serviço de A&B adicionado.</p>`;
+                }
+            }
+            function summarizePlanner(){
+                const policy = plannerState.policy;
+                let totalHosp = 0, totalRooms = 0, totalGuests = 0, roomNights = 0;
+                let minDate = null, maxDate = null;
+                plannerState.stays.forEach((s) => {
+                    const nights = calcStayNights(s, policy);
+                    const rooms = Number(s.quartos || 1);
+                    const daily = Number(s.diaria || 0);
+                    const guestsPerRoom = occupancyMap[s.tipo || "single"] || 1;
+                    totalHosp += nights * rooms * daily;
+                    totalRooms += rooms;
+                    roomNights += nights * rooms;
+                    totalGuests += guestsPerRoom * rooms;
+                    const ci = parseDateTime(s.checkin);
+                    const co = parseDateTime(s.checkout);
+                    if(ci && (!minDate || ci < minDate)) minDate = ci;
+                    if(co && (!maxDate || co > maxDate)) maxDate = co;
+                });
+                let totalEvents = 0;
+                plannerState.eventRooms.forEach((r) => {
+                    const ci = parseDateTime(r.checkin, r.checkinHora);
+                    const co = parseDateTime(r.checkout, r.checkoutHora);
+                    const nights = diffDays(ci, co);
+                    totalEvents += nights * (Number(r.diaria || 0));
+                    if(ci && (!minDate || ci < minDate)) minDate = ci;
+                    if(co && (!maxDate || co > maxDate)) maxDate = co;
+                });
+                let totalEquip = 0;
+                plannerState.equipment.forEach((e) => {
+                    const dates = (e.datas || "").split(",").map(d => d.trim()).filter(Boolean);
+                    const days = dates.length || 1;
+                    const qty = Number(e.quantidade || 1);
+                    totalEquip += days * qty * (Number(e.diaria || 0));
+                });
+                let totalFnb = 0;
+                plannerState.fnb.forEach((f) => {
+                    const dates = (f.datas || "").split(",").map(d => d.trim()).filter(Boolean);
+                    const qtd = Number(f.quantidade || (dates.length || 1));
+                    totalFnb += qtd * (Number(f.valor || 0));
+                });
+                const subtotal = totalHosp + totalEvents + totalEquip + totalFnb;
+                const issValue = subtotal * (Number(plannerState.iss || 0)/100);
+                return {
+                    totalHosp, totalEvents, totalEquip, totalFnb,
+                    subtotal,
+                    issValue,
+                    total: subtotal + issValue,
+                    totalRooms,
+                    roomNights,
+                    totalGuests,
+                    minDate,
+                    maxDate
+                };
+            }
+            function renderGroupSummary(apply=false){
+                if(!summaryPeriod) return;
+                const s = summarizePlanner();
+                summaryPeriod.textContent = s.minDate && s.maxDate ? `${s.minDate.toLocaleDateString("pt-BR")} a ${s.maxDate.toLocaleDateString("pt-BR")}` : "--";
+                summaryNights.textContent = `${s.totalRooms || 0} aptos | ${s.roomNights || 0} apto-noites | Salas: ${plannerState.eventRooms.length}`;
+                summaryGuests.textContent = `${s.totalGuests || 0} hóspedes`;
+                summaryValues.textContent = `Hosp: ${formatCurrency(s.totalHosp)} | Salas: ${formatCurrency(s.totalEvents)} | Equip: ${formatCurrency(s.totalEquip)} | A&B: ${formatCurrency(s.totalFnb)} | ISS ${plannerState.iss}% -> ${formatCurrency(s.total)}`;
+                if(apply) applyPlannerToForm(s);
+            }
+            function applyPlannerToForm(summary=null){
+                const s = summary || summarizePlanner();
+                if(!plannerState.stays.length && !plannerState.eventRooms.length) return;
+                if(s.minDate) document.getElementById("checkin").value = s.minDate.toISOString().slice(0,10);
+                if(s.maxDate) document.getElementById("checkout").value = s.maxDate.toISOString().slice(0,10);
+                document.getElementById("apartamentos").value = Math.max(1, s.totalRooms || 1);
+                document.getElementById("hospedes").value = Math.max(1, s.totalGuests || 1);
+                document.getElementById("rns").value = Math.max(0, s.roomNights || 0);
+                const adrField = document.getElementById("adr");
+                if(adrField) adrField.value = s.roomNights ? (s.totalHosp / s.roomNights).toFixed(2) : "0.00";
+                document.getElementById("valorTotal").value = s.total.toFixed(2);
+                updatePreview();
+            }
+            function handlePlannerInput(container, type){
+                container.addEventListener("input", (event) => {
+                    const row = event.target.closest(`[data-${type}]`);
+                    if(!row) return;
+                    const idx = Number(row.dataset[type]);
+                    const field = event.target.dataset.field;
+                    const targetArr = type === "stay" ? plannerState.stays : type === "event" ? plannerState.eventRooms : type === "equip" ? plannerState.equipment : plannerState.fnb;
+                    if(field && targetArr[idx] !== undefined){
+                        const val = event.target.type === "number" ? Number(event.target.value || 0) : event.target.value;
+                        targetArr[idx][field] = val;
+                        renderGroupSummary(true);
+                        savePlannerState();
+                    }
+                });
+                container.addEventListener("click", (event) => {
+                    if(event.target.dataset.removeStay !== undefined) removeStay(Number(event.target.dataset.removeStay));
+                    if(event.target.dataset.removeEvent !== undefined) removeEventRoom(Number(event.target.dataset.removeEvent));
+                    if(event.target.dataset.removeEquip !== undefined) removeEquipment(Number(event.target.dataset.removeEquip));
+                    if(event.target.dataset.removeFnb !== undefined) removeFnb(Number(event.target.dataset.removeFnb));
+                });
+            }
+            if(staysContainer) handlePlannerInput(staysContainer, "stay");
+            if(eventRoomsContainer) handlePlannerInput(eventRoomsContainer, "event");
+            if(equipmentContainer) handlePlannerInput(equipmentContainer, "equip");
+            if(fnbContainer) handlePlannerInput(fnbContainer, "fnb");
+            if(addStayBtn) addStayBtn.onclick = () => addStay();
+            if(clearStaysBtn) clearStaysBtn.onclick = () => { plannerState.stays = []; renderPlanner(); renderGroupSummary(); savePlannerState(); };
+            if(addEventRoomBtn) addEventRoomBtn.onclick = () => addEventRoom();
+            if(clearEventRoomsBtn) clearEventRoomsBtn.onclick = () => { plannerState.eventRooms = []; renderPlanner(); renderGroupSummary(); savePlannerState(); };
+            if(addEquipBtn) addEquipBtn.onclick = () => addEquipment();
+            if(clearEquipBtn) clearEquipBtn.onclick = () => { plannerState.equipment = []; renderPlanner(); renderGroupSummary(); savePlannerState(); };
+            if(addFnbBtn) addFnbBtn.onclick = () => addFnb();
+            if(clearFnbBtn) clearFnbBtn.onclick = () => { plannerState.fnb = []; renderPlanner(); renderGroupSummary(); savePlannerState(); };
+            if(applyGroupBtn) applyGroupBtn.onclick = () => renderGroupSummary(true);
+            if(groupCityInput) groupCityInput.oninput = (e) => { plannerState.city = e.target.value || "Cidade"; savePlannerState(); };
+            if(issPercentInput) issPercentInput.oninput = (e) => { plannerState.iss = Number(e.target.value || 0); renderGroupSummary(); savePlannerState(); };
+            const policyCheckin = document.getElementById("policyCheckin");
+            const policyCheckout = document.getElementById("policyCheckout");
+            const policyEarly = document.getElementById("policyEarly");
+            const policyLate = document.getElementById("policyLate");
+            if(policyCheckin) policyCheckin.oninput = (e) => { plannerState.policy.checkin = e.target.value || "14:00"; renderGroupSummary(); savePlannerState(); };
+            if(policyCheckout) policyCheckout.oninput = (e) => { plannerState.policy.checkout = e.target.value || "12:00"; renderGroupSummary(); savePlannerState(); };
+            if(policyEarly) policyEarly.onchange = (e) => { plannerState.policy.early = e.target.value || "none"; renderGroupSummary(true); savePlannerState(); };
+            if(policyLate) policyLate.onchange = (e) => { plannerState.policy.late = e.target.value || "none"; renderGroupSummary(true); savePlannerState(); };
+            if(exportPlannerBtn){
+                exportPlannerBtn.onclick = () => {
+                    const data = JSON.stringify(plannerState, null, 2);
+                    const blob = new Blob([data], { type: "application/json" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `planner-${activeProposal?.id || "proposta"}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                };
+            }
+            if(importPlannerBtn && importPlannerFile){
+                importPlannerBtn.onclick = () => importPlannerFile.click();
+                importPlannerFile.onchange = (e) => {
+                    const file = e.target.files?.[0];
+                    if(!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (evt) => {
+                        try{
+                            const parsed = JSON.parse(evt.target.result);
+                            plannerState = {
+                                city: parsed.city || plannerState.city,
+                                iss: parsed.iss || plannerState.iss,
+                                policy: parsed.policy || plannerState.policy,
+                                stays: parsed.stays || [],
+                                eventRooms: parsed.eventRooms || [],
+                                equipment: parsed.equipment || [],
+                                fnb: parsed.fnb || [],
+                            };
+                            syncPlannerInputs();
+                            renderPlanner();
+                            renderGroupSummary(true);
+                            savePlannerState();
+                        }catch(err){
+                            alert("Arquivo inválido");
+                        }
+                    };
+                    reader.readAsText(file);
+                };
+            }
+            function uuid() {
+                return crypto.randomUUID ? crypto.randomUUID() : "prop-" + Date.now();
+            }
+            function formatCurrency(value = 0) {
+                const num = Number(value) || 0;
+                return num.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 2 });
+            }
+            function defaultValidityDate(days = 5){
+                const d = new Date();
+                d.setDate(d.getDate() + days);
+                return d.toISOString().slice(0,10);
+            }
+            function getUserName() {
+                return localStorage.getItem("sellastay_user") || "Usuário";
+            }
+            function loadCompanies() {
+                try {
+                    const raw = localStorage.getItem(COMPANIES_KEY);
+                    if (!raw) return [...defaultCompanies];
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed) && parsed.length) {
+                        return parsed.map((item, idx) => ({
+                            ...item,
+                            id: item.id || `empresa-${idx + 1}`,
+                            photo: item.photo || item.logo || defaultCompanies[idx % defaultCompanies.length].photo,
+                            logo: item.logo || item.photo || defaultCompanies[idx % defaultCompanies.length].photo,
+                            rooms: Array.isArray(item.rooms) ? item.rooms : [],
+                        }));
+                    }
+                } catch (error) {
+                    console.warn("Erro ao ler empresas:", error);
+                }
+                return [...defaultCompanies];
+            }
+            function loadProposals() {
+                try {
+                    const raw = localStorage.getItem(PROPOSALS_KEY);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (Array.isArray(parsed)) {
+                            proposals = parsed;
+                            return;
+                        }
+                    }
+                } catch (error) {
+                    console.warn("Erro ao ler propostas:", error);
+                }
+                const sample = {
+                    id: uuid(),
+                    cliente: "Grupo Leste",
+                    empresaId: defaultCompanies[0].id,
+                    titulo: "Hospedagem Congresso Saúde",
+                    leadId: "LD-1024",
+                    leadLinha: "",
+                    checkin: new Date().toISOString().slice(0, 10),
+                    checkout: new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10),
+                    apartamentos: 20,
+                    hospedes: 40,
+                    adr: 520,
+                    rns: 60,
+                    valorTotal: 520 * 3 * 20,
+                    observacoes: "Tarifa com cafe da manha, cancelamento gratis ate 7 dias antes.",
+                    emailCliente: "contato@grupoleste.com",
+                    whatsappCliente: "55999999999",
+                    numero: "AUR-" + Date.now(),
+                    validadeData: defaultValidityDate(),
+                    checkinHora: "14:00",
+                    checkoutHora: "12:00",
+                    status: "draft",
+                    createdAt: new Date().toISOString()
+                };
+                proposals = [sample];
+                saveProposals();
+            }
+            function saveProposals() {
+                localStorage.setItem(PROPOSALS_KEY, JSON.stringify(proposals));
+            }
+            // Tabela (localStorage) sellastay_pdf_attachments
+            // Campos: id, proposalId, pdfUrl, status(pending/accepted/refused), createdAt
+            function readAttachments() {
+                try {
+                    const raw = localStorage.getItem(ATTACH_KEY);
+                    const parsed = raw ? JSON.parse(raw) : [];
+                    return Array.isArray(parsed) ? parsed : [];
+                } catch {
+                    return [];
+                }
+            }
+            function writeAttachments(list) {
+                localStorage.setItem(ATTACH_KEY, JSON.stringify(list.slice(0, 200)));
+            }
+            function addAttachment(proposalId, pdfUrl, dataUrl) {
+                const list = readAttachments();
+                const record = {
+                    id: crypto.randomUUID ? crypto.randomUUID() : `att-${Date.now()}`,
+                    proposalId,
+                    pdfUrl,
+                    dataUrl: dataUrl || pdfUrl,
+                    status: "pending",
+                    createdAt: new Date().toISOString()
+                };
+                list.unshift(record);
+                writeAttachments(list);
+                return record;
+            }
+            function updateAttachmentStatus(proposalId, status) {
+                const list = readAttachments();
+                let changed = false;
+                const updated = list.map(item => {
+                    if (item.proposalId === proposalId) {
+                        changed = true;
+                        return { ...item, status };
+                    }
+                    return item;
+                });
+                if (changed) writeAttachments(updated);
+            }
+            function logDecisionHistory(proposal, decision, meta = {}) {
+                if (!proposal) return proposal;
+                const entry = {
+                    decision,
+                    at: new Date().toISOString(),
+                    by: meta.by || "cliente",
+                    extra: meta.extra || ""
+                };
+                proposal.history = Array.isArray(proposal.history) ? [entry, ...proposal.history].slice(0, 50) : [entry];
+                return proposal;
+            }
+            function buildContractTemplate(proposal, company) {
+                const hoje = new Date().toLocaleDateString("pt-BR");
+                return `
+CONTRATO DE HOSPEDAGEM PARA GRUPOS
+Pelo presente instrumento, as partes:
+1. CONTRATANTE: ${proposal.cliente || "Cliente"}, inscrito conforme dados cadastrais.
+2. CONTRATADA: ${company?.name || "Hotel"}, CNPJ ${company?.cnpj || "N/A"}, doravante HOTEL.
+OBJETO
+Hospedagem de grupo referente ao evento ${proposal.titulo || "Evento"} com check-in em ${formatDate(proposal.checkin)} ${proposal.checkinHora || ""} e check-out em ${formatDate(proposal.checkout)} ${proposal.checkoutHora || ""}, para ${proposal.hospedes || 0} hóspedes em ${proposal.apartamentos || 0} apartamentos.
+VALORES E PAGAMENTO
+Valor total acordado: ${formatCurrency(proposal.valorTotal || 0)}.
+Forma de pagamento: conforme condições comerciais anexas ou combinadas entre as partes.
+POLÍTICAS
+Cancelamento e no-show: conforme política comercial do HOTEL.
+Horários: Check-in às ${proposal.checkinHora || "14:00"} e check-out às ${proposal.checkoutHora || "12:00"}.
+Serviços inclusos: ${proposal.observacoes || "Conforme proposta."}
+VIGÊNCIA E FORO
+Este contrato passa a vigorar na data da assinatura digital. Fica eleito o foro da comarca do hotel para dirimir eventuais questões.
+${company?.name || "Hotel"} - ${hoje}
+                `;
+            }
+            function escapePdfText(text = "") {
+                return String(text || "")
+                    .replace(/\\/g, "\\\\")
+                    .replace(/\(/g, "\\(")
+                    .replace(/\)/g, "\\)")
+                    .replace(/\r?\n/g, " ");
+            }
+            function createPdfDocument(title, lines = []) {
+                const contentLines = [title, "", ...lines];
+                let y = 800;
+                let stream = "BT\n/F1 14 Tf\n";
+                contentLines.forEach((line) => {
+                    const safe = escapePdfText(line).slice(0, 180);
+                    stream += `1 0 0 1 50 ${y} Tm (${safe}) Tj\n`;
+                    y = Math.max(40, y - 18);
+                });
+                stream += "ET";
+                const encoder = new TextEncoder();
+                const streamLength = encoder.encode(stream).length;
+                const objects = [];
+                objects[1] = "1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n";
+                objects[2] = "2 0 obj\n<< /Type /Pages /Count 1 /Kids [3 0 R] >>\nendobj\n";
+                objects[4] = `4 0 obj\n<< /Length ${streamLength} >>\nstream\n${stream}\nendstream\nendobj\n`;
+                objects[5] = "5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n";
+                objects[3] = "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>\nendobj\n";
+                let pdf = "%PDF-1.4\n";
+                let position = new TextEncoder().encode(pdf).length;
+                const offsets = [0];
+                for (let i = 1; i <= 5; i++) {
+                    offsets[i] = position;
+                    pdf += objects[i];
+                    position += encoder.encode(objects[i]).length;
+                }
+                const xrefPosition = position;
+                let xref = "xref\n0 6\n";
+                xref += "0000000000 65535 f \n";
+                for (let i = 1; i <= 5; i++) {
+                    xref += `${String(offsets[i]).padStart(10, "0")} 00000 n \n`;
+                }
+                pdf += xref;
+                pdf += `trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xrefPosition}\n%%EOF`;
+                const blob = new Blob([pdf], { type: "application/pdf" });
+                const url = URL.createObjectURL(blob);
+                return { url, blob, document: contentLines.join("\\n") };
+            }
+function buildProposalPdfPayload(proposal, company, link) {
+                const hotel = company?.name || "Hotel";
+                const numero = proposal.numero || proposal.id || "";
+                const resumo = `${proposal.apartamentos || 0} aptos - ${proposal.hospedes || 0} hospedes - ${formatDate(proposal.checkin)} a ${formatDate(proposal.checkout)}`;
+                const lines = [
+                    `Proposta ${numero} - ${hotel}`,
+                    `Cliente: ${proposal.cliente || "-"}`,
+                    `Titulo: ${proposal.titulo || "Hospedagem"}`,
+                    resumo,
+                    `Valor total: ${formatCurrency(proposal.valorTotal || 0)}`
+                ];
+                if (proposal.observacoes) lines.push(`Observacoes: ${proposal.observacoes}`);
+                if (Array.isArray(proposal.amenities) && proposal.amenities.length) {
+                    lines.push(`Diferenciais: ${proposal.amenities.slice(0, 6).join(", ")}`);
+                }
+                if (link) lines.push(`Acesse a proposta completa: ${link}`);
+                return lines;
+            }
+            function buildProposalPdf() {
+                const proposal = activeProposal || collectProposalFromForm();
+                if (!proposal) return null;
+                const empresa = companies.find((c) => c.id === proposal.empresaId);
+                const link = `${window.location.origin}${window.location.pathname.replace("propostas.html", "send.html")}?proposal=${proposal.id}`;
+                const lines = buildProposalPdfPayload(proposal, empresa, link);
+                return createPdfDocument(`Proposta ${proposal.numero || proposal.id}`, lines);
+            }
+            function buildContractPdf(proposal, company) {
+                const doc = buildContractTemplate(proposal, company);
+                const lines = doc.split("\n").filter(Boolean);
+                return createPdfDocument(`Contrato ${proposal.numero || proposal.id}`, lines);
+            }
+            function openContractModal(proposalId) {
+                const proposal = proposals.find(p => p.id === proposalId);
+                if (!proposal) return;
+                const empresa = companies.find(c => c.id === proposal.empresaId);
+                const pdf = buildContractPdf(proposal, empresa);
+                contractPdfUrl = pdf.url;
+                contractPreview.value = pdf.document;
+                contractPdfLink.href = pdf.url;
+                contractPdfLink.download = `contrato-${proposal.numero || proposal.id}.pdf`;
+                contractModal.classList.add("open");
+                contractModal.setAttribute("aria-hidden", "false");
+                sendContractBtn.onclick = () => sendContract(proposalId, pdf.url);
+            }
+            function closeContractModal() {
+                contractModal.classList.remove("open");
+                contractModal.setAttribute("aria-hidden", "true");
+                if (contractPdfUrl) URL.revokeObjectURL(contractPdfUrl);
+                contractPdfUrl = "";
+            }
+            async function sendContract(proposalId, pdfUrl) {
+                const proposal = proposals.find(p => p.id === proposalId);
+                if (!proposal || proposal.status !== "accepted") {
+                    pushNotification("Contrato só pode ser gerado após aceitar a proposta.");
+                    return;
+                }
+                const empresa = companies.find(c => c.id === proposal.empresaId);
+                const template = buildContractTemplate(proposal, empresa);
+                try {
+                    // Integração: configure seu backend em /api/contracts/send para chamar a Autentique (GraphQL em https://api.autentique.com.br/v2/graphql)
+                    // enviando o PDF/base64 e título, com header Authorization: Bearer <TOKEN_AUTENTIQUE>.
+                    const res = await fetch("/api/contracts/send", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            proposalId,
+                            title: `Contrato ${proposal.numero || proposal.titulo || proposalId}`,
+                            document: template,
+                            pdf: pdfUrl,
+                            client: {
+                                name: proposal.cliente,
+                                email: proposal.emailCliente,
+                                whatsapp: proposal.whatsappCliente
+                            },
+                            meta: {
+                                empresa: empresa?.name,
+                                valorTotal: proposal.valorTotal,
+                                checkin: proposal.checkin,
+                                checkout: proposal.checkout
+                            }
+                        })
+                    });
+                    const payload = await res.json().catch(() => ({}));
+                    const status = payload.status || "pending_signature";
+                    proposal.contractStatus = status;
+                    proposal.contractUrl = payload.url || payload.signUrl || proposal.contractUrl || "";
+                    proposal.contractId = payload.contractId || payload.id || proposal.contractId || `ct-${Date.now()}`;
+                    saveProposals();
+                    pushNotification("Contrato enviado para assinatura digital.", { url: proposal.contractUrl || undefined });
+                } catch (error) {
+                    console.warn("Falha ao enviar contrato:", error);
+                    pushNotification("N\u00e3o foi poss\u00edvel enviar o contrato agora.");
+                }
+                renderCards();
+            }
+            function updateContractStatus(proposalId, status, url) {
+                const idx = proposals.findIndex(p => p.id === proposalId);
+                if (idx === -1) return;
+                proposals[idx].contractStatus = status;
+                if (url) proposals[idx].contractUrl = url;
+                if (status === "signed") {
+                    proposals[idx].status = "contract_signed";
+                    pushNotification("Contrato assinado digitalmente.", { url: proposals[idx].contractUrl || "propostas.html" });
+                }
+                saveProposals();
+                renderCards();
+            }
+            function generateToken() {
+                return crypto.randomUUID ? crypto.randomUUID() : `tok-${Date.now()}`;
+            }
+            function storeSendToken(proposalId) {
+                const tokensRaw = localStorage.getItem(TOKEN_KEY);
+                const tokens = tokensRaw ? JSON.parse(tokensRaw) : [];
+                const token = generateToken();
+                const createdAt = Date.now();
+                const exp = createdAt + 72 * 60 * 60 * 1000;
+                tokens.unshift({ token, proposalId, createdAt, exp, used: false });
+                localStorage.setItem(TOKEN_KEY, JSON.stringify(tokens.slice(0, 50)));
+                return { token, exp };
+            }
+            function markTokenUsed(proposalId, token) {
+                try {
+                    const raw = localStorage.getItem(TOKEN_KEY);
+                    const tokens = raw ? JSON.parse(raw) : [];
+                    const updated = tokens.map((t) => t.token === token && t.proposalId === proposalId ? { ...t, used: true } : t);
+                    localStorage.setItem(TOKEN_KEY, JSON.stringify(updated));
+                } catch (_) { /* noop */ }
+            }
+            function loadClientsFromStorage() {
+                try {
+                    const raw = localStorage.getItem(CLIENTS_KEY);
+                    const parsed = raw ? JSON.parse(raw) : [];
+                    return Array.isArray(parsed) ? parsed : [];
+                } catch (error) {
+                    console.warn("N\u00e3o foi poss\u00edvel ler clientes:", error);
+                    return [];
+                }
+            }
+            function renderClientSuggestions(filter = "") {
+                if (!clienteOptions) return;
+                const search = (filter || "").toLowerCase();
+                const filtered = clientsCache.filter((client) => {
+                    if (!search) return true;
+                    return [client.name, client.company, client.cnpj].some((field) => (field || "").toLowerCase().includes(search));
+                });
+                clienteOptions.innerHTML = filtered.slice(0, 20).map((client) => `<option value="${client.name}">${client.company || ""}</option>`).join("");
+            }
+            function hydrateContactsFromClient(name) {
+                const client = clientsCache.find((c) => (c.name || "").toLowerCase() === (name || "").toLowerCase());
+                if (!client) return;
+                const emailField = document.getElementById("emailCliente");
+                const whatsappField = document.getElementById("whatsappCliente");
+                if (emailField && !emailField.value) emailField.value = client.email || "";
+                if (whatsappField && !whatsappField.value) whatsappField.value = client.whatsapp || client.phone || "";
+            }
+            function pushNotification(text, options = {}) {
+                notify(text, { ...(options || {}), source: "Propostas" });
+            }
+            function populateCompanyFilter() {
+                companyFilter.innerHTML = `<option value="all">Todas as empresas</option>` + companies.map((c) => `<option value="${c.id}">${c.name}</option>`).join("");
+                const select = document.getElementById("empresaSelect");
+                select.innerHTML = companies.map((c) => `<option value="${c.id}">${c.name}</option>`).join("");
+            }
+            function filterProposals() {
+                const statusValue = statusFilter.value;
+                const companyValue = companyFilter.value;
+                const search = (searchInput.value || "").toLowerCase();
+                return proposals.filter((proposal) => {
+                    const matchesStatus = statusValue === "all" || proposal.status === statusValue;
+                    const matchesCompany = companyValue === "all" || proposal.empresaId === companyValue;
+                    const matchesSearch = [proposal.cliente, proposal.titulo, proposal.leadId].some((field) =>
+                        (field || "").toLowerCase().includes(search)
+                    );
+                    return matchesStatus && matchesCompany && matchesSearch;
+                });
+            }
+            function renderSummary() {
+                const total = proposals.length;
+                const sent = proposals.filter(p => p.status === "sent").length;
+                const accepted = proposals.filter(p => p.status === "accepted").length;
+                document.getElementById("totalProposals").textContent = total;
+                document.getElementById("sentProposals").textContent = sent;
+                document.getElementById("acceptedProposals").textContent = accepted;
+            }
+            function openSummaryModal(proposal){
+                summaryTarget = proposal;
+                const empresa = companies.find(c => c.id === proposal.empresaId);
+                const validadeData = proposal.validadeData || "";
+                const validadeDias = (() => {
+                    if (!validadeData) return null;
+                    const target = new Date(validadeData);
+                    const now = new Date();
+                    return Math.max(0, Math.ceil((target - now) / 86400000));
+                })();
+                const validade = validadeData ? `${validadeData}${validadeDias !== null ? ` (${validadeDias} dias)` : ""}` : "N/A";
+                const contratoInfo = proposal.contractStatus ? `Contrato: ${proposal.contractStatus}${proposal.contractUrl ? ` (<a href="${proposal.contractUrl}" target="_blank">ver</a>)` : ""}` : "";
+                const historyHtml = (proposal.history || []).slice(0,5).map((h) => {
+                    const when = h.at ? new Date(h.at).toLocaleString("pt-BR") : "";
+                    return `<li><strong>${statusLabel(h.decision) || h.decision}</strong> em ${when} (${h.by || ""})</li>`;
+                }).join("");
+                const content = `
+                    <p><strong>${proposal.cliente}</strong> - ${proposal.titulo || "Hospedagem"}</p>
+                    <p>Status: ${statusLabel(proposal.status)}</p>
+                    <p>Valor: <strong>${formatCurrency(proposal.valorTotal)}</strong></p>
+                    <p>Check-in: ${formatDate(proposal.checkin)} ${proposal.checkinHora || ""} | Check-out: ${formatDate(proposal.checkout)} ${proposal.checkoutHora || ""}</p>
+                    <p>Validade: <span style="color:#dc2626;font-weight:800;">${validade}</span></p>
+                    <p>Hotel: ${empresa?.name || "N/A"}</p>
+                    ${contratoInfo ? `<p>${contratoInfo}</p>` : ""}
+                    ${historyHtml ? `<div style="margin-top:10px;"><strong>Hist\u00f3rico de respostas</strong><ul style="margin:6px 0 0 18px;padding:0;line-height:1.4;">${historyHtml}</ul></div>` : ""}
+                `;
+                document.getElementById("summaryContent").innerHTML = content;
+                const summaryContractBtn = document.getElementById("summaryContract");
+                if (proposal.status === "accepted") {
+                    summaryContractBtn.style.display = "inline-flex";
+                    summaryContractBtn.onclick = () => openContractModal(proposal.id);
+                } else {
+                    summaryContractBtn.style.display = "none";
+                }
+                document.getElementById("summaryModal").classList.add("open");
+            }
+            function closeSummaryModal(){
+                document.getElementById("summaryModal").classList.remove("open");
+                summaryTarget = null;
+            }
+            function renderCards() {
+                const filtered = filterProposals();
+                cardsContainer.innerHTML = "";
+                if (!filtered.length) {
+                    emptyState.style.display = "block";
+                    return;
+                }
+                emptyState.style.display = "none";
+                filtered.forEach((proposal) => {
+                    const empresa = companies.find((c) => c.id === proposal.empresaId);
+                    const card = document.createElement("div");
+                    card.className = "proposal-card";
+                    card.innerHTML = `
+                        <div>
+                            <h3>${proposal.cliente}</h3>
+                            <p class="subtitle">${proposal.titulo || "Proposta de hospedagem"}</p>
+                        </div>
+                        <div>
+                            <strong>${empresa ? empresa.name : "Empresa"}</strong><br>
+                            <span class="subtitle">${proposal.leadId || "Sem lead vinculado"}</span>
+                        </div>
+                        <div>
+                            <span class="subtitle">Check-in</span>
+                            <p><strong>${formatDate(proposal.checkin)}</strong></p>
+                        </div>
+                        <div>
+                            <span class="subtitle">Valor</span>
+                            <p><strong>${formatCurrency(proposal.valorTotal)}</strong></p>
+                        </div>
+                        <div>
+                            <span class="status-chip ${statusClass(proposal.status)}">${statusLabel(proposal.status)}</span>
+                        </div>
+                        <div class="proposal-actions">
+                            <button data-action="preview">Editar</button>
+                            <button data-action="send">Enviar</button>
+                            <button data-action="contract" class="contract-btn contract-pulse btn-contract" style="display:none;">Gerar contrato</button>
+                        </div>
+                    `;
+                    card.querySelector("[data-action='preview']").onclick = () => openProposal(proposal.id);
+                    card.querySelector("[data-action='send']").onclick = () => openProposal(proposal.id, true);
+                    const contractBtn = card.querySelector("[data-action='contract']");
+                    if (proposal.status === "accepted") {
+                        contractBtn.style.display = "inline-flex";
+                        contractBtn.onclick = (e) => { e.stopPropagation(); openContractModal(proposal.id); };
+                    }
+                    card.onclick = (e) => {
+                        if (e.target.closest(".proposal-actions")) return;
+                        openSummaryModal(proposal);
+                    };
+                    cardsContainer.appendChild(card);
+                });
+                renderSummary();
+            }
+            function statusClass(status) {
+                if (status === "sent") return "sent";
+                if (status === "accepted") return "accepted";
+                if (status === "refused") return "refused";
+                if (status === "contract_signed") return "accepted";
+                return "draft";
+            }
+            function statusLabel(status) {
+                switch (status) {
+                    case "sent": return "Proposta enviada";
+                    case "accepted": return "Proposta aceita";
+                    case "contract_signed": return "Contrato assinado";
+                    case "refused": return "Proposta negada";
+                    default: return "Rascunho";
+                }
+            }
+            function handleManualDecision(decision){
+                if(!summaryTarget) return;
+                summaryTarget.status = decision === "accepted" ? "accepted" : "refused";
+                logDecisionHistory(summaryTarget, summaryTarget.status, { by: getUserName(), extra: "Atualizado manualmente" });
+                updateAttachmentStatus(summaryTarget.id, summaryTarget.status);
+                saveProposals();
+                renderCards();
+                pushNotification(`Status atualizado manualmente para ${statusLabel(summaryTarget.status)}`, { url: "propostas.html" });
+                moveLead(summaryTarget, decision === "accepted" ? "Proposta aceita" : "Proposta negada");
+                closeSummaryModal();
+            }
+            function requestManagerAccess(id, sendFlow){
+                pendingManagerAuth = { id, sendFlow };
+                managerInput.value = "";
+                managerModal.classList.add("open");
+                managerModal.setAttribute("aria-hidden","false");
+                managerInput.focus();
+            }
+            function closeManagerModal(){
+                managerModal.classList.remove("open");
+                managerModal.setAttribute("aria-hidden","true");
+                pendingManagerAuth = null;
+            }
+            function formatDate(value) {
+                if (!value) return "--";
+                const date = new Date(value);
+                if (Number.isNaN(date.getTime())) return value;
+                return date.toLocaleDateString("pt-BR");
+            }
+            function openProposal(id = null, sendFlow = false, bypass = false) {
+                if (!companies.length) {
+                    companies = loadCompanies();
+                    populateCompanyFilter();
+                }
+                const allowSend = sendFlow && !bypass;
+                const found = proposals.find((p) => p.id === id);
+                if (found?.status === "accepted") {
+                    alert("Proposta aceita n\u00e3o pode ser editada.");
+                    return;
+                }
+                if (found?.status === "sent" && found?.status !== "refused" && !bypass) {
+                    requestManagerAccess(id, sendFlow);
+                    return;
+                }
+                activeProposal = found || {
+                    id: uuid(),
+                    numero: "",
+                    status: "draft",
+                    apartamentos: 10,
+                    hospedes: 20,
+                    adr: 520,
+                    rns: 10,
+                    valorTotal: 5200,
+                    checkin: new Date().toISOString().slice(0, 10),
+                    checkout: new Date(Date.now() + 2 * 86400000).toISOString().slice(0, 10),
+                    checkinHora: "14:00",
+                    checkoutHora: "12:00",
+                    validadeData: defaultValidityDate(),
+                    createdAt: new Date().toISOString(),
+                    history: [],
+                    contractStatus: "pending",
+                    contractUrl: "",
+                    contractId: ""
+                };
+                modalTitle.textContent = found ? "Editar proposta" : "Nova proposta";
+                loadPlannerState(activeProposal.id);
+                if (!activeProposal.numero) {
+                    const empresa = companies.find((c) => c.id === (activeProposal.empresaId || companies[0]?.id));
+                    const prefix = (empresa?.name || "PROP").split(" ")[0].slice(0, 4).toUpperCase();
+                    activeProposal.numero = `${prefix}-${Date.now()}`;
+                }
+                document.getElementById("proposalId").value = activeProposal.id;
+                document.getElementById("cliente").value = activeProposal.cliente || "";
+                document.getElementById("empresaSelect").value = activeProposal.empresaId || companies[0]?.id || "";
+                document.getElementById("titulo").value = activeProposal.titulo || "";
+                document.getElementById("leadId").value = activeProposal.leadId || "";
+                document.getElementById("leadLinha").value = activeProposal.leadLinha || "";
+                document.getElementById("checkin").value = activeProposal.checkin || "";
+                document.getElementById("checkinHora").value = activeProposal.checkinHora || "14:00";
+                document.getElementById("checkout").value = activeProposal.checkout || "";
+                document.getElementById("checkoutHora").value = activeProposal.checkoutHora || "12:00";
+                document.getElementById("validadeData").value = activeProposal.validadeData || defaultValidityDate();
+                document.getElementById("apartamentos").value = activeProposal.apartamentos || 0;
+                document.getElementById("hospedes").value = activeProposal.hospedes || 0;
+                document.getElementById("adr").value = activeProposal.adr || activeProposal.tarifa || 0;
+                document.getElementById("rns").value = activeProposal.rns || 0;
+                document.getElementById("valorTotal").value = activeProposal.valorTotal || 0;
+                document.getElementById("observacoes").value = activeProposal.observacoes || "";
+                document.getElementById("emailCliente").value = activeProposal.emailCliente || "";
+                document.getElementById("whatsappCliente").value = activeProposal.whatsappCliente || "";
+                deleteProposalBtn.style.display = found ? "inline-flex" : "none";
+                document.getElementById("contractProposalBtn").style.display = activeProposal.status === "accepted" ? "inline-flex" : "none";
+                renderClientSuggestions(document.getElementById("cliente").value);
+                hydrateContactsFromClient(document.getElementById("cliente").value);
+                modal.classList.add("open");
+                formDirty = false;
+                updatePreview();
+                if (allowSend) {
+                    sendProposalBtn.click();
+                }
+            }
+            function closeProposal(forceClose = false) {
+                if (formDirty && !forceClose) {
+                    pushNotification("Finalize a proposta ou clique em Cancelar para sair.");
+                    return;
+                }
+                modal.classList.remove("open");
+                activeProposal = null;
+                formDirty = false;
+            }
+            // === Inicio das configuracoes de layout para gerar o PDF ===
+            function updatePreview() {
+                const empresa = companies.find((c) => c.id === document.getElementById("empresaSelect").value);
+                const cliente = document.getElementById("cliente").value || "Cliente";
+                const titulo = document.getElementById("titulo").value || "Proposta de hospedagem";
+                const checkin = formatDate(document.getElementById("checkin").value);
+                const checkout = formatDate(document.getElementById("checkout").value);
+                const checkinHora = document.getElementById("checkinHora").value || "14:00";
+                const checkoutHora = document.getElementById("checkoutHora").value || "12:00";
+                const hospedes = document.getElementById("hospedes").value || 0;
+                const apartamentos = document.getElementById("apartamentos").value || 0;
+                const adr = Number(document.getElementById("adr").value || 0);
+                const rns = Number(document.getElementById("rns").value || 0);
+                const valorTotal = Number(document.getElementById("valorTotal").value || 0);
+                const observacoes = document.getElementById("observacoes").value || "Sem observacoes adicionais.";
+                const logo = empresa?.logo || empresa?.photo || "img/logo.png";
+                const rooms = Array.isArray(empresa?.rooms) ? empresa.rooms : [];
+                const quarto = rooms[0];
+                const quartoFotos = (quarto?.photos || quarto?.fotos || []).slice(0, 3);
+                const validadeInput = document.getElementById("validadeData").value;
+                const validadeDias = validadeInput ? Math.max(0, Math.ceil((new Date(validadeInput) - new Date())/86400000)) : 0;
+                const validadeData = validadeInput ? new Date(validadeInput).toLocaleDateString("pt-BR") : "--";
+                pdfPreview.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+                        <img src="${logo}" alt="Logo da empresa" style="height:48px;width:auto;border-radius:10px;border:1px solid #e2e8f0;padding:6px;background:#fff;">
+                        <div>
+                            <h3 style="margin:0;">${titulo}</h3>
+                            <small style="color:#475569;">${empresa?.name || "Empresa"} | ${empresa?.cnpj || ""}</small>
+                            <small style="color:#b91c1c;font-weight:800;display:block;">Proposta n° ${activeProposal?.numero || ""} - Valida até ${validadeData} (${validadeDias} dias)</small>
+                        </div>
+                    </div>
+                    <p><strong>Cliente:</strong> <strong>${cliente}</strong></p>
+                    <div class="pdf-meta">
+                        <div><strong>Check-in:</strong> <strong>${checkin} ${checkinHora}</strong></div>
+                        <div><strong>Check-out:</strong> <strong>${checkout} ${checkoutHora}</strong></div>
+                        <div><strong>Hospedes:</strong> <strong>${hospedes}</strong></div>
+                        <div><strong>Apartamentos:</strong> <strong>${apartamentos}</strong></div>
+                    </div>
+                    <div class="pdf-prices">
+                        <table>
+                            <thead>
+                                <tr><th>Item</th><th>Detalhes</th><th>Tarifa</th><th>Total</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Hospedagem</td>
+                                    <td><strong>${apartamentos}</strong> aptos | <strong>${hospedes}</strong> hospedes</td>
+                                    <td><strong>${formatCurrency(adr)}</strong><br><small>ADR</small></td>
+                                    <td><strong>${formatCurrency(valorTotal)}</strong><br><small>RNS: ${rns}</small></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top:12px;font-size:13px;">
+                        <strong>Observacoes:</strong>
+                        <div>${observacoes}</div>
+                    </div>
+                    ${quarto ? `
+                        <div style="margin-top:12px;font-size:13px;">
+                            <strong>Quarto sugerido:</strong> ${quarto.name || quarto.titulo || "Nao informado"}<br>
+                            <span>${quarto.capacidade || ""} | ${quarto.metragem || ""} | ${quarto.camas || ""}</span><br>
+                            <span>${Array.isArray(quarto.amenities) ? quarto.amenities.join(", ") : (quarto.amenities || quarto.instalacoes || "")}</span>
+                        </div>
+                    ` : ""}
+                    <div class="pdf-photos">
+                        <div>
+                            <img src="${logo}" alt="Logo" style="object-fit:contain;">
+                        </div>
+                        ${quartoFotos.map((src) => `<div><img src="${src}" alt="Foto do quarto"></div>`).join("")}
+                    </div>
+                    <div style="margin-top:12px;font-size:12px;color:#334155;">
+                        <strong>Informacoes uteis:</strong>
+                        <ul style="margin:6px 0 0 18px;padding:0;line-height:1.4;color:#475569;">
+                            <li>Horarios: Check-in ${checkinHora} | Check-out ${checkoutHora}</li>
+                            <li>Politicas de cancelamento conforme contrato enviado.</li>
+                            <li>Inclui amenidades descritas acima; confirme disponbilidade previamente.</li>
+                        </ul>
+                    </div>
+                    <div style="margin-top:16px;font-size:11px;color:#475569;">
+                        <strong>${empresa?.name || "Hotel"}</strong><br>
+                        Contato: ${empresa?.contact || "-"} | ${empresa?.email || "-"}
+                    </div>
+                    <p style="margin-top:12px;font-size:12px;color:#475569;">Ao aceitar, o lead sera movido para <strong>Proposta aceita</strong>. Em caso de recusa, ira para <strong>Proposta negada</strong>.</p>
+                `;
+            }
+            function collectProposalFromForm() {
+                if (!activeProposal) return null;
+                const updated = {
+                    ...activeProposal,
+                    cliente: document.getElementById("cliente").value,
+                    empresaId: document.getElementById("empresaSelect").value,
+                    titulo: document.getElementById("titulo").value,
+                    leadId: document.getElementById("leadId").value,
+                    leadLinha: document.getElementById("leadLinha").value,
+                    checkin: document.getElementById("checkin").value,
+                    checkout: document.getElementById("checkout").value,
+                    checkinHora: document.getElementById("checkinHora").value || "14:00",
+                    checkoutHora: document.getElementById("checkoutHora").value || "12:00",
+                    validadeData: document.getElementById("validadeData").value || defaultValidityDate(),
+                    apartamentos: Number(document.getElementById("apartamentos").value || 0),
+                    hospedes: Number(document.getElementById("hospedes").value || 0),
+                    adr: Number(document.getElementById("adr").value || 0),
+                    rns: Number(document.getElementById("rns").value || 0),
+                    valorTotal: Number(document.getElementById("valorTotal").value || 0),
+                    observacoes: document.getElementById("observacoes").value,
+                    emailCliente: document.getElementById("emailCliente").value,
+                    whatsappCliente: document.getElementById("whatsappCliente").value,
+                    contractStatus: activeProposal.contractStatus || "pending",
+                    contractUrl: activeProposal.contractUrl || "",
+                    contractId: activeProposal.contractId || "",
+                    history: activeProposal.history || [],
+                    createdAt: activeProposal.createdAt || new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                return updated;
+            }
+            async function saveProposal(e) {
+                e?.preventDefault();
+                const updated = collectProposalFromForm();
+                if (!updated) return;
+                await ensureLeadForProposal(updated, updated.status === "sent" ? "Proposta enviada" : "Tratativa Pendente");
+                const exists = proposals.findIndex((p) => p.id === updated.id);
+                if (exists >= 0) {
+                    proposals[exists] = updated;
+                } else {
+                    proposals.push(updated);
+                }
+                saveProposals();
+                pushNotification("Proposta salva para " + (updated.cliente || "cliente"), { url: "propostas.html" });
+                renderCards();
+                formDirty = false;
+                closeProposal(true);
+            }
+            function deleteProposal() {
+                if (!activeProposal) return;
+                if (!confirm("Excluir esta proposta?")) return;
+                proposals = proposals.filter((p) => p.id !== activeProposal.id);
+                saveProposals();
+                renderCards();
+                formDirty = false;
+                closeProposal(true);
+            }
+            function buildDecisionLink(proposalId, decision, token, exp) {
+                const base = `${window.location.origin}${window.location.pathname.replace("propostas.html", "thanks.html")}`;
+                const url = new URL(base);
+                url.searchParams.set("proposal", proposalId);
+                url.searchParams.set("decision", decision);
+                if (token) url.searchParams.set("token", token);
+                if (exp) url.searchParams.set("exp", exp);
+                url.searchParams.set("ts", Date.now());
+                return url.toString();
+            }
+            async function moveLead(proposal, stageName) {
+                if (!proposal?.leadId) {
+                    pushNotification("Lead não vinculado. Status interno atualizado, Kanban permanece igual.");
+                    return;
+                }
+                try {
+                    const leadIdentifier = proposal.leadLinha || proposal.leadId;
+                    const formData = new FormData();
+                    formData.append("action", "updateStatus");
+                    formData.append("id", leadIdentifier);
+                    if (proposal.leadLinha || proposal.leadId) formData.append("linha", proposal.leadLinha || proposal.leadId);
+                    formData.append("novoStatus", stageName);
+                    formData.append("usuario", getUserName());
+                    await fetch(scriptURL, { method: "POST", body: formData });
+                    pushNotification(`Lead ${proposal.leadId} movido para ${stageName}.`);
+                } catch (error) {
+                    console.warn("Falha ao mover lead:", error);
+                    pushNotification("Não foi possível sincronizar com o Kanban agora.");
+                }
+            }
+            async function ensureLeadForProposal(proposal, targetStage = "Tratativa Pendente") {
+                if (!proposal) return proposal;
+                const cached = leadsCache.find((lead) => lead.ID === proposal.leadId || lead["Nome Evento"] === proposal.titulo || lead.agencia === proposal.cliente);
+                if (cached) {
+                    proposal.leadLinha = proposal.leadLinha || cached.Linha || cached.id;
+                    proposal.leadId = proposal.leadLinha || proposal.leadId || cached.ID;
+                    document.getElementById("leadId").value = proposal.leadId || "";
+                    document.getElementById("leadLinha").value = proposal.leadLinha || "";
+                    return proposal;
+                }
+                try {
+                    const formData = new FormData();
+                    formData.append("action", "leads");
+                    formData.append("ID", proposal.leadId || proposal.id);
+                    formData.append("nomeEvento", proposal.titulo || proposal.id);
+                    formData.append("agencia", proposal.cliente || "Cliente");
+                    formData.append("responsavel", getUserName());
+                    formData.append("statusProgresso", targetStage || "Tratativa Pendente");
+                    if (proposal.checkin) formData.append("dataInicio", proposal.checkin);
+                    if (proposal.checkout) formData.append("dataFim", proposal.checkout);
+                    if (proposal.hospedes) formData.append("qtdPAX", proposal.hospedes);
+                    if (proposal.valorTotal) formData.append("receitaHospedagem", proposal.valorTotal);
+                    formData.append("observacoes", proposal.observacoes || "Criado automaticamente pela proposta.");
+                    const res = await fetch(`${scriptURL}?action=leads`, { method: "POST", body: formData });
+                    const data = await res.json();
+                    const lineId = data?.id || proposal.leadLinha || "";
+                    proposal.leadLinha = lineId || "";
+                    proposal.leadId = lineId || proposal.leadId || proposal.id;
+                    document.getElementById("leadId").value = proposal.leadId || "";
+                    document.getElementById("leadLinha").value = proposal.leadLinha || "";
+                    leadsCache.push({ ID: proposal.leadId, Linha: proposal.leadLinha, "Nome Evento": proposal.titulo, agencia: proposal.cliente });
+                    pushNotification("Lead criado automaticamente para " + (proposal.cliente || "cliente") + ".", { url: "propostas.html" });
+                } catch (error) {
+                    console.warn("Erro ao criar lead automaticamente:", error);
+                    pushNotification("Nao foi possivel criar o lead automaticamente.");
+                }
+                return proposal;
+            }
+            function openSendModal() {
+                sendModal.classList.add("open");
+            }
+            function closeSendModal() {
+                sendModal.classList.remove("open");
+            }
+            async function sendProposal(channel) {
+                const updated = collectProposalFromForm();
+                if (!updated) return;
+                await ensureLeadForProposal(updated, "Proposta enviada");
+                activeProposal = updated;
+                const { token, exp } = storeSendToken(updated.id);
+                if (!activeProposal.numero) {
+                    const empresaNumero = companies.find((c) => c.id === updated.empresaId);
+                    const prefix = (empresaNumero?.name || "PROP").split(" ")[0].slice(0, 4).toUpperCase();
+                    activeProposal.numero = `${prefix}-${Date.now()}`;
+                }
+                const empresa = companies.find((c) => c.id === updated.empresaId);
+                const assuntoBase = `Proposta ${activeProposal.numero || updated.id} - ${empresa?.name || "Hotel"}`;
+                const resumo = `Resumo: ${updated.apartamentos || 0} aptos | ${updated.hospedes || 0} hospedes | Total ${formatCurrency(updated.valorTotal)} (${formatDate(updated.checkin)} a ${formatDate(updated.checkout)})`;
+                const sendLink = `${window.location.origin}${window.location.pathname.replace("propostas.html","send.html")}?proposal=${updated.id}&token=${token}&exp=${exp}`;
+                const acceptLink = buildDecisionLink(updated.id, "accepted", token, exp);
+                const refuseLink = buildDecisionLink(updated.id, "refused", token, exp);
+                const message = `${assuntoBase}\n${resumo}\nAcesse: ${sendLink}`;
+                if (channel === "whatsapp")  {
+                    const wa = `https://wa.me/${(updated.whatsappCliente || "").replace(/\D/g, "")}?text=${encodeURIComponent(message)}`;
+                    window.open(wa, "_blank");
+                } else if (channel === "email") {
+                    const mailHtml = `
+                        <div style="font-family:'Poppins',Arial,sans-serif;background:#0f172a;color:#e2e8f0;padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);">
+                            <p style="margin:0 0 10px;font-size:13px;color:#94a3b8;">${assuntoBase}</p>
+                            <h2 style="margin:0 0 12px;font-size:20px;letter-spacing:-0.02em;">Sua proposta de hospedagem</h2>
+                            <div style="margin-bottom:12px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);">
+                                <p style="margin:4px 0;font-size:14px;">${resumo}</p>
+                            </div>
+                            <a href="${sendLink}" style="display:inline-block;padding:12px 16px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;font-weight:700;text-decoration:none;">Clique aqui para ver a proposta completa</a>
+                            <p style="margin:12px 0 0;font-size:12px;color:#94a3b8;">Link seguro: ${sendLink}</p>
+                        </div>
+                    `.trim();
+                    const mail = `mailto:${updated.emailCliente || ""}?subject=${encodeURIComponent(assuntoBase)}&body=${encodeURIComponent(mailHtml)}`;
+                    window.location.href = mail;
+                }
+                updated.status = "sent";
+                updated.lastSentAt = new Date().toISOString();
+                const idx = proposals.findIndex((p) => p.id === updated.id);
+                if (idx >= 0) proposals[idx] = updated; else proposals.push(updated);
+                saveProposals();
+                renderCards();
+                pushNotification("Proposta enviada para " + (updated.cliente || "cliente"));
+                await moveLead(updated, "Proposta enviada");
+                closeSendModal();
+                formDirty = false;
+                closeProposal(true);
+            }
+            function downloadPdf() {
+                const pdf = buildProposalPdf();
+                if (!pdf) return;
+                triggerPdfDownload(pdf);
+            }
+            function buildPdfLink() {
+                const pdf = buildProposalPdf();
+                if (!pdf) return { url: "", dataUrl: "" };
+                return { url: pdf.url, dataUrl: pdf.url };
+            }
+            function triggerPdfDownload(payload) {
+                const target = (payload && (payload.url || payload.dataUrl)) || "";
+                if (!target) return null;
+                const a = document.createElement("a");
+                a.href = target;
+                a.download = `proposta-${activeProposal?.id || Date.now()}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                return target;
+            }
+            async function pdfUrlToDataUrl(pdfUrl) {
+                try {
+                    const res = await fetch(pdfUrl);
+                    const blob = await res.blob();
+                    return await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(blob);
+                    });
+                } catch (error) {
+                    console.warn("Erro ao ler PDF para base64:", error);
+                    return null;
+                }
+            }
+            async function storePdfAttachment(proposalId, pdfUrl, fileName) {
+                const dataUrl = await pdfUrlToDataUrl(pdfUrl);
+                if (!dataUrl) return pdfUrl;
+                try {
+                    const response = await fetch("/api/propostas/pdf", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ proposalId, fileName, data: dataUrl })
+                    });
+                    if (!response.ok) throw new Error("upload falhou");
+                    const payload = await response.json();
+                    if (payload?.url) return payload.url;
+                } catch (error) {
+                    console.warn("Falha ao enviar PDF para o servidor:", error);
+                }
+                return pdfUrl;
+            }
+            async function syncLeads() {
+                try {
+                    const res = await fetch(`${scriptURL}?action=kanban`);
+                    const data = await res.json();
+                    leadsCache = Object.values(data || {}).flat();
+                    pushNotification("Leads sincronizados.");
+                } catch (error) {
+                    console.warn("Erro ao sincronizar leads:", error);
+                    pushNotification("Não foi possível ler os leads agora.");
+                }
+            }
+            function handleDecisionFromUrl() {
+                const params = new URLSearchParams(window.location.search);
+                const decision = params.get("decision");
+                const proposalId = params.get("proposal");
+                if (!decision || !proposalId) return;
+                const proposal = proposals.find((p) => p.id === proposalId);
+                if (!proposal) return;
+                const stage = decision === "accepted" ? "Proposta aceita" : "Proposta negada";
+                proposal.status = decision === "accepted" ? "accepted" : "refused";
+                logDecisionHistory(proposal, proposal.status, { by: "cliente", extra: "Link de decisao" });
+                updateAttachmentStatus(proposalId, proposal.status);
+                saveProposals();
+                renderCards();
+                pushNotification(`Cliente respondeu: ${stage} para ${proposal.cliente || "proposta"}.`, { url: "propostas.html" });
+                moveLead(proposal, stage);
+            }
+            statusFilter.onchange = renderCards;
+            companyFilter.onchange = renderCards;
+            searchInput.oninput = () => {
+                renderCards();
+            };
+            if (clienteInput) {
+                clienteInput.addEventListener("input", (event) => {
+                    formDirty = true;
+                    renderClientSuggestions(event.target.value);
+                    hydrateContactsFromClient(event.target.value);
+                });
+            }
+            newProposalBtn.onclick = () => openProposal();
+            deleteProposalBtn.onclick = deleteProposal;
+            closeProposalBtn.onclick = () => closeProposal(true);
+            contractProposalBtn.onclick = () => {
+                if (activeProposal?.status === "accepted") {
+                    openContractModal(activeProposal.id);
+                } else {
+                    pushNotification("O contrato fica dispon\u00edvel ap\u00f3s aceitar a proposta.");
+                }
+            };
+            sendProposalBtn.onclick = () => {
+                updatePreview();
+                openSendModal();
+            };
+            form.oninput = () => { formDirty = true; updatePreview(); };
+            form.onsubmit = saveProposal;
+            sendWhatsappBtn.onclick = () => sendProposal("whatsapp");
+            sendEmailBtn.onclick = () => sendProposal("email");
+            downloadPdfBtn.onclick = downloadPdf;
+            closeSendModalBtn.onclick = closeSendModal;
+            modal.onclick = (e) => { if (e.target === modal) closeProposal(false); };
+            sendModal.onclick = (e) => { if (e.target === sendModal) closeSendModal(); };
+            document.getElementById("summaryClose").onclick = closeSummaryModal;
+            document.getElementById("summaryReject").onclick = () => handleManualDecision("refused");
+            document.getElementById("summaryAccept").onclick = () => handleManualDecision("accepted");
+            managerCancel.onclick = closeManagerModal;
+            managerConfirm.onclick = () => {
+                if (managerInput.value === MANAGER_PASS && pendingManagerAuth) {
+                    closeManagerModal();
+                    openProposal(pendingManagerAuth.id, pendingManagerAuth.sendFlow, true);
+                } else {
+                    alert("Senha incorreta.");
+                }
+            };
+            closeContractBtn.onclick = closeContractModal;
+            contractModal.onclick = (e) => { if (e.target === contractModal) closeContractModal(); };
+            window.addEventListener("storage", (event) => {
+                if (event.key === "sellastay_contract_status" && event.newValue) {
+                    try {
+                        const data = JSON.parse(event.newValue);
+                        if (data.proposalId && data.status) updateContractStatus(data.proposalId, data.status, data.url);
+                    } catch (_) { /* ignore */ }
+                }
+            });
+            ensureNotificationCenter();
+            companies = loadCompanies();
+            clientsCache = loadClientsFromStorage();
+            renderClientSuggestions();
+            populateCompanyFilter();
+            loadProposals();
+            renderCards();
+            handleDecisionFromUrl();
+            syncLeads();
+            setInterval(syncLeads, 300000);
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Proposta | Visualização</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #0b1224;
+            --card: #10192f;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #22c55e;
+            --danger: #ef4444;
+            --pill: rgba(255,255,255,0.06);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(59,130,246,0.12), transparent 32%), radial-gradient(circle at 80% 0%, rgba(14,165,233,0.18), transparent 34%), var(--bg);
+            color: var(--text);
+            font-family: "Poppins", Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            padding: 18px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--panel);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.4);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        header h1 { margin: 0; font-size: 1.2rem; }
+        header span { color: var(--muted); font-size: 0.95rem; }
+        .layout {
+            display: grid;
+            grid-template-columns: 2fr 1.1fr;
+            gap: 18px;
+            padding: 20px;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+        }
+        .card h2 { margin-top: 0; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .pill {
+            padding: 8px 10px;
+            background: var(--pill);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .pill strong { font-size: 0.95rem; }
+        .muted { color: var(--muted); font-size: 0.9rem; }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .gallery img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            border: none;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #fff;
+            transition: transform .12s ease, box-shadow .2s ease;
+        }
+        .btn:hover { transform: translateY(-1px); }
+        .btn.accept { background: linear-gradient(135deg, #22c55e, #16a34a); box-shadow: 0 10px 25px rgba(34,197,94,0.25); }
+        .btn.reject { background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 10px 25px rgba(239,68,68,0.25); }
+        .btn.secondary { background: linear-gradient(135deg, #3b82f6, #2563eb); box-shadow: 0 10px 25px rgba(59,130,246,0.25); }
+        .result {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: var(--panel);
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.08);
+            margin: 18px 20px 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+        }
+        .result.show { display: block; animation: pop 0.25s ease; }
+        .result h2 { margin: 6px 0; }
+        @keyframes pop { from { transform: scale(0.97); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .pulse {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 rgba(34,197,94,0.4);
+            animation: pulse 1.6s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+            70% { box-shadow: 0 0 0 16px rgba(34,197,94,0); }
+            100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+        }
+        @media (max-width: 960px) {
+            .layout { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <h1>Proposta</h1>
+            <span id="proposalMeta" class="muted"></span>
+        </div>
+        <div class="pulse" title="Link seguro"></div>
+    </header>
+
+    <div class="result" id="resultBox"></div>
+
+    <div class="layout">
+        <section class="card" id="proposalCard">
+            <h2 id="proposalTitle">Proposta</h2>
+            <p class="muted" id="proposalSubtitle"></p>
+            <div class="grid" id="proposalFacts"></div>
+            <div class="card" style="margin-top:16px;">
+                <h3 style="margin-top:0;">Detalhes e comodidades</h3>
+                <p id="proposalNotes" class="muted"></p>
+                <div id="amenities" class="grid" style="margin-top:8px;"></div>
+            </div>
+            <div class="card" style="margin-top:16px;">
+                <h3 style="margin-top:0;">Localização</h3>
+                <p id="location" class="muted"></p>
+            </div>
+            <div class="card" style="margin-top:16px;">
+                <h3 style="margin-top:0;">Galeria</h3>
+                <div class="gallery" id="gallery"></div>
+            </div>
+            <div class="actions">
+                <button class="btn accept" id="btnAccept">Aceitar proposta</button>
+                <button class="btn reject" id="btnReject">Rejeitar</button>
+                <button class="btn secondary" id="btnDownload">Baixar PDF</button>
+            </div>
+        </section>
+        <aside class="card">
+            <h3 style="margin-top:0;">Resumo</h3>
+            <ul id="summaryList" class="muted" style="line-height:1.7;"></ul>
+            <div style="margin-top:16px;">
+                <small class="muted">Ao aceitar, o status muda automaticamente e nossa equipe continua a operação.</small>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        (function(){
+            const PROPOSALS_KEY = "sellastay_propostas_v1";
+            const ATTACH_KEY = "sellastay_pdf_attachments";
+            const TOKEN_KEY = "sellastay_send_tokens";
+            const params = new URLSearchParams(window.location.search);
+            const proposalId = params.get("proposal") || "";
+            const token = params.get("token") || "";
+            const exp = Number(params.get("exp") || 0);
+
+            const metaEl = document.getElementById("proposalMeta");
+            const titleEl = document.getElementById("proposalTitle");
+            const subtitleEl = document.getElementById("proposalSubtitle");
+            const factsEl = document.getElementById("proposalFacts");
+            const notesEl = document.getElementById("proposalNotes");
+            const amenitiesEl = document.getElementById("amenities");
+            const locationEl = document.getElementById("location");
+            const galleryEl = document.getElementById("gallery");
+            const summaryEl = document.getElementById("summaryList");
+            const resultBox = document.getElementById("resultBox");
+
+            function loadProposals(){
+                try{
+                    const raw = localStorage.getItem(PROPOSALS_KEY);
+                    const parsed = raw ? JSON.parse(raw) : [];
+                    return Array.isArray(parsed) ? parsed : [];
+                } catch { return []; }
+            }
+            function saveProposals(list){
+                localStorage.setItem(PROPOSALS_KEY, JSON.stringify(list));
+            }
+            function loadAttachments(){
+                try{
+                    const raw = localStorage.getItem(ATTACH_KEY) || "[]";
+                    const parsed = JSON.parse(raw);
+                    return Array.isArray(parsed) ? parsed : [];
+                } catch { return []; }
+            }
+            function saveAttachments(list){
+                localStorage.setItem(ATTACH_KEY, JSON.stringify(list.slice(0, 200)));
+            }
+            function loadTokens(){
+                try {
+                    const raw = localStorage.getItem(TOKEN_KEY);
+                    const parsed = raw ? JSON.parse(raw) : [];
+                    return Array.isArray(parsed) ? parsed : [];
+                } catch { return []; }
+            }
+            function saveTokens(list){
+                localStorage.setItem(TOKEN_KEY, JSON.stringify(list));
+            }
+            const proposals = loadProposals();
+            const proposal = proposals.find(p => p.id === proposalId);
+            const attachments = loadAttachments();
+            const attachment = attachments.find(a => a.proposalId === proposalId);
+            const tokens = loadTokens();
+            const tokenRecord = tokens.find(t => t.token === token && t.proposalId === proposalId);
+
+            if (!proposal) {
+                document.body.innerHTML = "<p style='color:#e11d48;padding:20px;font-family:Arial;'>Proposta não encontrada. Abra o link pelo canal enviado.</p>";
+                return;
+            }
+
+            function formatDate(value){
+                if(!value) return "--";
+                const d = new Date(value);
+                return Number.isNaN(d.getTime()) ? value : d.toLocaleDateString("pt-BR");
+            }
+            function currency(value){
+                return isNaN(value) ? value : new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(value);
+            }
+            function amenityIcon(name = ""){
+                const key = name.toLowerCase();
+                if (key.includes("wi") || key.includes("internet")) return "📶";
+                if (key.includes("cafe") || key.includes("breakfast")) return "☕";
+                if (key.includes("piscina") || key.includes("pool")) return "🏊";
+                if (key.includes("academia") || key.includes("gym")) return "🏋️";
+                if (key.includes("estacion") || key.includes("parking")) return "🅿️";
+                if (key.includes("evento") || key.includes("sala")) return "🏢";
+                if (key.includes("praia") || key.includes("sea") || key.includes("beach")) return "🌊";
+                if (key.includes("spa")) return "💆";
+                if (key.includes("24") || key.includes("recep")) return "🛎️";
+                return "•";
+            }
+
+            function renderProposal(){
+                metaEl.textContent = `Validade: ${proposal.validadeDias || 5} dias · Link protegido`;
+                titleEl.textContent = proposal.titulo || "Proposta de hospedagem";
+                subtitleEl.textContent = `${proposal.cliente || "Cliente"} • ${proposal.numero || ""}`;
+                factsEl.innerHTML = [
+                    { label:"Check-in", value:`${formatDate(proposal.checkin)} ${proposal.checkinHora || ""}` },
+                    { label:"Check-out", value:`${formatDate(proposal.checkout)} ${proposal.checkoutHora || ""}` },
+                    { label:"Hospedes", value: proposal.hospedes || 0 },
+                    { label:"Aptos", value: proposal.apartamentos || 0 },
+                    { label:"Valor total", value: currency(proposal.valorTotal || 0) },
+                    { label:"Status", value: proposal.status || "sent" }
+                ].map(item => `<div class="pill"><strong>${item.label}</strong><span class="muted">${item.value}</span></div>`).join("");
+                notesEl.textContent = proposal.observacoes || "Sem observacoes adicionais.";
+
+                const defaultAmenities = ["Wi-Fi de alta velocidade","Café da manhã incluso","Piscina e academia","Sala de eventos disponível","Estacionamento no local"];
+                const amenities = proposal.amenities || defaultAmenities;
+                amenitiesEl.innerHTML = amenities.map(a => `<div class="pill"><strong>${amenityIcon(a)} ${a}</strong></div>`).join("");
+
+                locationEl.textContent = proposal.localizacao || "Localização conforme combinado com a equipe. Consulte-nos para rotas e distâncias.";
+
+                const galleryItems = (proposal.photos || []).concat(attachment?.dataUrl ? [attachment.dataUrl] : []).slice(0,6);
+                const fallback = [
+                    "https://images.unsplash.com/photo-1501117716987-c8e1ecb210af?auto=format&fit=crop&w=800&q=60",
+                    "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=60",
+                    "https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?auto=format&fit=crop&w=800&q=60"
+                ];
+                const gallery = galleryItems.length ? galleryItems : fallback;
+                galleryEl.innerHTML = gallery.map(src => `<img src="${src}" alt="Foto do hotel">`).join("");
+
+                summaryEl.innerHTML = `
+                    <li>Cliente: <strong>${proposal.cliente || "Cliente"}</strong></li>
+                    <li>Período: ${formatDate(proposal.checkin)} a ${formatDate(proposal.checkout)}</li>
+                    <li>Valor: <strong>${currency(proposal.valorTotal || 0)}</strong></li>
+                    <li>Status atual: ${proposal.status || "enviada"}</li>
+                `;
+            }
+
+            function logHistory(decision){
+                const entry = {
+                    decision,
+                    at: new Date().toISOString(),
+                    by: "cliente",
+                    extra: "send.html"
+                };
+                const idx = proposals.findIndex(p => p.id === proposalId);
+                if (idx >= 0) {
+                    const history = Array.isArray(proposal.history) ? proposal.history : [];
+                    proposal.history = [entry, ...history].slice(0, 50);
+                    proposal.status = decision;
+                    proposals[idx] = proposal;
+                    saveProposals(proposals);
+                }
+                const attIdx = attachments.findIndex(a => a.proposalId === proposalId);
+                if (attIdx >= 0) {
+                    attachments[attIdx].status = decision;
+                    attachments[attIdx].decidedAt = new Date().toISOString();
+                    saveAttachments(attachments);
+                }
+                if (tokenRecord) {
+                    const updatedTokens = tokens.map(t => t.token === token && t.proposalId === proposalId ? { ...t, used: true } : t);
+                    saveTokens(updatedTokens);
+                }
+                localStorage.setItem("sellastay_propostas_sync", String(Date.now()));
+            }
+
+            function buildThanksLink(decision){
+                const base = `${window.location.origin}${window.location.pathname.replace("send.html", "thanks.html")}`;
+                const url = new URL(base);
+                url.searchParams.set("proposal", proposalId);
+                url.searchParams.set("decision", decision);
+                if (token) url.searchParams.set("token", token);
+                if (exp) url.searchParams.set("exp", exp);
+                return url.toString();
+            }
+
+            function showResult(decision){
+                resultBox.classList.add("show");
+                if (decision === "accepted") {
+                    resultBox.innerHTML = `
+                        <h2>Obrigado pela confiança!</h2>
+                        <p class="muted">Sua proposta foi aceita. Nossa equipe já recebeu a confirmação e seguirá com os próximos passos.</p>
+                        <div style="margin-top:12px;">🎉</div>
+                    `;
+                } else {
+                    resultBox.innerHTML = `
+                        <h2>Vamos ajustar</h2>
+                        <p class="muted">Recebemos sua recusa. Em breve nossa equipe entrará em contato para novas negociações.</p>
+                        <div style="margin-top:12px;">🤝</div>
+                    `;
+                }
+            }
+
+            function handleDecision(decision){
+                if (guardAccess()) return;
+                window.location.href = buildThanksLink(decision);
+            }
+
+            function disableActions(){
+                document.getElementById("btnAccept").disabled = true;
+                document.getElementById("btnReject").disabled = true;
+                document.querySelector(".actions").style.opacity = 0.5;
+            }
+
+            function alreadyDecided(){
+                return proposal.status === "accepted" || proposal.status === "refused";
+            }
+
+            function expiredToken(){
+                if (!tokenRecord) return true;
+                if (tokenRecord.used) return true;
+                if (exp && Date.now() > exp) return true;
+                if (tokenRecord.exp && Date.now() > tokenRecord.exp) return true;
+                return false;
+            }
+
+            function guardAccess(){
+                if (alreadyDecided()) {
+                    showResult(proposal.status);
+                    disableActions();
+                    return true;
+                }
+                if (expiredToken()) {
+                    resultBox.classList.add("show");
+                    resultBox.innerHTML = `<h2>Link expirado</h2><p class="muted">Esta proposta já foi respondida ou o link expirou.</p>`;
+                    disableActions();
+                    return true;
+                }
+                return false;
+            }
+
+            function downloadPdf(){
+                const html = `
+                    <html>
+                        <head><title>Proposta</title></head>
+                        <body>${document.getElementById("proposalCard").innerHTML}</body>
+                    </html>
+                `;
+                const blob = new Blob([html], { type: "text/html" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `proposta-${proposal.numero || proposal.id}.html`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            document.getElementById("btnAccept").onclick = () => handleDecision("accepted");
+            document.getElementById("btnReject").onclick = () => handleDecision("refused");
+            document.getElementById("btnDownload").onclick = downloadPdf;
+
+            renderProposal();
+            guardAccess();
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Botão Ibexy com Neon</title>
+  <style>
+    :root{
+      --cor1: #7c3aed; /* roxo */
+      --cor2: #06b6d4; /* ciano */
+      --panel: #0f172a;
+      --bg-dark: #020617;
+      --text: #e2e8f0;
+    }
+
+    body{
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(circle at top, #1e293b, #020617 60%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+    }
+
+    /* ========= BOTÃO FLUTUANTE IBEXY ========= */
+    #chat-fab{
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      z-index: 9999;
+    }
+
+    /* Botão em si */
+    .fab-btn{
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      /* fundo com o mesmo degradê das bordas, animado */
+      background-image: linear-gradient(
+        120deg,
+        var(--cor1),
+        var(--cor2),
+        var(--cor1)
+      );
+      background-size: 260% 260%;
+      animation: ibexyBgMove 6s linear infinite;
+
+      color: #ffffff;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 2px solid var(--cor1);
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      user-select: none;
+      outline: none;
+      overflow: hidden;
+
+      /* só o ícone visível por padrão */
+      max-width: 54px;
+      transition: max-width 0.35s ease, padding-right 0.35s ease;
+
+      /* efeito NEON na borda em movimento */
+      box-shadow:
+        0 0 8px rgba(124,58,237,0.8),
+        0 0 16px rgba(6,182,212,0.8),
+        0 0 24px rgba(124,58,237,0.6);
+      animation-name: ibexyBgMove, neonBorder;
+      animation-duration: 6s, 2.4s;
+      animation-timing-function: linear, ease-in-out;
+      animation-iteration-count: infinite, infinite;
+      animation-direction: normal, alternate;
+    }
+
+    /* remove qualquer “seleção/efeito” no hover */
+    .fab-btn:hover,
+    .fab-btn:focus{
+      transform: none;
+      box-shadow:
+        0 0 10px rgba(124,58,237,0.9),
+        0 0 20px rgba(6,182,212,0.9),
+        0 0 30px rgba(124,58,237,0.8);
+      outline: none;
+    }
+
+    .fab-btn,
+    .fab-btn *{
+      user-select: none;
+    }
+
+    /* Ícone */
+    .ibexy-icon{
+      width: 26px;
+      height: 26px;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    /* Texto – começa escondido */
+    .ibexy-label{
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 0.25s ease 0.1s, transform 0.25s ease 0.1s;
+    }
+
+    /* Expanded: revela o texto */
+    .fab-btn.expanded{
+      max-width: 180px;
+      padding-right: 18px;
+    }
+
+    .fab-btn.expanded .ibexy-label{
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Fundo do chat flutuante com borda neon também */
+    #chat-window{
+      display: none;
+      position: fixed;
+      bottom: 90px;
+      right: 22px;
+      width: 340px;
+      height: 430px;
+      border-radius: 20px;
+      border: 2px solid var(--cor2);
+      background: #020617;
+      box-shadow:
+        0 0 8px rgba(6,182,212,0.8),
+        0 0 18px rgba(124,58,237,0.7);
+      animation: neonBorderChat 2.8s ease-in-out infinite alternate;
+      overflow: hidden;
+      z-index: 9998;
+    }
+
+    .chat-header{
+      background: #020617;
+      padding: 12px;
+      border-bottom: 1px solid #1e293b;
+      color: var(--text);
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .close-btn{
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .chat-body{
+      background: #020617;
+      height: 290px;
+      padding: 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .msg{
+      padding: 8px 12px;
+      border-radius: 10px;
+      max-width: 80%;
+      font-size: 0.85rem;
+    }
+
+    .msg.bot{
+      background: #0f172a;
+      color: var(--text);
+    }
+
+    .msg.user{
+      background: #2563eb;
+      color: #fff;
+      margin-left: auto;
+    }
+
+    .chat-footer{
+      background: #020617;
+      padding: 10px;
+      display: flex;
+      gap: 8px;
+      border-top: 1px solid #1e293b;
+    }
+
+    .chat-footer input{
+      flex: 1;
+      padding: 8px;
+      border-radius: 8px;
+      background: #020814;
+      color: white;
+      border: 1px solid #1f2933;
+      font-size: 0.85rem;
+    }
+
+    .chat-footer button{
+      background: #22c55e;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: #022c22;
+    }
+
+    /* ===== ANIMAÇÕES ===== */
+    @keyframes ibexyBgMove{
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Neon correndo nas bordas do botão */
+    @keyframes neonBorder{
+      0%{
+        border-color: var(--cor1);
+        box-shadow:
+          0 0 6px rgba(124,58,237,0.7),
+          0 0 14px rgba(6,182,212,0.5);
+      }
+      50%{
+        border-color: var(--cor2);
+        box-shadow:
+          0 0 10px rgba(6,182,212,0.9),
+          0 0 22px rgba(124,58,237,0.7);
+      }
+      100%{
+        border-color: var(--cor1);
+        box-shadow:
+          0 0 8px rgba(124,58,237,0.9),
+          0 0 18px rgba(6,182,212,0.8);
+      }
+    }
+
+    /* Neon suave no chat */
+    @keyframes neonBorderChat{
+      0%{
+        border-color: var(--cor2);
+        box-shadow:
+          0 0 6px rgba(6,182,212,0.6),
+          0 0 14px rgba(124,58,237,0.4);
+      }
+      50%{
+        border-color: var(--cor1);
+        box-shadow:
+          0 0 10px rgba(124,58,237,0.9),
+          0 0 24px rgba(6,182,212,0.6);
+      }
+      100%{
+        border-color: var(--cor2);
+        box-shadow:
+          0 0 8px rgba(6,182,212,0.8),
+          0 0 18px rgba(124,58,237,0.7);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Botão flutuante IBEXY -->
+  <div id="chat-fab">
+    <button class="fab-btn" aria-label="Abrir chat Ibexy" id="ibexyButton">
+      <!-- Ícone da Ibexy (troque o src pela sua imagem) -->
+      <img src="img/ibexy-icon.png" alt="Ibexy" class="ibexy-icon">
+      <span class="ibexy-label">Ibexy</span>
+    </button>
+  </div>
+
+  <!-- Janela do chat -->
+  <div id="chat-window">
+    <div class="chat-header">
+      <span>SyncIA • Atendimento</span>
+      <button id="close-chat" class="close-btn">✕</button>
+    </div>
+
+    <div class="chat-body" id="chat-body">
+      <div class="msg bot">Olá! 👋 Como posso te ajudar?</div>
+    </div>
+
+    <div class="chat-footer">
+      <input id="chat-input" type="text" placeholder="Digite sua mensagem..." />
+      <button id="send-btn">Enviar</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const btn = document.getElementById("ibexyButton");
+      const chatWindow = document.getElementById("chat-window");
+      const closeChat = document.getElementById("close-chat");
+      const sendBtn = document.getElementById("send-btn");
+      const chatBody = document.getElementById("chat-body");
+      const chatInput = document.getElementById("chat-input");
+
+      if (!btn) return;
+
+      let hoverAtivo = false;
+      let autoTimer = null;
+
+      function expandir() {
+        btn.classList.add("expanded");
+      }
+
+      function recolher() {
+        if (!hoverAtivo) {
+          btn.classList.remove("expanded");
+        }
+      }
+
+      // Expansões aleatórias com texto por 5s
+      function agendaExpansaoAleatoria() {
+        const delay = 8000 + Math.random() * 12000; // entre 8 e 20s
+        autoTimer = setTimeout(() => {
+          expandir();
+          setTimeout(() => {
+            recolher();
+            agendaExpansaoAleatoria();
+          }, 5000); // fica 5s expandido
+        }, delay);
+      }
+
+      // Hover: sempre expande e mostra texto
+      btn.addEventListener("mouseenter", () => {
+        hoverAtivo = true;
+        expandir();
+      });
+
+      btn.addEventListener("mouseleave", () => {
+        hoverAtivo = false;
+        recolher();
+      });
+
+      btn.addEventListener("focusin", () => {
+        hoverAtivo = true;
+        expandir();
+      });
+
+      btn.addEventListener("focusout", () => {
+        hoverAtivo = false;
+        recolher();
+      });
+
+      // Clique: abre/fecha chat
+      btn.addEventListener("click", () => {
+        const visivel = chatWindow.style.display === "block";
+        chatWindow.style.display = visivel ? "none" : "block";
+      });
+
+      closeChat.addEventListener("click", () => {
+        chatWindow.style.display = "none";
+      });
+
+      // Enviar mensagem (simples, só ecoa no front)
+      function enviarMensagem() {
+        const texto = chatInput.value.trim();
+        if (!texto) return;
+
+        const msgUser = document.createElement("div");
+        msgUser.className = "msg user";
+        msgUser.textContent = texto;
+        chatBody.appendChild(msgUser);
+
+        chatInput.value = "";
+
+        setTimeout(() => {
+          const msgBot = document.createElement("div");
+          msgBot.className = "msg bot";
+          msgBot.textContent = "Recebi sua mensagem: " + texto;
+          chatBody.appendChild(msgBot);
+          chatBody.scrollTop = chatBody.scrollHeight;
+        }, 600);
+
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }
+
+      sendBtn.addEventListener("click", enviarMensagem);
+      chatInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          enviarMensagem();
+        }
+      });
+
+      // Inicia ciclo aleatório de expansão
+      agendaExpansaoAleatoria();
+    })();
+  </script>
+</body>
+</html>
