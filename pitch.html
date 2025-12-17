@@ -86,7 +86,23 @@
             margin-bottom: 12px; width: 280px; z-index: 50; pointer-events: none;
         }
         .group:hover .tooltip-content { visibility: visible; opacity: 1; transform: translateY(0) translateX(-50%); }
-        .tooltip-arrow { position: absolute; top: 100%; left: 50%; margin-left: -6px; border-width: 6px; border-style: solid; }
+        .tooltip-arrow { 
+            position: absolute; 
+            top: 100%; 
+            left: 50%; 
+            margin-left: -6px; 
+            width: 0; 
+            height: 0; 
+            border-style: solid; 
+            border-width: 6px 6px 0 6px; 
+            border-left-color: transparent; 
+            border-right-color: transparent; 
+            border-bottom-color: transparent; 
+            background: transparent !important;
+        }
+
+        /* Icon contrast in dark mode */
+        .dark .text-brand-primary { color: #f58b3f !important; }
         .timeline-tooltip { width: 320px; }
 
         /* Full Height Section Utility */
@@ -114,8 +130,7 @@
                 <p class="text-sm text-slate-600 dark:text-slate-300 mt-2" data-i18n="gate_subtitle">Protected Content.</p>
             </div>
             <form id="gate-form" class="space-y-5 relative z-10">
-                <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1 ml-1" data-i18n="gate_label_name">Name</label><input type="text" id="investor-name" required class="w-full px-4 py-3 rounded-xl bg-white/70 dark:bg-black/20 border border-slate-200 dark:border-white/10 focus:ring-2 focus:ring-brand-secondary focus:outline-none transition-all placeholder-slate-400 text-sm"></div>
-                <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1 ml-1" data-i18n="gate_label_pass">Password</label><div class="relative"><input type="password" id="investor-pass" required class="w-full px-4 py-3 rounded-xl bg-white/70 dark:bg-black/20 border border-slate-200 dark:border-white/10 focus:ring-2 focus:ring-brand-secondary focus:outline-none transition-all placeholder-slate-400 text-sm"><button type="button" id="toggle-pass" class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-slate-400 hover:text-brand-primary transition-colors"><i data-lucide="eye" class="w-4 h-4"></i></button></div></div>
+                <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1 ml-1" data-i18n="gate_label_pass">Access Code</label><div class="relative"><input type="password" id="investor-pass" required class="w-full px-4 py-3 rounded-xl bg-white/70 dark:bg-black/20 border border-slate-200 dark:border-white/10 focus:ring-2 focus:ring-brand-secondary focus:outline-none transition-all placeholder-slate-400 text-sm"><button type="button" id="toggle-pass" class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-slate-400 hover:text-brand-primary transition-colors"><i data-lucide="eye" class="w-4 h-4"></i></button></div></div>
                 <div class="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300">
                     <input type="checkbox" id="terms-check" class="mt-1 h-4 w-4 rounded border-slate-300 text-brand-primary focus:ring-brand-secondary">
                     <label for="terms-check" class="leading-snug">Li e concordo com os <button type="button" id="open-terms" class="underline font-semibold text-brand-primary dark:text-brand-secondary hover:text-brand-tertiary">Termos</button> de confidencialidade.</label>
@@ -208,9 +223,25 @@
                      <h2 class="text-3xl md:text-4xl font-bold mt-2 text-slate-900 dark:text-white" data-i18n="market_title">Market Size & Opportunity</h2>
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-8 items-stretch">
-                    <div class="glass p-8 rounded-3xl flex flex-col"><h3 class="text-sm font-bold uppercase text-slate-400 mb-6 tracking-wider" data-i18n="chart_1_title">Global SaaS</h3><div class="chart-container flex-grow"><canvas id="marketGrowthChart"></canvas></div></div>
-                    <div class="glass p-8 rounded-3xl flex flex-col"><h3 class="text-sm font-bold uppercase text-slate-400 mb-6 tracking-wider" data-i18n="chart_2_title">Brazil Opportunity</h3><div class="chart-container sunburst-container flex-grow"><div id="plotlySunburst" style="height: 100%; width: 100%;"></div></div></div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+                    <div class="glass p-6 rounded-3xl flex flex-col lg:col-span-2 h-full"><h3 class="text-sm font-bold uppercase text-slate-400 mb-4 tracking-wider" data-i18n="chart_1_title">Global SaaS</h3><div class="chart-container flex-grow"><canvas id="marketGrowthChart"></canvas></div></div>
+                    <div class="glass p-6 rounded-3xl flex flex-col lg:col-span-2 h-full"><h3 class="text-sm font-bold uppercase text-slate-400 mb-4 tracking-wider" data-i18n="chart_2_title">Brazil Opportunity</h3><div class="chart-container sunburst-container flex-grow"><div id="plotlySunburst" style="height: 100%; width: 100%;"></div></div></div>
+                    <div class="glass p-6 rounded-3xl flex flex-col justify-between h-full lg:col-span-2">
+                        <div class="flex items-center gap-3 text-brand-primary dark:text-brand-secondary mb-3"><i data-lucide="briefcase" class="w-6 h-6"></i><p class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300" data-i18n="impact_title">Impacto de Grupos/Eventos</p></div>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            <span data-i18n="impact_body_prefix">Grupos e Eventos representam entre</span>
+                            <strong>30% - 60%</strong>
+                            <span data-i18n="impact_body_suffix">da receita total de um hotel.</span>
+                        </p>
+                    </div>
+                    <div class="glass p-6 rounded-3xl flex flex-col justify-between h-full lg:col-span-2">
+                        <div class="flex items-center gap-3 text-brand-primary dark:text-brand-secondary mb-3"><i data-lucide="trending-up" class="w-6 h-6"></i><p class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300" data-i18n="demand_title">Projeção de Demanda</p></div>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            <span data-i18n="demand_body_prefix">Estima-se um aumento de</span>
+                            <strong>20-30%</strong>
+                            <span data-i18n="demand_body_suffix">na demanda por reservas em Grupo e/ou Eventos para os próximos 5 anos.</span>
+                        </p>
+                    </div>
                 </div>
             </section>
 
@@ -247,6 +278,55 @@
                         <div class="chart-container"><canvas id="maturityChart"></canvas></div>
                     </div>
                 </div>
+
+<!-- Survey live stats -->
+                <div class="mt-10">
+                    <h3 class="text-xl md:text-2xl font-semibold text-slate-900 dark:text-white text-center mb-2" data-i18n="survey_title">Dados em tempo real da pesquisa</h3>
+                    <p class="text-center text-sm text-slate-500 dark:text-slate-400 mb-4">
+                        <span data-i18n="survey_source_label">Fonte:</span>
+                        <a href="https://www.sellastay.com/survey.html" target="_blank" rel="noopener noreferrer" class="font-semibold text-brand-primary dark:text-brand-secondary underline">
+                            <span data-i18n="survey_source_text">SellaStay survey</span>
+                        </a>
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="survey-stats">
+                        <div class="glass p-5 rounded-2xl border border-white/30 dark:border-white/10 shadow-lg flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-brand-primary/10 text-brand-primary dark:bg-brand-secondary/15 dark:text-brand-secondary flex items-center justify-center">
+                                <i data-lucide="users" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300 mb-1" data-i18n="survey_total">Total de respostas</p>
+                                <div class="text-3xl font-extrabold text-brand-primary dark:text-brand-secondary" id="stat-total-resp">--</div>
+                            </div>
+                        </div>
+                        <div class="glass p-5 rounded-2xl border border-white/30 dark:border-white/10 shadow-lg flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 dark:bg-amber-900/20 dark:text-amber-300 flex items-center justify-center">
+                                <i data-lucide="sparkles" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300 mb-1" data-i18n="survey_interest">Interesse em testar</p>
+                                <div class="text-3xl font-extrabold text-brand-primary dark:text-brand-secondary" id="stat-interest">--%</div>
+                            </div>
+                        </div>
+                        <div class="glass p-5 rounded-2xl border border-white/30 dark:border-white/10 shadow-lg flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-300 flex items-center justify-center">
+                                <i data-lucide="rocket" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300 mb-1" data-i18n="survey_pilot">Hotéis piloto</p>
+                                <div class="text-3xl font-extrabold text-brand-primary dark:text-brand-secondary" id="stat-pilot">--%</div>
+                            </div>
+                        </div>
+                        <div class="glass p-5 rounded-2xl border border-white/30 dark:border-white/10 shadow-lg flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-300 flex items-center justify-center">
+                                <i data-lucide="building-2" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300 mb-1" data-i18n="survey_chains">Redes hoteleiras</p>
+                                <div class="text-3xl font-extrabold text-brand-primary dark:text-brand-secondary" id="stat-chains">--</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <!-- 2. SOLUTION -->
@@ -271,10 +351,23 @@
                     <div class="glass p-6 rounded-2xl hover:border-brand-secondary/50 transition-all duration-300 group relative"><div class="w-10 h-10 bg-brand-primary/10 rounded-lg flex items-center justify-center text-brand-primary mb-3"><i data-lucide="trending-up" class="w-5 h-5"></i></div><h3 class="font-bold text-base mb-1" data-i18n="sol_title_12">RM Assistant</h3><p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="sol_desc_12">Pricing.</p><div class="tooltip-content bg-brand-primary dark:bg-white text-white dark:text-brand-primary p-4 rounded-xl shadow-2xl text-xs font-light leading-relaxed"><span data-i18n="sol_tooltip_12"></span><div class="tooltip-arrow border-t-brand-primary dark:border-t-white"></div></div></div>
                 </div>
 
-                <div class="glass rounded-3xl p-2 border border-slate-200 dark:border-white/10 shadow-2xl relative overflow-hidden group">
-                    <div class="aspect-video bg-slate-100 dark:bg-slate-900 rounded-2xl flex items-center justify-center relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-tr from-brand-primary/5 to-transparent"></div>
-                        <div class="text-center p-8 z-10"><i data-lucide="monitor" class="w-16 h-16 text-slate-300 mx-auto mb-4"></i><p class="text-slate-400 font-medium text-lg" data-i18n="sol_preview">SellaStay Dashboard UI</p></div>
+                <div class="glass rounded-3xl p-4 border border-slate-200 dark:border-white/10 shadow-2xl relative overflow-hidden">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="monitor" class="w-6 h-6 text-brand-primary dark:text-brand-secondary"></i>
+                                <p class="text-slate-700 dark:text-slate-200 font-semibold" data-i18n="sol_preview">SellaStay Dashboard UI</p>
+                            </div>
+                            <div class="inline-flex bg-slate-100 dark:bg-slate-800 rounded-full p-1">
+                                <button id="mode-desktop" class="px-3 py-1 text-xs font-semibold rounded-full bg-white dark:bg-slate-700 text-brand-primary dark:text-white shadow" type="button">Desktop</button>
+                                <button id="mode-mobile" class="px-3 py-1 text-xs font-semibold rounded-full text-slate-600 dark:text-slate-300" type="button">Mobile</button>
+                            </div>
+                        </div>
+                        <div class="flex justify-center">
+                            <div id="frame-wrapper" class="w-full">
+                                <iframe id="dashboard-frame" src="home.html" class="w-full h-[620px] rounded-2xl border border-slate-200 dark:border-white/10 shadow-lg bg-white dark:bg-slate-900"></iframe>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -529,11 +622,13 @@
         let currentLang = 'pt';
         let isDark = false;
         let chartInstances = {};
+        let surveyLoaded = false;
+        let dashboardMode = 'desktop';
 
         // --- I18N DICTIONARY ---
         const translations = {
             en: {
-                gate_title: "SellaStay Pitch Deck", gate_subtitle: "Confidential material. Please, identify yourself.", gate_label_name: "Name", gate_label_pass: "Password", gate_btn: "Unlock Pitch Deck", gate_error: "Incorrect Password.",
+                gate_title: "SellaStay Pitch Deck", gate_subtitle: "Confidential material. Please, identify yourself.", gate_label_pass: "Access Code", gate_btn: "Unlock Pitch Deck", gate_error: "Incorrect Code.",
                 nav_problem: "Problem", nav_solution: "Solution", nav_market: "Market", nav_comp: "Competition", nav_fin: "Financials", nav_team: "Team",
                 hero_badge: "Live Pitch Deck 2025", hero_title_1: "The Modern OS for", hero_title_highlight: "Group Hospitality", hero_title_2: "Sales", hero_subtitle: "Replace manual Excel sheets with an intelligent SaaS that automates negotiation, contracts, and payments for hotel groups & events.",
                 stat_1: "TAM 2032", stat_2: "SP Events Market", stat_3: "Manual Hotels",
@@ -541,7 +636,7 @@
                 pain_img_1: "Spreadsheet Overload", pain_img_2: "Manual Task Overload", pain_img_3: "Slow Proposals", pain_img_4: "No Integration",
                 highlight_phrase: `MANY HOTELS <strong>STILL OPERATE</strong> THIS CONTROL WITH <strong>MANUAL AND OUTDATED</strong> TOOLS WITH LITTLE OR <span class="text-brand-secondary font-bold text-4xl hand-underline">NO AUTOMATION*</span>.`,
                 highlight_footer: "*Key difficulties and challenges faced by hoteliers, according to proprietary research conducted between August and December 2025.",
-                tag_problem: "The Problem", tag_solution: "The Solution", solution_title: "SellaStay: Automation Engine", 
+                tag_problem: 'THE <span class="line-through decoration-brand-secondary decoration-2 opacity-50">PROBLEM</span> OPPORTUNITY', tag_solution: "The Solution", solution_title: "SellaStay: Automation Engine", 
                 sol_title_1: "Task Manager", sol_desc_1: "Lists, workflows & multi-user.",
                 sol_tooltip_1: "Complete task manager with lists, workflows, and multi-user integration to manage negotiations from request to contract.",
                 sol_title_2: "Smart Reminders", sol_desc_2: "Notifications via Email & WhatsApp.",
@@ -567,6 +662,19 @@
                 sol_title_12: "RM Assistant", sol_desc_12: "Pricing & fluctuation system for RM precision.",
                 sol_tooltip_12: "Pricing and fluctuation system that assists in rate precision.",
                 sol_preview: "SellaStay Dashboard UI",
+                impact_title: "Group/Event Impact",
+                impact_body_prefix: "Groups and Events represent between",
+                impact_body_suffix: "of a hotel's total revenue.",
+                demand_title: "Demand Projection",
+                demand_body_prefix: "Demand for Group/Event bookings is expected to grow",
+                demand_body_suffix: "over the next 5 years.",
+                survey_title: "Real-time survey data",
+                survey_total: "Total responses",
+                survey_interest: "Interest in testing",
+                survey_pilot: "Pilot hotels",
+                survey_chains: "Hotel chains",
+                survey_source_label: "Source:",
+                survey_source_text: "SellaStay survey",
                 tl_title: "Available Features:",
                 tl_date_1: "Jan 2, 2026", tl_desc_1: "Task Manager, Smart Reminders, Kanban, Calculator.",
                 tl_date_2: "Apr 6, 2026", tl_desc_2: "AI Chatbot, Email, Automations, Event Map.",
@@ -586,7 +694,7 @@
                 c_mkt:"Market ($B)", c_mat1:"PMS", c_mat2:"Manual", c_proj1:"Revenue", c_proj2:"Cost", c_cap1:"Filipe", c_cap2:"Abner", c_cap3: "Investors", c_sun: ["Global", "ROW", "Latam", "Other", "Brazil", "R$1.5B"]
             },
             pt: {
-                gate_title: "SellaStay Pitch Deck", gate_subtitle: "Material Confidencial. Favor, identifique-se.", gate_label_name: "Nome", gate_label_pass: "Senha", gate_btn: "Liberar Pitch Deck", gate_error: "Senha Incorreta.",
+                gate_title: "SellaStay Pitch Deck", gate_subtitle: "Material Confidencial. Favor, identifique-se.", gate_label_pass: "Código de acesso", gate_btn: "Liberar Pitch Deck", gate_error: "Código incorreto.",
                 nav_problem: "Problema", nav_solution: "Solução", nav_market: "Mercado", nav_comp: "Concorrência", nav_fin: "Financeiro", nav_team: "Time",
                 hero_badge: "Pitch Deck 2025", hero_title_1: "O S.O. Moderno para", hero_title_highlight: "Vendas de Grupos", hero_title_2: "Hoteleiros", hero_subtitle: "Substitua planilhas manuais por um SaaS inteligente que automatiza negociação, contratos e pagamentos.",
                 stat_1: "TAM 2032", stat_2: "Mercado Eventos SP", stat_3: "Hotéis no Excel",
@@ -621,6 +729,19 @@
                 sol_title_12: "Assistente de RM", sol_desc_12: "Precificação e flutuação com automação.",
                 sol_tooltip_12: "Sistema de precificação e flutuação que auxilia na precisão das tarifas.",
                 sol_preview: "Painel SellaStay (Preview)",
+                impact_title: "Impacto de Grupos/Eventos",
+                impact_body_prefix: "Grupos e Eventos representam entre",
+                impact_body_suffix: "da receita total de um hotel.",
+                demand_title: "Projeção de Demanda",
+                demand_body_prefix: "Estima-se um aumento de",
+                demand_body_suffix: "na demanda por reservas em Grupo e/ou Eventos para os próximos 5 anos.",
+                survey_title: "Dados em tempo real da pesquisa",
+                survey_total: "Total de respostas",
+                survey_interest: "Interesse em testar",
+                survey_pilot: "Hotéis piloto",
+                survey_chains: "Redes hoteleiras",
+                survey_source_label: "Fonte:",
+                survey_source_text: "SellaStay survey",
                 tl_title: "Recursos Disponíveis:",
                 tl_date_1: "2 Jan 2026", tl_desc_1: "Gestor de Tarefas, Lembretes, Kanban, Calculadora.",
                 tl_date_2: "6 Abr 2026", tl_desc_2: "IA Chatbot, Email, Automações, Mapa de Eventos.",
@@ -637,10 +758,17 @@
                 role_sales: "Assistente de Vendas", role_cs: "Sucesso do Cliente", role_dev1: "Dev Junior 1", role_dev2: "Dev Junior 2", role_tech_advisor: "Conselheiro Tecnológico",
                 comp_gabriela: "Senac RJ", comp_su: "Brazil-Korea Conference",
                 sources_title: "Fontes Auditáveis", s1:"Mercado $29,8B em 2032.", s2:"Valida share receita Grupos.", s3:"Prevê orçamentos maiores.", s4:"Análise mix receita.", s5:"Confirma demanda grupos.", s6:"Dependência hotéis convenção.", s7:"Dados hotelaria BR.", s8:"Eventos SP: R$ 305B.", s9:"Previsão R$ 8,4B investimentos.", s10:"Dados ocupação.", s11:"Demanda tech local.", s12:"Notícias B2B.", s13:"Adoção PMS Cloud.", s14:"Tendência Bleisure.", s15:"Hábitos de compra.", s16:"Crescimento online.",
+                survey_title: "Dados em tempo real da pesquisa",
+                survey_total: "Total de respostas",
+                survey_interest: "Interesse em testar",
+                survey_pilot: "Hotéis piloto",
+                survey_chains: "Redes hoteleiras",
+                survey_source_label: "Fonte:",
+                survey_source_text: "SellaStay survey",
                 c_mkt:"Mercado ($B)", c_mat1:"PMS", c_mat2:"Manual", c_proj1:"Receita", c_proj2:"Custo", c_cap1:"Filipe", c_cap2:"Abner", c_cap3: "Investidores", c_sun: ["Global", "Resto", "Latam", "Outros", "Brasil", "R$1.5B"]
             },
             es: {
-                gate_title: "SellaStay Pitch Deck", gate_subtitle: "Material Confidencial. Por favor, identifíquese.", gate_label_name: "Nombre", gate_label_pass: "Contraseña", gate_btn: "Desbloquear", gate_error: "Contraseña Incorrecta.",
+                gate_title: "SellaStay Pitch Deck", gate_subtitle: "Material Confidencial. Por favor, identifíquese.", gate_label_pass: "Código de acceso", gate_btn: "Desbloquear", gate_error: "Código incorrecto.",
                 nav_problem: "Problema", nav_solution: "Solución", nav_market: "Mercado", nav_comp: "Competencia", nav_fin: "Finanzas", nav_team: "Equipo",
                 hero_badge: "Pitch Deck 2025", hero_title_1: "El S.O. Moderno para", hero_title_highlight: "Ventas de Grupos", hero_title_2: "Hoteleros", hero_subtitle: "Reemplace Excel manual con un SaaS inteligente que automatiza negociación, contratos y pagos.",
                 stat_1: "TAM 2032", stat_2: "Mercado Eventos SP", stat_3: "Hoteles en Excel",
@@ -675,6 +803,12 @@
                 sol_title_12: "Asistente de RM", sol_desc_12: "Precios y fluctuación con automatización.",
                 sol_tooltip_12: "Sistema de precios y fluctuación que ayuda en la precisión de las tarifas.",
                 sol_preview: "Panel SellaStay (Vista)",
+                impact_title: "Impacto de Grupos/Eventos",
+                impact_body_prefix: "Grupos y Eventos representan entre",
+                impact_body_suffix: "de los ingresos totales de un hotel.",
+                demand_title: "Proyección de Demanda",
+                demand_body_prefix: "Se estima un aumento de",
+                demand_body_suffix: "en la demanda de reservas de Grupo y/o Eventos para los próximos 5 años.",
                 tl_title: "Características Disponibles:",
                 tl_date_1: "2 Ene 2026", tl_desc_1: "Gestor de Tareas, Recordatorios, Kanban, Calculadora.",
                 tl_date_2: "6 Abr 2026", tl_desc_2: "Chatbot IA, Email, Automatizaciones, Mapa de Eventos.",
@@ -691,6 +825,13 @@
                 role_sales: "Asistente de Ventas", role_cs: "Éxito del Cliente", role_dev1: "Dev Junior 1", role_dev2: "Dev Junior 2", role_tech_advisor: "Asesor Tecnológico",
                 comp_gabriela: "Senac RJ", comp_su: "Brazil-Korea Conference",
                 sources_title: "Fuentes Auditables", s1:"Mercado $29.8B en 2032.", s2:"Valida share ingresos Grupos.", s3:"Presupuestos más altos.", s4:"Análisis mix ingresos.", s5:"Confirma demanda grupos.", s6:"Dependencia hoteles convención.", s7:"Datos hotelería BR.", s8:"Eventos SP: R$ 305B.", s9:"Previsión R$ 8.4B inversión.", s10:"Datos ocupación.", s11:"Demanda tech local.", s12:"Noticias B2B.", s13:"Adopción PMS Cloud.", s14:"Tendencia Bleisure.", s15:"Hábitos de compra.", s16:"Crecimiento online.",
+                survey_title: "Datos en tiempo real de la encuesta",
+                survey_total: "Total de respuestas",
+                survey_interest: "Interés en probar",
+                survey_pilot: "Hoteles piloto",
+                survey_chains: "Cadenas hoteleras",
+                survey_source_label: "Fuente:",
+                survey_source_text: "Encuesta SellaStay",
                 c_mkt:"Mercado ($B)", c_mat1:"PMS", c_mat2:"Manual", c_proj1:"Ingresos", c_proj2:"Costo", c_cap1:"Filipe", c_cap2:"Abner", c_cap3: "Inversores", c_sun: ["Global", "Resto", "Latam", "Otros", "Brasil", "R$1.5B"]
             }
         };
@@ -741,6 +882,10 @@
         const closeTermsBtn = document.getElementById('close-terms');
         const acceptTermsBtn = document.getElementById('accept-terms');
         const termsCheck = document.getElementById('terms-check');
+        const frameWrapper = document.getElementById('frame-wrapper');
+        const dashboardFrame = document.getElementById('dashboard-frame');
+        const btnDesktop = document.getElementById('mode-desktop');
+        const btnMobile = document.getElementById('mode-mobile');
 
         function openTerms() {
             termsModal.classList.remove('hidden');
@@ -761,6 +906,38 @@
         termsModal.addEventListener('click', (e) => {
             if (e.target === termsModal) closeTerms();
         });
+
+        function updateFrameSize() {
+            if (!frameWrapper || !dashboardFrame) return;
+            // reset classes
+            frameWrapper.className = "flex justify-center";
+            dashboardFrame.className = "";
+            if (dashboardMode === 'desktop') {
+                frameWrapper.classList.add('w-full');
+                dashboardFrame.classList.add('w-full','h-[620px]','rounded-2xl','border','border-slate-200','dark:border-white/10','shadow-lg','bg-white','dark:bg-slate-900');
+            } else {
+                frameWrapper.classList.add('w-[380px]');
+                dashboardFrame.classList.add('w-full','h-[720px]','rounded-[28px]','border','border-slate-200','dark:border-white/10','shadow-lg','bg-white','dark:bg-slate-900');
+            }
+
+            if (btnDesktop && btnMobile) {
+                if (dashboardMode === 'desktop') {
+                    btnDesktop.classList.add('bg-white','dark:bg-slate-700','text-brand-primary','dark:text-white','shadow');
+                    btnMobile.classList.remove('bg-white','dark:bg-slate-700','text-brand-primary','dark:text-white','shadow');
+                    btnMobile.classList.add('text-slate-600','dark:text-slate-300');
+                } else {
+                    btnMobile.classList.add('bg-white','dark:bg-slate-700','text-brand-primary','dark:text-white','shadow');
+                    btnDesktop.classList.remove('bg-white','dark:bg-slate-700','text-brand-primary','dark:text-white','shadow');
+                    btnDesktop.classList.add('text-slate-600','dark:text-slate-300');
+                }
+            }
+        }
+
+        if (btnDesktop && btnMobile) {
+            btnDesktop.addEventListener('click', () => { dashboardMode = 'desktop'; updateFrameSize(); });
+            btnMobile.addEventListener('click', () => { dashboardMode = 'mobile'; updateFrameSize(); });
+        }
+        updateFrameSize();
 
 
         function toggleTheme() {
@@ -960,6 +1137,48 @@
             renderSunburst();
         }
 
+        async function loadSurveyStats() {
+            if (surveyLoaded) return;
+            const totalEl = document.getElementById('stat-total-resp');
+            const interestEl = document.getElementById('stat-interest');
+            const pilotEl = document.getElementById('stat-pilot');
+            const chainsEl = document.getElementById('stat-chains');
+            if (!totalEl || !interestEl || !pilotEl || !chainsEl) return;
+
+            const setFallback = () => {
+                totalEl.innerText = '--';
+                interestEl.innerText = '--%';
+                pilotEl.innerText = '--%';
+                chainsEl.innerText = '--';
+            };
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('action', 'getSurveyStats');
+                const response = await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData
+                });
+                if (!response.ok) throw new Error(`Erro ao ler survey (${response.status})`);
+                const result = await response.json();
+                if (result.success && result.stats) {
+                    const s = result.stats;
+                    totalEl.innerText = s.totalResponses ?? '--';
+                    interestEl.innerText = (s.interestPct ?? 0) + '%';
+                    pilotEl.innerText = (s.pilotPct ?? 0) + '%';
+                    chainsEl.innerText = s.hotelChains ?? '--';
+                    surveyLoaded = true;
+                } else {
+                    setFallback();
+                }
+            } catch (err) {
+                console.error('Erro ao carregar survey:', err);
+                setFallback();
+            }
+        }
+
         window.onload = function() {
             lucide.createIcons();
             const userLang = navigator.language || navigator.userLanguage; 
@@ -979,7 +1198,7 @@
 
     <script>
         // ===== CONFIGURAÇÃO =====
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxEWv41WeTglMldjVJ_FiejF0osAk6xBtNvu6MmSN3BPW1DQyB30dKtHGaivVz3iftiUw/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz0HMFJlU0mb23L-_wOmvVhJlCIVIE0MpqwMTm896bRumdfztwZdU6UUlzj2N-d19uZ2A/exec';
 
         // ===== DADOS DO USUÁRIO ATUAL =====
         let currentUser = {
@@ -1204,7 +1423,6 @@
         document.getElementById('gate-form').addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const nomeInput = document.getElementById('investor-name');
         const passInput = document.getElementById('investor-pass');
         const btn = document.getElementById('unlock-btn');
         const errorDiv = document.getElementById('gate-error');
@@ -1288,6 +1506,7 @@
                 document.getElementById('access-gate').remove();
                 document.getElementById('main-content').classList.remove('locked');
                 createWatermark();
+                loadSurveyStats();
                 if (window.Plotly) window.dispatchEvent(new Event('resize'));
                 }, 500);
             }, 800);
@@ -1321,7 +1540,7 @@
             user-select: none;
         }
         
-        #investor-name, #investor-pass {
+        #investor-pass {
             -webkit-user-select: text !important;
             -moz-user-select: text !important;
             -ms-user-select: text !important;
